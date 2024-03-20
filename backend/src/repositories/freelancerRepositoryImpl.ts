@@ -1,33 +1,48 @@
 // freelancerRepositoryImpl.ts
-
-import { log } from "console";
 import { Freelancer } from "../models/Freelancer";
 import { FreelancerRepository } from "./freelancerRepository";
-
-// Import necessary database modules or configurations here
+// import {FreelancerModel} from "../models/Freelancer";
+const FreelancerModel = require('../models/Freelancer').Freelancer
+const FreelancerDetailsModel = require('../models/Freelancer').FreelancerDetails
+import bcrypt from "bcrypt"
 
 export class FreelancerRepositoryImpl implements FreelancerRepository {
     async findByUsername(username: string): Promise<Freelancer | null> {
-        // console.log(username);
-        
-        // Implement logic to find a freelancer by username in the database
-        // Example:
-        // const freelancer = await db.collection("freelancers").findOne({ username });
-        // return freelancer;
-        return null; // Placeholder, replace with actual implementation
+        return await FreelancerModel.findOne({ username });
     }
+
+    async findByEmail(email: string): Promise<Freelancer | null> {
+        return await FreelancerModel.findOne({ email });
+    }
+
+    
+    async findById(id: string): Promise<Freelancer | null> {
+        return await FreelancerModel.findById(id);
+    }
+    
+    async create(freelancer: Freelancer): Promise<void> {
+        await FreelancerModel.create(freelancer);
+    }
+
 
     async checkPassword(username: string, password: string): Promise<boolean> {
-        // Implement logic to check if the provided password matches the hashed password
-        // Example:
-        // const freelancer = await db.collection("freelancers").findOne({ username });
-        // if (!freelancer) {
-        //     return false; // User not found
-        // }
-        // const isPasswordValid = await comparePasswords(password, freelancer.password);
-        // return isPasswordValid;
-        return false; // Placeholder, replace with actual implementation
+        const freelancer = await FreelancerModel.findOne({ username });
+        if (!freelancer) {
+            return false; // User not found
+        }
+        const isPasswordValid = await bcrypt.compare(password, freelancer.password);
+        return isPasswordValid;
+        // return false; 
     }
 
-    // Implement other methods of the FreelancerRepository interface
+   
+
+
+    async clearOTP(email:string){
+        await FreelancerModel.updateOne({email,OTP:-1})
+    }
+
+    async FreelancerDetailsAdd(formData:any){
+       return await FreelancerDetailsModel.create(formData)
+    }
 }

@@ -1,10 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./styles/tailwind.css";
+import Context from "./config/context.tsx";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
+    <GoogleOAuthProvider clientId="950575847846-ngm9mu79bg2knt4ktg6b85o5sjkd09p5.apps.googleusercontent.com">
+    <Context>
+      <App />
+    </Context>
+    </GoogleOAuthProvider>
+  </React.StrictMode>
+);
