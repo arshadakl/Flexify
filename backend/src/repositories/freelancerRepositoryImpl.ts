@@ -17,6 +17,8 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
     
     async findById(id: string): Promise<Freelancer | null> {
+        console.log(id, "in implements FreelancerRepository");
+        
         return await FreelancerModel.findById(id);
     }
     
@@ -44,5 +46,13 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
     async FreelancerDetailsAdd(formData:any){
        return await FreelancerDetailsModel.create(formData)
+    }
+
+    async doVerification(id:String){
+        return await FreelancerModel.updateOne({id,isVerified:1})
+    }
+
+    async setNewOTP(email:string,otp:number){
+        return await Freelancer.updateOne({email,OTP:otp})
     }
 }

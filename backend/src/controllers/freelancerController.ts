@@ -43,6 +43,29 @@ export class FreelancerController {
         }
     }
 
+    async GoogleAuthentication(req: Request, res: Response):Promise<void>{
+        // console.log(req.body);
+        const {key} = req.body
+        try {
+            const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
+            console.log(decodeResponse);
+            if(decodeResponse.email_verified){
+                const {name,email,jti} = decodeResponse
+                const data = {
+                    isVerified:1,
+                    username:name,
+                    email,password:jti || " "
+                }
+                const response = await this.freelancerService.signup(data);
+                
+                res.status(201).json({ message: "User signed up successfully", status:true, id: response});
+            }
+            // res.status(200).json({data:decodeResponse})
+            
+        } catch (error) {
+            res.json({ error: "Username or email already exists" ,status:false});
+        }
+    }
 
     //otp verification 
     // ===========================
@@ -52,10 +75,28 @@ export class FreelancerController {
            const userId = await this.freelancerService.verifyOtp(email,code)
            if(userId){
              res.status(200).json({message:"user successfully verified", status:true,userId })
+           }else{
+            res.json({status:false,error:"Incorrect OTP, Please try again."});
+            
            }
             
         } catch (error) {
             res.json({ error: (error as Error).message ,status:false});
+        }
+    }
+
+    // resend OTP 
+    //================================
+
+    async reSendOtp(req:Request,res:Response):Promise<void>{
+        try {
+            const email =  req.body.email
+            const response = await this.freelancerService.reSendotpServ(email)
+            console.log(response);
+            res.status(200).json({status:true})
+            
+        } catch (error) {
+            
         }
     }
     

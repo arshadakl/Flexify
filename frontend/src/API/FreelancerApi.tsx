@@ -58,3 +58,27 @@ export const profileCompletion = async (formData:profileCompletionForm)=>{
         
     }
 }
+
+export const reSendOTP = async (email:string)=>{
+    try {
+        const response = await freelancersAPI.post('/resendotp',{email})
+        console.log(response.data);
+        
+        return response.data
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
+export const googleAuth = async (key:string)=>{
+    try {
+        console.log(key);
+        
+        const response = await freelancersAPI.post('/googleauth',{key})
+        return response.data
+    } catch (error) {
+        
+    }
+}

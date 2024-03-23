@@ -10,7 +10,7 @@ const ProfileCompletion = () => {
   return (
     <>
       {/* <NavBar /> */}
-      {pageManage===1 ? <UserSelection pageManage={setPageManage} setUserType={setUserType} userType={userType} /> : <CompletionForm/>}
+      {pageManage===1 ? <UserSelection pageManage={setPageManage} setUserType={setUserType} userType={userType} /> : <CompletionForm userType={userType} />}
       
       
     </>

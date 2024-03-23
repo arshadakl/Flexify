@@ -5,6 +5,9 @@ import { FreelancerRepository } from "../repositories/freelancerRepository";
 import { MailServices } from './MailService';
 import { FreelancerController } from '../controllers/freelancerController';
 import jwt from "jsonwebtoken"
+import { jwtDecode } from "jwt-decode";
+import { JwtPayload } from 'jsonwebtoken';
+
 
 const mailService = new MailServices()
 
@@ -37,7 +40,7 @@ export class FreelancerService {
 
     //signup
     // ================
-    async signup(freelancer: Freelancer): Promise<void> {
+    async signup(freelancer: Freelancer): Promise<string | undefined> {
         console.log(freelancer);
         
         const existingUsername = await this.freelancerRepository.findByUsername(freelancer.username);
@@ -53,30 +56,66 @@ export class FreelancerService {
 
         const newFreelancer: Freelancer = {
             ...freelancer,
-            password: hashedPassword,OTP
+            password: hashedPassword,OTP,isVerified: freelancer.isVerified ? 1 : 0
         };
         
     
-        await this.freelancerRepository.create(newFreelancer);
-        mailService.sendOtp(freelancer.email,OTP)
+       const response =  await this.freelancerRepository.create(newFreelancer);
+        if(!freelancer.isVerified){
+            mailService.sendOtp(freelancer.email,OTP)
+        }
+        const userData = await this.freelancerRepository.findByEmail(freelancer.email)
+        return userData?.id
+
         
     }
 
 
-   async verifyOtp(email:string,code:number):Promise<string | undefined>{
-    console.log(email,"reaced");
-    const userData =  await this.freelancerRepository.findByEmail(email)
-    console.log(userData?.OTP);
-    
-    if(userData?.OTP===code){
-        console.log("otp correct");
-        return userData.id
-    }else{
-        console.log("wrong otp");
-        throw new Error("Incorrect OTP Please try again.");
+
+async verifyOtp(email: string, code: number): Promise<string | undefined> {
+    console.log(email, "reached");
+
+    try {
+        const userData = await this.freelancerRepository.findByEmail(email);
+
+        if (!userData || !userData.OTP) {
+            throw new Error("Invalid email or missing OTP.");
+        }
+
+        console.log("Stored OTP:", userData.OTP);
+        console.log("Entered OTP:", code);
+
+        if (userData.OTP !== code) {
+            throw new Error("Incorrect OTP");
+        }
+
+        if (userData.id) {
+            const verifiedData = await this.freelancerRepository.doVerification(userData.id);
+            console.log("User Verified");
+            console.log(verifiedData);
+
+            return userData.id;
+        }
+    } catch (error) {
+        console.error("OTP verification error:", error);
+        // Rethrow the error to propagate it further if needed
+        throw error;
     }
-    
-    
+}
+
+
+   async reSendotpServ(email:string):Promise<void>{
+    try {
+        const OTP = generateOTP()
+        console.log(email," resend email");
+        const status = await this.freelancerRepository.setNewOTP(email,OTP)
+        
+        mailService.sendOtp(email,OTP)
+        return status
+        
+    } catch (error) {
+        throw new Error("faild to create new otp")
+    }
    }
 
 
@@ -91,6 +130,18 @@ export class FreelancerService {
         }
        
     }
+
+    async GoogleKeyValidation(key: string): Promise<JwtPayload> {
+        try {
+            const decoded = jwtDecode(key);
+            // console.log(decoded);
+            return decoded;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+    
 
 
     async jwtCreation(freelancer: Freelancer): Promise<any> {

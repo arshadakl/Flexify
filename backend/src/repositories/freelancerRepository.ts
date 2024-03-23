@@ -10,4 +10,6 @@ export interface FreelancerRepository {
     checkPassword(username:string , password:string): Promise<boolean>
     clearOTP(email:string):void
     FreelancerDetailsAdd(formData:any):void
+    doVerification(id:string):Promise<Freelancer>
+    setNewOTP(email:string,otp:number):Promise<any>
 }

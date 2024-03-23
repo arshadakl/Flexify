@@ -1,127 +1,128 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { OTPApi } from '../../API/FreelancerApi';
+import { OTPApi, reSendOTP } from '../../API/FreelancerApi';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../config/context';
-
+import { Toaster, toast } from 'sonner';
 
 interface EmailVerificationProps {
-    email: string;
-  }
+  email: string;
+}
+
 const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) => {
-const {setUserId} = useContext(AuthContext)
-  
 
 
-  // State to store the values of the inputs
-  const [inputValues, setInputValues] = useState(['', '', '', '']);
-  const formRef = useRef<HTMLFormElement>(null);
-  const [error,setError] = useState<string>("")
-  const navigate = useNavigate()
-
-  // Function to update the state when input values change
-  const updateInputValues = (index: number, value: string) => {
-    const newInputValues = [...inputValues];
-    newInputValues[index] = value;
-    setInputValues(newInputValues);
+  const handleBeforeUnload = (event:any) => {
+    event.preventDefault();
+    event.returnValue = 'Please avoid refreshing this page.'; // Optional custom message
   };
 
   useEffect(() => {
-    const form = formRef.current;
-    if (form) {
-      const inputs = Array.from(form.querySelectorAll('input[type="text"]')) as HTMLInputElement[];
-      const submitButton = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
-      const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (
-          !/^[0-9]{1}$/.test(e.key) &&
-          e.key !== 'Backspace' &&
-          e.key !== 'Delete' &&
-          e.key !== 'Tab' &&
-          !e.metaKey
-        ) {
-          e.preventDefault();
-        }
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
-        if (e.key === 'Delete' || e.key === 'Backspace') {
-          const index = inputs.indexOf(e.currentTarget);
-          if (index > 0) {
-            updateInputValues(index - 1, '');
-            inputs[index - 1].focus();
-          }
-        }
-      };
+  
+  const { setUserId } = useContext(AuthContext);
+  const formRef = useRef<HTMLFormElement>(null);
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const navigate = useNavigate();
 
-      const handleInput = (e: React.FormEvent<HTMLInputElement>) => {
-        const target = e.target as HTMLInputElement;
-        const index = inputs.indexOf(target);
-        updateInputValues(index, target.value);
-        if (target.value) {
-          if (index < inputs.length - 1) {
-            inputs[index + 1].focus();
-          } else {
-            submitButton?.focus();
-          }
-        }
-      };
+  const [inputValues, setInputValues] = useState(['', '', '', '']);
+  const [error, setError] = useState<string>('');
+  const [timer, setTimer] = useState<number>(60);
+  const [isActive,setIsActive] = useState(true)
 
-      const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-        e.target.select();
-      };
+  useEffect(() => {
+    inputRefs.current[0]?.focus(); 
+  }, []);
 
-      const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-        e.preventDefault();
-        const pasteData = e.clipboardData.getData('text');
-        if (!new RegExp(`^[0-9]{${inputs.length}}$`).test(pasteData)) {
-          return;
-        }
-        const digits = pasteData.split('');
-        digits.forEach((digit, index) => {
-          updateInputValues(index, digit);
-        });
-        submitButton?.focus();
-      };
-
-      inputs.forEach((input, index) => {
-        input.value = inputValues[index]; // Set the value from the state
-        input.addEventListener('keydown', handleKeyDown as any);
-        input.addEventListener('input', handleInput as any);
-        input.addEventListener('focus', handleFocus as any);
-        input.addEventListener('paste', handlePaste as any);
-      });
-    }
-  }, [inputValues]);
-
-
-  // Function to handle form submission
-  const handleSubmit  = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Here you can add the code to verify the OTP
-    setError("")
-    console.log(inputValues.join(''));
-    const code:number = Number(inputValues.join(''))
-    const formData = {  email,code }
-    const OTP_response:any = await OTPApi(formData)
-    console.log(OTP_response,": test");
-
-
-    if(OTP_response.status){
-      setUserId(OTP_response.userId)
-      navigate('/profilecompletion')
-    }
-    setInputValues(['', '', '', ''])
-    setError(OTP_response.error)
+  const updateInputValues = (index: number, value: string) => {
+    console.log(index);
     
-    // For example, send the OTP to the server for verification
-    console.log('OTP submitted:', inputValues.join(''));
+    if (value === '' && index > 0) {
+      const newInputValues = [...inputValues];
+      newInputValues[index ] = '';
+      setInputValues(newInputValues);
+      inputRefs.current[index - 1]?.focus(); 
+    } else if (/^\d*$/.test(value) && index < inputValues.length) {
+      
+      const newInputValues = [...inputValues];
+      newInputValues[index] = value;
+      setInputValues(newInputValues);
+  
+      
+      if (value !== '' && index < inputValues.length - 1) {
+        inputRefs.current[index + 1]?.focus();
+      }
+    } else if (value === '' && index >= inputValues.length) {
+      
+      const newInputValues = [...inputValues];
+      newInputValues[index - 1] = '';
+      setInputValues(newInputValues);
+      inputRefs.current[index - 1]?.focus();
+    }
+  };
+  
+
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setTimer((prevTimer) => (prevTimer > 0 ? prevTimer - 1 : 0)); 
+    }, 1000);
+  
+    return () => clearInterval(timerId);
+  }, []);
+
+  useEffect(() => {
+    if (timer === 0) {
+      clearInterval(timer);
+      setIsActive(false)
+    }
+  }, [timer]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if(!isActive) return
+    setError('');
+    const code = Number(inputValues.join(''));
+    const formData = { email, code };
+    const OTP_response: any = await OTPApi(formData);
+
+    if (OTP_response.status) {
+      setUserId(OTP_response.userId);
+      navigate('/profilecompletion');
+    } else {
+      setError(OTP_response.error);
+      toast.error(OTP_response.error);
+    }
+    // inputRefs.current[0]?.focus();
+    // setInputValues(['', '', '', '']);
   };
 
+  const resend = async()=>{
+    
+    const response = await reSendOTP(email)
+    if(response){
+      setError('')
+      toast.success("OTP has been Resent.")
+      setTimer(60)
+      setIsActive(true)
+      inputRefs.current[0]?.focus();
+      setInputValues(['', '', '', '']);
+
+    }
+  }
+
   return (
-    <div className="min-h-screen flex items-center content-center ">
+    <div className="min-h-screen flex items-center content-center">
+      <Toaster richColors position="top-left" />
       <div className="max-w-md lg:w-full mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
         <header className="mb-8">
           <h1 className="text-2xl font-bold mb-1">Email Verification</h1>
           <p className="text-[15px]  text-slate-500">
-          Check your Email, We have sent you the Code  <br /> <b>{email}</b>
+            Check your Email, We have sent you the Code <br /> <b>{email}</b>
           </p>
         </header>
         <form ref={formRef} id="otp-form" onSubmit={handleSubmit}>
@@ -130,29 +131,47 @@ const {setUserId} = useContext(AuthContext)
               <input
                 key={index}
                 type="text"
-                className="w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100 border border-transparent hover:border-slate-200 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                className="border border-gray-300 w-14 h-14 text-center text-2xl font-extrabold text-slate-900 bg-slate-100  hover:border-gray-300 appearance-none rounded p-4 outline-none focus:bg-white focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
                 pattern="\d*"
                 maxLength={1}
                 value={value}
+                ref={(el) => (inputRefs.current[index] = el)}
                 onChange={(e) => updateInputValues(index, e.target.value)}
+                onKeyDown={(e) => {
+                  // Handle backspace
+                  if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    updateInputValues(index, '');
+                  
+                  }
+                }}
               />
             ))}
           </div>
           <div className="max-w-[260px] mx-auto mt-4">
-            <button
-              type="submit"
-              className="w-full hover:bg-gray-600 inline-flex justify-center whitespace-nowrap rounded-lg bg-black px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:logo-green focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150"
-            >
+            {isActive ? <button type="submit" 
+             className="w-full hover:bg-gray-900 inline-flex justify-center whitespace-nowrap rounded-lg bg-black px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:logo-green focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150" >
               Verify Account
-            </button>
+            </button>:
+            <button 
+            className="w-full cursor-not-allowed  hover:bg-gray-600 inline-flex justify-center whitespace-nowrap rounded-lg bg-gray-600 px-3.5 py-2.5 text-sm font-medium text-white shadow-sm shadow-indigo-950/10 hover:logo-green focus:outline-none focus:ring focus:ring-indigo-300 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300 transition-colors duration-150" >
+             Verify Account
+           </button>
+            }
           </div>
         </form>
         <div className="text-sm text-slate-500 mt-4">
-          Didn't receive code?{" "}
-          <a className="font-medium text-indigo-500 hover:text-indigo-600" href="#0">
-            Resend
-          </a>
-          <p className='text-rose-600 font-medium'>{error}</p>
+          {timer === 0 ? (
+            <p>
+              Didn't receive code?{' '}
+              <a onClick={resend} className="font-medium text-indigo-500 hover:text-indigo-600 cursor-pointer" >
+                Resend
+              </a>
+            </p>
+          ) : (
+            <p>Resend code in {timer} seconds</p>
+          )}
+          <p className="text-rose-600 font-medium">{error}</p>
         </div>
       </div>
     </div>

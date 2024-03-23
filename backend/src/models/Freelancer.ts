@@ -8,7 +8,8 @@ export interface Freelancer {
     email: string;
     password: string ;
     OTP?:Number,
-    token?:string
+    token?:string,
+    isVerified?:Number
 }
 
 
@@ -17,7 +18,8 @@ const FreelancerSchema = new Schema<Freelancer>({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     OTP: {type:Number, require:true},
-    token:{type:String}
+    token:{type:String},
+    isVerified:{type:Number,required:true}
 });
 
 

@@ -1,19 +1,12 @@
-import { useContext, useState } from "react";
-import { SignupApi, googleAuth } from "../../API/FreelancerApi";
-import EmailVerification from "./OTP";
+import { useState } from "react";
+import { SignupApi } from "../../API/FreelancerApi";
 import { Toaster, toast } from "sonner";
 import { useNavigate } from "react-router-dom";
-import { GoogleLogin } from "@react-oauth/google";
-import { AuthContext } from "../../config/context";
-// useGoogleOneTapLogin
+import { GoogleLogin,useGoogleOneTapLogin } from "@react-oauth/google";
 // interface EmailVerificationProps {
 //   email: string;
 // }
-const Signup = ()=> {
-
-  const {setUserId} = useContext(AuthContext)
-  const navigate = useNavigate();
-
+function Signup() {
   interface FormData {
     username: string;
     email: string;
@@ -21,8 +14,9 @@ const Signup = ()=> {
     confirmPassword: string;
   }
 
+  const navigate = useNavigate();
 
-  const [isOTP, setIsOTP] = useState<boolean>(false);
+//   const [isOTP, setIsOTP] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     username: "",
     email: "",
@@ -73,7 +67,7 @@ const Signup = ()=> {
       const signupResponse: any = await SignupApi(formData);
       console.log(signupResponse);
       if (signupResponse.status) {
-        setIsOTP(true);
+        // setIsOTP(true);
       } else {
         toast.error(signupResponse.error);
       }
@@ -83,78 +77,18 @@ const Signup = ()=> {
       toast.error("Signup failed. Please try again.");
     }
   };
-
-  // const handleGoogleAuth = async (credential:string)=>{
-  //   console.log("inner handler");
-    
-  //   const AuthResponse = await googleAuth(credential)
-  //   console.log(AuthResponse);
-  //   if (AuthResponse.status) {
-  //     setIsOTP(true);
-  //   } else {
-  //     toast.error(AuthResponse.error);
-  //   }
-    
-  // }
-
-
-  // useGoogleOneTapLogin({
-  //   onSuccess: credentialResponse => {
-  //     if(credentialResponse.credential){
-  //       handleGoogleAuth(credentialResponse.credential)
-  //     }else{
-  //       toast.error("Something went wrong");
-  //     }
-  //   },
-  //   onError: () => {
-  //     console.log('Login Failed');
-  //     toast.error("Login Failed");
-  //   },
-  // });
-
-  const handleGoogleAuth = async (credential: string) => {
-    try {
-      console.log("inner handler");
-      const AuthResponse = await googleAuth(credential);
-      console.log(AuthResponse);
-  
-      if (AuthResponse.status) {
-        setUserId(AuthResponse.id)
-        // setIsOTP(true);
-        // navigate('/profilecompletion', { state: AuthResponse.id });
-        navigate('/profilecompletion');
-      } else {
-        toast.error(AuthResponse.error);
-      }
-    } catch (error) {
-      // Handle errors that may occur during the googleAuth call or in the if/else block
-      console.error('Error during authentication', error);
-      toast.error("Authentication failed");
-    }
-  }
-  
-  // useGoogleOneTapLogin({
-  //   onSuccess: credentialResponse => {
-  //     if (credentialResponse.credential) {
-  //       handleGoogleAuth(credentialResponse.credential);
-  //     } else {
-  //       toast.error("Something went wrong");
-  //     }
-  //   },
-  //   onError: () => {
-  //     console.log('Login Failed');
-  //     toast.error("Login Failed");
-  //   },
-  // });
-  
-
-
+  useGoogleOneTapLogin({
+    onSuccess: credentialResponse => {
+      console.log(credentialResponse);
+    },
+    onError: () => {
+      console.log('Login Failed');
+    },
+  });
 
   return (
     <>
-      {isOTP ? (
-        <EmailVerification email={formData.email} />
-      ) : (
+      
         <section >
           <Toaster richColors position="top-left" />
           {/* component */}
@@ -247,15 +181,10 @@ const Signup = ()=> {
                     <div className="flex justify-center">
                       <GoogleLogin
                         onSuccess={(credentialResponse) => {
-                          console.log("test",credentialResponse);
-                          if(credentialResponse.credential){
-                            handleGoogleAuth(credentialResponse.credential);
-                          }
-                          
+                          console.log(credentialResponse);
                         }}
                         onError={() => {
                           console.log("Login Failed");
-                          toast.error("Login Failed");
                         }}
                       />
                     </div>
@@ -280,7 +209,7 @@ const Signup = ()=> {
         </div>
       </div>
         </section>
-      )}
+      )
     </>
   );
 }

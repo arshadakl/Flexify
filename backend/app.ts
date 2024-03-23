@@ -1,5 +1,6 @@
 import express from "express";
 import freelancerRoutes from "./src/routes/freelancerRoutes";
+import clientRoutes from "./src/routes/clientRoutes";
 import cors from "cors"
 import bodyParser from "body-parser";
 require("dotenv").config();
@@ -28,6 +29,7 @@ app.use(
 
 // Routes
 app.use("/api/freelancers", freelancerRoutes);
+app.use("/api/client", clientRoutes);
 
 
 // Start the server

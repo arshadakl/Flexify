@@ -11,9 +11,16 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<HomePage/>} />
-        <Route path='/test' element={<Test email={"arshadss@gmail.com"}/>} />
         <Route path='/signup' element={<Signup/>} />
         <Route path='/profilecompletion' element={<ProfileCompletion/>} />
+        <Route path='/client' element={<ProfileCompletion/>} />
+
+        <Route path='/test' element={<Test
+        //  userType={"freelancer"}
+         userType={"client"}
+         />} />
+
+        
       </Routes>
     </BrowserRouter>
   )
