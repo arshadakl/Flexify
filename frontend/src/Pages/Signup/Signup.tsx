@@ -260,9 +260,9 @@ const Signup = ()=> {
                       />
                     </div>
 
-                    <p className="text-sm text-center font-light text-gray-500 dark:text-gray-400">
+                    <p className="cursor-pointer text-sm text-center font-light text-gray-500 dark:text-gray-400">
                       already have an account ?{" "}
-                      <a className="font-medium text-blue-600 hover:underline dark:text-primary-500">
+                      <a onClick={()=>navigate('/login')} className="font-medium text-blue-600 hover:underline dark:text-primary-500">
                         Sign in
                       </a>
                     </p>

@@ -1,5 +1,5 @@
 // freelancerRepositoryImpl.ts
-import { Freelancer } from "../models/Freelancer";
+import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { FreelancerRepository } from "./freelancerRepository";
 // import {FreelancerModel} from "../models/Freelancer";
 const FreelancerModel = require('../models/Freelancer').Freelancer
@@ -54,5 +54,10 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
     async setNewOTP(email:string,otp:number){
         return await Freelancer.updateOne({email,OTP:otp})
+    }
+
+    async findDetailsById(id: string): Promise<FreelancerDetails | null> {
+        console.log("implement id",id);
+        return await FreelancerDetailsModel.findOne({user:id});
     }
 }

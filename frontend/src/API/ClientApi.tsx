@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
-import { profileCompletionFormClient } from '../Pages/Signup/Test';
+import { profileCompletionFormClient } from '../components/ProfileCompletionParts/CompletionForm';
 
 
 const clientAPI = axios.create({

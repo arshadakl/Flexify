@@ -22,7 +22,8 @@ export interface Freelancer {
     email: string;
     password: string ;
     OTP?:Number,
-    token?:string
+    token?:string,
+    _id?: string
 }
 
 export const AuthContext = createContext<AuthContextValue>(initialContextValue);

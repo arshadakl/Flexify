@@ -5,3 +5,13 @@
     background-size: 100%;
     /* background-repeat: no-repeat; */
 }
+.hero-banner{
+    background-size: 100%;
+    
+    background-repeat: no-repeat;
+    height: 80vh;
+}
+.popularCards::-webkit-scrollbar{ 
+        display: none;
+        transition: all 0.4s;
+}

@@ -148,6 +148,8 @@ const Profile= ({userType}:{userType:string})=> {
 
     const response = await profileCompletion(formData);
     setFreelancerDetails(response.freelancer);
+    const userDataString = JSON.stringify(response.freelancer);
+     localStorage.setItem('user_data', userDataString);
     navigate("/", { state: { signpopup: true } });
     console.log("Form submitted successfully");
   };

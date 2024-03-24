@@ -1,11 +1,13 @@
 module.exports = {
   content: [
-    "./src/**/*.{jsx,tsx}", // Include all JSX/TSX files in the src directory
+    "./src/**/*.{jsx,tsx}",
+    "./node_modules/flowbite/**/*.js" // Include all JSX/TSX files in the src directory
   ],
   theme: {
     extend: {
       colors: {
         'logo-green': '#00B16D',
+        "flexy-green": "#0A4226"
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],

@@ -1,6 +1,6 @@
 // freelancerRepository.ts
 
-import { Freelancer } from "../models/Freelancer";
+import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 
 export interface FreelancerRepository {
     findByUsername(username: string): Promise<Freelancer | null>;
@@ -12,4 +12,5 @@ export interface FreelancerRepository {
     FreelancerDetailsAdd(formData:any):void
     doVerification(id:string):Promise<Freelancer>
     setNewOTP(email:string,otp:number):Promise<any>
+    findDetailsById(id:string):Promise<FreelancerDetails | null>
 }
