@@ -1,21 +1,20 @@
 import express from "express";
 import freelancerRoutes from "./src/routes/freelancerRoutes";
 import clientRoutes from "./src/routes/clientRoutes";
+import adminRoutes from "./src/routes/adminRouter";
 import cors from "cors"
 import bodyParser from "body-parser";
 require("dotenv").config();
 import { connectDB } from "./config/mongoConfig";
+import configCloudinary from "./src/utils/Cloudinary";
 const app = express();
-const PORT = 3000; // Default port is 3000, but can be overridden by environment variable
-
-// Middleware setup, body parser, etc.
+const PORT = 3000; 
 
 connectDB()
 
-// Increase the limit for JSON bodies
 app.use(bodyParser.json({ limit: '10mb' }));
+configCloudinary()
 
-// Increase the limit for URL-encoded bodies
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 
 app.use(
@@ -30,9 +29,9 @@ app.use(
 // Routes
 app.use("/api/freelancers", freelancerRoutes);
 app.use("/api/client", clientRoutes);
+app.use("/api/admin",adminRoutes );
 
 
-// Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

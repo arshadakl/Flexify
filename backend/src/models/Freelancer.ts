@@ -10,6 +10,8 @@ export interface Freelancer {
     OTP?:Number,
     token?:string,
     isVerified?:Number
+    profile?:string,
+    isBlocked?:string
 }
 
 
@@ -19,7 +21,9 @@ const FreelancerSchema = new Schema<Freelancer>({
     password: { type: String, required: true },
     OTP: {type:Number, require:true},
     token:{type:String},
-    isVerified:{type:Number,required:true}
+    isVerified:{type:Number,required:true},
+    profile:{type:String},
+    isBlocked:{type:String}
 });
 
 

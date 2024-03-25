@@ -46,6 +46,7 @@ const Profile= ({userType}:{userType:string})=> {
     bio: "",
     user: userId,
   });
+  
   const [formDataClient, setFormDataClient] = useState<profileCompletionFormClient>({
     firstName: "",
     lastName: "",
@@ -218,7 +219,7 @@ const Profile= ({userType}:{userType:string})=> {
                   <img
                     src="/images/FlexifyBlack.png"
                     className="w-52 mx-auto sm:mb-12 lg:hidden"
-                    alt=""
+                    alt="Click here.."
                   />
                   <h1 className="text-xl lg:text-4xl font-poppins m-0 p-0 font-semibold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                     Sign up to find work <br /> you love

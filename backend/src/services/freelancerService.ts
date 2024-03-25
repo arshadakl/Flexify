@@ -7,6 +7,7 @@ import { FreelancerController } from '../controllers/freelancerController';
 import jwt, { Secret } from "jsonwebtoken"
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from 'jsonwebtoken';
+// import { uploadFile } from '../utils/Cloudinary';
 
 
 const mailService = new MailServices()
@@ -28,7 +29,9 @@ export class FreelancerService {
             // return null; 
             throw new Error("Failed to find Freelancer")
         }
-
+        if(freelancer.isBlocked=="Block"){
+            throw new Error("blocked user")
+        }
         const isPasswordValid = await this.freelancerRepository.checkPassword(username, password);
         if (!isPasswordValid) {
             throw new Error("Failed to check")
@@ -58,7 +61,7 @@ export class FreelancerService {
         const OTP: number = generateOTP()
 
         const newFreelancer: Freelancer = {
-            ...freelancer,
+            ...freelancer,profile:"",isBlocked:"unBlock",
             password: hashedPassword, OTP, isVerified: freelancer.isVerified ? 1 : 0
         };
 
@@ -133,6 +136,20 @@ export class FreelancerService {
         }
 
     }
+    async profileUpdateServ(formData: any): Promise<Freelancer | FreelancerDetails> {
+        const response: any = await this.freelancerRepository.FreelancerDetailsupdate(formData)  
+        console.log(response,"updation");
+
+        const FreelancerDs = await this.freelancerRepository.findDetailsById(formData.user)
+        console.log(FreelancerDs,"new thisnk");
+
+        if (FreelancerDs) {
+            return FreelancerDs
+        } else {
+            throw new Error("wrong")
+        }
+
+    }
 
     async GoogleKeyValidation(key: string): Promise<JwtPayload> {
         try {
@@ -152,6 +169,9 @@ export class FreelancerService {
             console.log(user);
             
             if (user) {
+                if(user.isBlocked=="Block"){
+                    throw new Error("blocked user")
+                }
                 user.OTP = 0
                 user.password = ""
                 const credentialsResponse = await this.jwtCreation(user)
@@ -179,6 +199,19 @@ export class FreelancerService {
         } catch (error) {
             throw new Error("User not found ")
         }
+    }
+
+    async updatePrfileImage(token: string,file:string): Promise<any> {
+      try {
+        const decodedToken = await this.validateJWT(token);
+        // console.log(decodedToken);
+        
+        const response = await this.freelancerRepository.updateProfileImage(decodedToken.id,file);
+        console.log(response);
+        return response
+      } catch (error) {
+        throw new Error("User not found ")
+      }
     }
 
 

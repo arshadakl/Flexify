@@ -104,6 +104,15 @@ export const profileCompletion = async (formData: profileCompletionForm) => {
   } catch (error) {}
 };
 
+export const profileUpdate = async (formData: profileCompletionForm) => {
+  try {
+    
+    const response = await freelancersAPI.post("/profileupdate", formData);
+    console.log(response);
+    return response.data;
+  } catch (error) {}
+};
+
 export const reSendOTP = async (email: string) => {
   try {
     const response = await freelancersAPI.post("/resendotp", { email });
@@ -141,3 +150,13 @@ export const fetchProfileData = async () => {
     return response.data;
   } catch (error) {}
 };
+
+export const uploadProfileImage = async (formData: FormData): Promise<any> => {
+    try {
+      const response = await freelancersAPI.post('/uploadProfileImage', formData);
+      return response.data;
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      throw error; 
+    }
+  };

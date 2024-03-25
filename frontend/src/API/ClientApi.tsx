@@ -20,3 +20,4 @@ export const profileCompletionClient = async (formData:profileCompletionFormClie
         
     }
 }
+

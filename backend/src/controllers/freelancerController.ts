@@ -2,6 +2,14 @@
 import { Request, Response } from "express";
 import { FreelancerService } from "../services/freelancerService";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
+import ImageUploadRepository from "../repositories/ImageUploadRepository";
+import { Readable } from 'stream';
+import { uploadToCloudinary } from "../utils/Cloudinary";
+import fs from 'fs'
+
+
+
+const imageUploadRepository = new ImageUploadRepository();
 
 export class FreelancerController {
     constructor(private readonly freelancerService: FreelancerService) { }
@@ -66,12 +74,12 @@ export class FreelancerController {
     async GoogleAuthLogin(req: Request, res: Response): Promise<void> {
         const { key } = req.body
         console.log(key);
-        
+
         try {
             const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
             if (decodeResponse.email_verified) {
                 const response = await this.freelancerService.GoogleLoginEmailValidation(decodeResponse.email)
-               
+
                 if ("token" in response && "options" in response && "freelancer" in response) {
                     const { token, options, freelancer } = response;
 
@@ -84,11 +92,11 @@ export class FreelancerController {
                             freelancer,
                         });
                     } else {
-                    // console.log("hi");
+                        // console.log("hi");
 
                         throw new Error("Token or options are undefined");
                     }
-                } else { 
+                } else {
                     throw new Error("Token or options are undefined");
                 }
             }
@@ -106,8 +114,8 @@ export class FreelancerController {
             if (decodeResponse.email_verified) {
                 const { name, email, jti } = decodeResponse
                 const data = {
-                    isVerified: 1,
-                    username: name,
+                    isVerified: 1,isBlocked:"unBlock",
+                    username: name, profile: "",
                     email, password: jti || " "
                 }
                 const response = await this.freelancerService.signup(data);
@@ -184,27 +192,71 @@ export class FreelancerController {
         }
     }
 
-
-    async profiledata(req: Request, res: Response): Promise<void> {
+    // profile update functions 
+    // ===========================
+    async profileUpdate(req: Request, res: Response): Promise<void> {
         try {
-            const token = req.headers.authorization
-            if (token) {
-                const userDetails = await this.freelancerService.profiledataService(token)
-                res.status(200).json({userDetails,status:true})
-            }else{
-                throw new Error("Invalid Request")
+            console.log(req.body,"new profile");
+            const response = await this.freelancerService.profileUpdateServ(req.body);
+            console.log(response,"2nd response");
+            if (response) {
+                // console.log("control response: ", response);
+                res.status(200).json({status:true,response})
+            } else {
+                throw new Error("Token or options are undefined");
             }
-
-        } catch (error) {
-            console.log(error);
-            res.json({ error,status: false });
-
-        }
+        
+    } catch(error) {
+        console.error("Error in profile completion:", error);
+        res.json({ status: false });
     }
+}
 
 
+    async profiledata(req: Request, res: Response): Promise < void> {
+    try {
+        const token = req.headers.authorization
+            if(token) {
+            const userDetails = await this.freelancerService.profiledataService(token)
+            res.status(200).json({ userDetails, status: true })
+        }else{
+            throw new Error("Invalid Request")
+        }
+
+    } catch(error) {
+        console.log(error);
+        res.json({ error, status: false });
+
+    }
+}
 
 
-    // 
+     async uploadImage(req: Request, res: Response): Promise < void> {
+    try {
+        if(!req.file) {
+    res.status(400).send('No file uploaded');
+    return;
+}
+const token = req.headers.authorization
+console.log(token);
+
+if (!token) {
+    throw new Error('Invalid token')
+}
+
+const result = await uploadToCloudinary(req.file.path);
+console.log(result);
+const userData = await this.freelancerService.updatePrfileImage(token, result.url)
+fs.unlinkSync(req.file.path);
+userData.password = ""
+userData.OTP = 0
+res.status(200).json({ userData, status: true })
+          } catch (error) {
+    console.error('Error uploading image to Cloudinary:', error);
+    res.status(500).send('Error uploading image to Cloudinary');
+}
+      }
+
+
 }
 

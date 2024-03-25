@@ -48,6 +48,37 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
        return await FreelancerDetailsModel.create(formData)
     }
 
+
+
+    async FreelancerDetailsupdate(formData: any) {
+        try {
+            console.log('Updating freelancer details for user:', formData.user);
+            console.log('New data:', formData);
+    
+            const result = await FreelancerDetailsModel.updateOne(
+                { user: formData.user },
+                {
+                    $set: {
+                        firstName: formData.firstName,
+                        lastName: formData.lastName,
+                        Country: formData.Country,
+                        language: formData.language,
+                        skillsList: formData.skillsList, 
+                        bio: formData.bio
+                    }
+                }
+            );
+    
+            console.log('Update result:', result);
+            return result;
+        } catch (error) {
+            console.error('Error updating freelancer details:', error);
+            throw error;
+        }
+    }
+
+    
+
     async doVerification(id:String){
         return await FreelancerModel.updateOne({id,isVerified:1})
     }
@@ -59,5 +90,15 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     async findDetailsById(id: string): Promise<FreelancerDetails | null> {
         console.log("implement id",id);
         return await FreelancerDetailsModel.findOne({user:id});
+    }
+
+    async updateProfileImage(id:string,filepath:string):Promise<Freelancer | null> {
+         const response = await Freelancer.updateOne({id,profile:filepath})
+         if(response){
+             return Freelancer.findById(id);
+         }else{
+            throw new Error("Failed to update profile image")
+         }
+
     }
 }
