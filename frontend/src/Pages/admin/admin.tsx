@@ -1,4 +1,4 @@
-import AdminHome from "../../components/admin-component/adminHome"
+import AdminHome from "../../admin/components/adminHome"
 
 function admin() {
   return (

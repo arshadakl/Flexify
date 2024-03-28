@@ -12,6 +12,11 @@ module.exports = {
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
       },
+      height: (theme) => ({
+        '50vh': '50vh',
+        '80vh': '80vh',
+        // Add more viewport height values as needed
+      })
     }, // Add custom theme configurations if needed
   },
   plugins: [], // Add plugins if desired

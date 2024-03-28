@@ -1,15 +1,15 @@
 
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import AdminHome from '../components/admin-component/adminHome'
+import { Route, Routes } from 'react-router-dom'
+import AdminHome from '../admin/components/adminHome'
+import AdminLogin from '../Pages/admin/adminLogin'
 
-function adminRouter() {
+function AdminRouter() {
   return (
-    <BrowserRouter>
     <Routes>
-      <Route path="/" element={<AdminHome />} />
+      <Route path="/*" element={<AdminHome />} />
+      <Route path="login" element={<AdminLogin />} />
     </Routes>
-  </BrowserRouter>
   )
 }
 
-export default adminRouter
+export default AdminRouter

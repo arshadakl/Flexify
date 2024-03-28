@@ -5,7 +5,7 @@ import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 export interface FreelancerRepository {
     findByUsername(username: string): Promise<Freelancer | null>;
     findByEmail(email: string): Promise<Freelancer | null>;
-    findById(id: string): Promise<Freelancer | null>;
+    find_ById(id:string): Promise<Freelancer | undefined>;
     create(freelancer: Freelancer): Promise<void>;
     checkPassword(username:string , password:string): Promise<boolean>
     clearOTP(email:string):void

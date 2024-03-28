@@ -1,4 +1,5 @@
 // freelancerRepositoryImpl.ts
+import { error } from "console";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { FreelancerRepository } from "./freelancerRepository";
 // import {FreelancerModel} from "../models/Freelancer";
@@ -16,10 +17,13 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     }
 
     
-    async findById(id: string): Promise<Freelancer | null> {
+    async find_ById(id: string): Promise<Freelancer | undefined> {
         console.log(id, "in implements FreelancerRepository");
         
-        return await FreelancerModel.findById(id);
+        const res =  await FreelancerModel.findById(id);
+        console.log(res,"imp");
+        
+        return res
     }
     
     async create(freelancer: Freelancer): Promise<void> {
@@ -95,7 +99,14 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     async updateProfileImage(id:string,filepath:string):Promise<Freelancer | null> {
          const response = await Freelancer.updateOne({id,profile:filepath})
          if(response){
-             return Freelancer.findById(id);
+            console.log(id);
+            const data = await Freelancer.findById(id);
+            if(data){
+                console.log(data,"updated profile image data");
+                return data
+            }else{
+                throw new Error("data not found");
+            }
          }else{
             throw new Error("Failed to update profile image")
          }

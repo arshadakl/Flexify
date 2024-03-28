@@ -58,10 +58,12 @@ export class FreelancerController {
     // ============================
     async signup(req: Request, res: Response): Promise<void> {
         const { username, email, password } = req.body;
+        console.log(req.body);
+        
         const freelancer: Freelancer = { username, email, password };
 
         try {
-            await this.freelancerService.signup(freelancer);
+           const userId = await this.freelancerService.signup(freelancer);
             res.status(201).json({ message: "Freelancer signed up successfully", status: true });
         } catch (error) {
             console.log("failed");
@@ -114,7 +116,7 @@ export class FreelancerController {
             if (decodeResponse.email_verified) {
                 const { name, email, jti } = decodeResponse
                 const data = {
-                    isVerified: 1,isBlocked:"unBlock",
+                    isVerified: 1, isBlocked: "unBlock",
                     username: name, profile: "",
                     email, password: jti || " "
                 }
@@ -136,6 +138,8 @@ export class FreelancerController {
         try {
             const userId = await this.freelancerService.verifyOtp(email, code)
             if (userId) {
+                console.log(userId);
+                
                 res.status(200).json({ message: "user successfully verified", status: true, userId })
             } else {
                 res.json({ status: false, error: "Incorrect OTP, Please try again." });
@@ -166,9 +170,9 @@ export class FreelancerController {
     // ===========================
     async profileCompletion(req: Request, res: Response): Promise<void> {
         try {
-            console.log(req.body);
+            console.log(req.body,"body");
             const response = await this.freelancerService.profileCompletionServ(req.body);
-            // console.log(response,"2nd response");
+            console.log(response,"2nd response");
             if ("token" in response && "options" in response && "freelancer" in response) {
                 const { token, options, freelancer } = response;
 
@@ -176,7 +180,7 @@ export class FreelancerController {
 
                 if (token && options) {
                     res.status(200).cookie("token", token, options).json({
-                        success: true,
+                        status: true,
                         token,
                         freelancer,
                     });
@@ -196,66 +200,66 @@ export class FreelancerController {
     // ===========================
     async profileUpdate(req: Request, res: Response): Promise<void> {
         try {
-            console.log(req.body,"new profile");
+            console.log(req.body, "new profile");
             const response = await this.freelancerService.profileUpdateServ(req.body);
-            console.log(response,"2nd response");
+            console.log(response, "2nd response");
             if (response) {
                 // console.log("control response: ", response);
-                res.status(200).json({status:true,response})
+                res.status(200).json({ status: true, response })
             } else {
                 throw new Error("Token or options are undefined");
             }
-        
-    } catch(error) {
-        console.error("Error in profile completion:", error);
-        res.json({ status: false });
-    }
-}
 
-
-    async profiledata(req: Request, res: Response): Promise < void> {
-    try {
-        const token = req.headers.authorization
-            if(token) {
-            const userDetails = await this.freelancerService.profiledataService(token)
-            res.status(200).json({ userDetails, status: true })
-        }else{
-            throw new Error("Invalid Request")
+        } catch (error) {
+            console.error("Error in profile completion:", error);
+            res.json({ status: false });
         }
-
-    } catch(error) {
-        console.log(error);
-        res.json({ error, status: false });
-
     }
-}
 
 
-     async uploadImage(req: Request, res: Response): Promise < void> {
-    try {
-        if(!req.file) {
-    res.status(400).send('No file uploaded');
-    return;
-}
-const token = req.headers.authorization
-console.log(token);
+    async profiledata(req: Request, res: Response): Promise<void> {
+        try {
+            const token = req.headers.authorization
+            if (token) {
+                const userDetails = await this.freelancerService.profiledataService(token)
+                res.status(200).json({ userDetails, status: true })
+            } else {
+                throw new Error("Invalid Request")
+            }
 
-if (!token) {
-    throw new Error('Invalid token')
-}
+        } catch (error) {
+            console.log(error);
+            res.json({ error, status: false });
 
-const result = await uploadToCloudinary(req.file.path);
-console.log(result);
-const userData = await this.freelancerService.updatePrfileImage(token, result.url)
-fs.unlinkSync(req.file.path);
-userData.password = ""
-userData.OTP = 0
-res.status(200).json({ userData, status: true })
-          } catch (error) {
-    console.error('Error uploading image to Cloudinary:', error);
-    res.status(500).send('Error uploading image to Cloudinary');
-}
-      }
+        }
+    }
+
+
+    async uploadImage(req: Request, res: Response): Promise<void> {
+        try {
+            if (!req.file) {
+                res.status(400).send('No file uploaded');
+                return;
+            }
+            const token = req.headers.authorization
+            console.log(token);
+
+            if (!token) {
+                throw new Error('Invalid token')
+            }
+
+            const result = await uploadToCloudinary(req.file.path);
+            console.log(result);
+            const userData = await this.freelancerService.updatePrfileImage(token, result.url)
+            fs.unlinkSync(req.file.path);
+            userData.password = ""
+            userData.OTP = 0
+            res.status(200).json({ userData, status: true })
+        } catch (error) {
+            console.error('Error uploading image to Cloudinary:', error);
+            res.status(400).json({error,status:false});
+        }
+    }
 
 
 }

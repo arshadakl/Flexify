@@ -71,6 +71,8 @@ export class FreelancerService {
             mailService.sendOtp(freelancer.email, OTP)
         }
         const userData = await this.freelancerRepository.findByEmail(freelancer.email)
+        console.log(userData,"userData in sign");
+        
         return userData?.id
 
 
@@ -127,15 +129,23 @@ export class FreelancerService {
 
     async profileCompletionServ(formData: any): Promise<Freelancer | FreelancerDetails> {
         const response: any = await this.freelancerRepository.FreelancerDetailsAdd(formData)
-        const FreelancerDs = await this.freelancerRepository.findById(response.user)
+        
+        console.log(response,"test");
+        const FreelancerDs = await this.freelancerRepository.find_ById(response.user)
+        console.log(FreelancerDs);
+        
         if (FreelancerDs) {
             const credentialsResponse = await this.jwtCreation(FreelancerDs)
+            console.log(credentialsResponse,"datatatatata");
+            
             return credentialsResponse
         } else {
             throw new Error("wrong")
         }
 
     }
+
+
     async profileUpdateServ(formData: any): Promise<Freelancer | FreelancerDetails> {
         const response: any = await this.freelancerRepository.FreelancerDetailsupdate(formData)  
         console.log(response,"updation");
@@ -204,10 +214,8 @@ export class FreelancerService {
     async updatePrfileImage(token: string,file:string): Promise<any> {
       try {
         const decodedToken = await this.validateJWT(token);
-        // console.log(decodedToken);
         
         const response = await this.freelancerRepository.updateProfileImage(decodedToken.id,file);
-        console.log(response);
         return response
       } catch (error) {
         throw new Error("User not found ")

@@ -1,0 +1,21 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+.signup-banner{
+    background-size: 100%;
+    /* background-repeat: no-repeat; */
+}
+.hero-banner{
+    background-size: cover;
+    
+    background-repeat: no-repeat;
+    background-position: center;
+    /* height: 80vh; */
+}
+.popularCards::-webkit-scrollbar{ 
+        display: none;
+        transition: all 0.4s;
+}
+nav{
+    z-index: 100;
+}

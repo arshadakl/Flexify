@@ -12,7 +12,7 @@ export class ClientService {
     async profileCompletionServ(formData: any): Promise<Freelancer> {
         const response: any = await this.clientRepository.ClientDetailsAdd(formData);
         
-        const clientDs = await this.freelancerRepository.findById(response.user)
+        const clientDs = await this.freelancerRepository.find_ById(response.user)
         console.log(clientDs,"profile completion user");
         if (clientDs) {
             
