@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import { otpApi, reSendOTP } from "../../utils/APIs/FreelancerApi";
 import { useNavigate } from "react-router-dom";
 
-import { Toaster, toast } from "sonner";
+import {  toast } from "sonner";
 import { AuthContext } from "../../utils/config/context";
 
 interface EmailVerificationProps {
@@ -118,7 +118,6 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) =
 
   return (
     <div className="min-h-screen flex items-center content-center">
-      <Toaster richColors position="top-left" />
       <div className="max-w-md lg:w-full mx-auto text-center bg-white px-4 sm:px-8 py-10 rounded-xl shadow">
         <header className="mb-8">
           <h1 className="text-2xl font-bold mb-1">Email Verification</h1>

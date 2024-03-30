@@ -7,54 +7,48 @@ import { profileCompletionForm } from "../ProfileCompletionParts/CompletionForm"
 import { profileUpdate } from "../../utils/APIs/FreelancerApi";
 
 function FreelancerProfileUpdateForm(users:any) {
-  const { setIsEdit,setFreelancerDetails,freelancerDetails } = useContext(AuthContext);
-    const user = users || freelancerDetails
-    const [formData, setFormData] = useState<profileCompletionForm>({
-        firstName: '',
-        lastName: '',
-        Country: '',
-        language: '',
-        skillsList: [],
-        bio: '',
-        user: '',
-      });
+  const { setIsEdit, setFreelancerDetails, freelancerDetails } = useContext(AuthContext);
+  const user = users || freelancerDetails;
+  const [formData, setFormData] = useState<profileCompletionForm>({
+    firstName: '',
+    lastName: '',
+    Country: '',
+    language: '',
+    skillsList: [],
+    bio: '',
+    user: '',
+  });
 
+  useEffect(() => {
+    console.log(user.data);
 
-      useEffect(() => {
-        console.log(user.data);
-        
-        if (user && user.data) {
-          setFormData(prevFormData => ({
-            ...prevFormData,
-            firstName: user.data.firstName || prevFormData.firstName,
-            lastName: user.data.lastName || prevFormData.lastName,
-            Country: user.data.Country || prevFormData.Country,
-            language: user.data.language || prevFormData.language,
-            skillsList: user.data.skillsList || prevFormData.skillsList,
-            bio: user.data.bio || prevFormData.bio,
-            user: user.data.user || prevFormData.user,
-          }));
-    
-          // If you need to update the skills state separately
-          setSkills(user.data.skillsList);
-        }
-      }, [user]);
+    if (user && user.data) {
+      setFormData(prevFormData => ({
+        ...prevFormData,
+        firstName: user.data.firstName || prevFormData.firstName,
+        lastName: user.data.lastName || prevFormData.lastName,
+        Country: user.data.Country || prevFormData.Country,
+        language: user.data.language || prevFormData.language,
+        skillsList: user.data.skillsList || prevFormData.skillsList,
+        bio: user.data.bio || prevFormData.bio,
+        user: user.data.user || prevFormData.user,
+      }));
 
-useEffect(() => {
-  console.log(formData, "updated formData");
-}, [formData]);
+      // If you need to update the skills state separately
+      setSkills(user.data.skillsList);
+    }
+  }, [user]);
 
-
+  useEffect(() => {
+    console.log(formData, "updated formData");
+  }, [formData]);
 
   type Skill = string;
   const [input, setInput] = useState<string>("");
-  
-    // const {setFreelancerDetails} = useContext(AuthContext)
- 
+
+  // const {setFreelancerDetails} = useContext(AuthContext)
+
   const [skills, setSkills] = useState<Skill[]>([]);
-
-  
-
 
   const addSkills = () => {
     if (input === "") return;
@@ -66,20 +60,14 @@ useEffect(() => {
 
     const updatedSkills = [...skills, input];
     setSkills(updatedSkills);
-    setFormData({
-        ...formData,
-        skillsList: skills,
-      });
+    setFormData({ ...formData, skillsList: updatedSkills }); // Update skillsList with updatedSkills
     setInput("");
   };
 
   const removeSkill = (skill: string) => {
     const updatedSkills = skills.filter((item) => item !== skill);
     setSkills(updatedSkills);
-    setFormData({
-        ...formData,
-        skillsList: skills,
-      });
+    setFormData({ ...formData, skillsList: updatedSkills }); // Update skillsList with updatedSkills
   };
 
   const handileUpdate = async (e: SyntheticEvent) => {
@@ -124,10 +112,11 @@ useEffect(() => {
     }
 
     console.log("updated data ", formData);
-    const response = await profileUpdate(formData);
-    console.log(response,"user side");
-    
-    setFreelancerDetails(response.response);
+    const updatedData = await profileUpdate(formData);
+    console.log(updatedData,"user side");
+    user.set(updatedData.response)
+    setFreelancerDetails(updatedData.response);
+    toast.success("Profile updated")
     setIsEdit(false)
   };
 

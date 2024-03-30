@@ -1,11 +1,12 @@
-export interface FreelancerInterface {
-    id?: string;
-    username: string;
+// interfaces/Freelancer.ts
+export interface Freelancer {
+    OTP: number;
     email: string;
-    password: string ;
-    OTP?:Number,
-    token?:string,
-    isVerified?:Number
-    profile?:string,
-    isBlocked?:string
-}
+    isBlocked: string;
+    isVerified: boolean;
+    password: string;
+    profile: string;
+    token: string;
+    username: string;
+    _id: string;
+  }

@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import {EmailVerification} from "./OTP";
-import { Toaster, toast } from "sonner";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { AuthContext } from "../../utils/config/context";
@@ -120,7 +120,6 @@ const Signup = ()=> {
         <EmailVerification email={formData.email} />
       ) : (
         <section >
-          <Toaster richColors position="top-left" />
           {/* component */}
       <div className="flex h-screen ">
         {/* Left Pane */}

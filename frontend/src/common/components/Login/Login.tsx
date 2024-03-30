@@ -1,16 +1,25 @@
-import { useContext, useState } from "react";
-import { LoginApi, googleAuthLogin } from "../../utils/APIs/FreelancerApi";
-import { Toaster, toast } from "sonner";
+import {  useState } from "react";
+import {  LoginApi, googleAuthLogin } from "../../utils/APIs/FreelancerApi";
+import {  toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-import { AuthContext } from "../../utils/config/context";
-
+// import { AuthContext } from "../../utils/config/context";
+import { useDispatch } from "react-redux";
+// import { loginFreelancer } from '../../../Redux/Slices/freelancerSlice';
+import { loginStart, loginSuccess, loginFailure } from "../../../Redux/Slices/freelancerSlice"
 // interface EmailVerificationProps {
 //   email: string;
 // }
-function Login() {
-  const { setFreelancerDetails } = useContext(AuthContext);
+
+
+
+
+const Login = () =>{
+  const dispatch = useDispatch()
+
+  // const { setFreelancerDetails } = useContext(AuthContext);
   
+
   interface FormData {
     username: string;
     password: string;
@@ -31,41 +40,72 @@ function Login() {
     });
   };
 
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   // Validation
+  //   if (!formData.username.trim()) {
+  //     toast.error("Please enter a username.");
+  //     return;
+  //   }
+
+  //   if (formData.password.length < 6) {
+  //     toast.error("Password must be at least 6 characters long.");
+  //     return;
+  //   }
+
+
+  //   // All validations passed, proceed with signup
+  //   try {
+  //     const LoginResponse: any = await LoginApi(formData);
+  //     console.log(LoginResponse.status,"reposenseses");
+  //     if (LoginResponse.status) {
+  //       // setIsOTP(true);
+  //       toast.success("Successfully Logined")
+  //       setFreelancerDetails(LoginResponse.freelancer)
+
+  //       const userDataString = JSON.stringify(LoginResponse.freelancer);
+  //       localStorage.setItem('user_data', userDataString);
+
+  //       navigate('/')
+  //     } else {
+  //       toast.error(LoginResponse.error);
+  //     }
+  //   } catch (error) {
+  //     // Handle other errors
+  //     console.error("Error during signup:", error);
+  //     toast.error("Login failed. Please try again.");
+  //   }
+  // };
+
+  // interface LoginFormData {
+  //   username: string;
+  //   password: string;
+  // }
+
+  
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     // Validation
     if (!formData.username.trim()) {
-      toast.error("Please enter a username.");
+      // Handle empty username error
       return;
     }
-
     if (formData.password.length < 6) {
-      toast.error("Password must be at least 6 characters long.");
+      // Handle password length error
       return;
     }
 
-
-    // All validations passed, proceed with signup
     try {
-      const signupResponse: any = await LoginApi(formData);
-      console.log(signupResponse.status,"reposenseses");
-      if (signupResponse.status) {
-        // setIsOTP(true);
-        toast.success("Successfully Logined")
-        setFreelancerDetails(signupResponse.freelancer)
-
-        const userDataString = JSON.stringify(signupResponse.freelancer);
-        localStorage.setItem('user_data', userDataString);
-
-        navigate('/')
-      } else {
-        toast.error(signupResponse.error);
-      }
-    } catch (error) {
-      // Handle other errors
-      console.error("Error during signup:", error);
-      toast.error("Login failed. Please try again.");
+      dispatch(loginStart());
+      console.log("called");
+      const response = await LoginApi(formData);
+      console.log(response,"normal data");
+      
+      dispatch(loginSuccess(response.freelancer));
+      navigate('/')
+    } catch (error:any) {
+      dispatch(loginFailure(error.message));
     }
   };
 
@@ -81,13 +121,17 @@ function Login() {
   const handlGoogleAuth = async(key:string)=>{
     try {
       const response = await googleAuthLogin(key)
-      console.log(response);
+      console.log(response,"google data");
       
       if(response.status){
+        console.log(response.freelancer);
+        
         toast.success("Successfully Logined")
-        setFreelancerDetails(response.freelancer)
-        const userDataString = JSON.stringify(response.freelancer);
-        localStorage.setItem('user_data', userDataString);
+      dispatch(loginSuccess(response.freelancer));
+
+        // setFreelancerDetails(response.freelancer)
+        // const userDataString = JSON.stringify(response.freelancer);
+        // localStorage.setItem('user_data', userDataString);
         navigate('/')
       }else{
         toast.error(response.error)
@@ -96,12 +140,30 @@ function Login() {
       toast.error("Login failed. Please try again.");
     }
   }
+  // const handlGoogleAuth = async(key:string)=>{
+  //   try {
+  //     const response = await googleAuthLogin(key)
+  //     console.log(response);
+      
+  //     if(response.status){
+  //       toast.success("Successfully Logined")
+  //       setFreelancerDetails(response.freelancer)
+  //       const userDataString = JSON.stringify(response.freelancer);
+  //       localStorage.setItem('user_data', userDataString);
+  //       navigate('/')
+  //     }else{
+  //       toast.error(response.error)
+  //     }
+  //   } catch (error) {
+  //     toast.error("Login failed. Please try again.");
+  //   }
+  // }
 
   return (
     <>
       
         <section >
-          <Toaster richColors position="top-left" />
+          {/* <Toaster richColors position="top-left" /> */}
           {/* component */}
       <div className="flex h-screen ">
         {/* Left Pane */}

@@ -1,25 +1,19 @@
+// AxiosInterceptor.tsx
+import React, { useEffect } from 'react';
 import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
+import {  useSelector } from 'react-redux';
 import { profileCompletionForm } from '../../components/ProfileCompletionParts/CompletionForm';
+// import { useNavigate } from 'react-router-dom';
+// import { persistor } from '../../../Redux/store';
+import { handleError } from './ErrorHandle';
 
-const freelancersAPI = axios.create({
+export const freelancersAPI = axios.create({
   baseURL: `${BASE_API_URL}/freelancers`,
 });
 
-// request interceptor
-freelancersAPI.interceptors.request.use(
-  (config) => {
-    const storedDataString = localStorage.getItem('user_data');
-    const user = storedDataString ? JSON.parse(storedDataString) : null;
-
-    if (user) {
-      config.headers['Authorization'] = user.token;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
+// const dispatch = useDispatch();
+// const navigate = useNavigate();
 
 // response interceptor
 freelancersAPI.interceptors.response.use(
@@ -42,6 +36,34 @@ interface VerificationData {
   email: string;
   code: number;
 }
+
+const AxiosInterceptor: React.FC = () => {
+  const user = useSelector((state: any) => state.freelancer);
+  console.log(user.freelancer,"interapsent");
+  
+  useEffect(() => {
+    const requestInterceptor = freelancersAPI.interceptors.request.use(
+      (config) => {
+        if (user) {
+          config.headers['Authorization'] = user.freelancer.token;
+        }
+
+        return config;
+      },
+      (error) => Promise.reject(error)
+    );
+    // console.log("called intresepter");
+    
+
+    // Clean up the request interceptor when the component unmounts
+    return () => {
+      freelancersAPI.interceptors.request.eject(requestInterceptor);
+    };
+  }, [user]);
+
+  return null; 
+};
+
 
 export const LoginApi = async ({ username, password }: LoginData) => {
   try {
@@ -84,14 +106,14 @@ export const profileCompletion = async (formData: profileCompletionForm) => {
   try {
     const response = await freelancersAPI.post('/profileCompletion', formData);
     console.log(response);
-    
+
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error)) {
-    //   throw new Error(`Profile completion failed: ${error.message}`);
-    // } else {
-    //   throw new Error('An unexpected error occurred during profile completion.');
-    // }
+    if (axios.isAxiosError(error)) {
+      throw new Error(`Profile completion failed: ${error.message}`);
+    } else {
+      throw new Error('An unexpected error occurred during profile completion.');
+    }
   }
 };
 
@@ -125,7 +147,7 @@ export const googleAuth = async (key: string) => {
   try {
     const response = await freelancersAPI.post('/googleAuth', { key });
     console.log(response);
-    
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -140,25 +162,34 @@ export const googleAuthLogin = async (key: string) => {
   try {
     const response = await freelancersAPI.post('/googleAuthLogin', { key });
     return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Google authentication login failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during Google authentication login.');
-    }
+  } catch (error: any) {
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(`Google authentication login failed: ${error.message}`);
+    // } else {
+    //   throw new Error('An unexpected error occurred during Google authentication login.');
+    // }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
 export const fetchProfileData = async () => {
   try {
+    console.log("called api");
+
     const response = await freelancersAPI.get('/profileData');
+    console.log(response);
+    
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Fetching profile data failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred while fetching profile data.');
-    }
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(`Fetching profile data failed: ${error.message}`);
+    // } else {
+    //   throw new Error('An unexpected error occurred while fetching profile data.');
+    // }
+    const errorMessage = handleError(error);
+    throw errorMessage;
+
   }
 };
 
@@ -169,8 +200,8 @@ export const uploadProfileImage = async (formData: FormData) => {
         'Content-Type': 'multipart/form-data',
       },
     });
-    console.log(response,"api res");
-    
+    console.log(response, "api res");
+
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -180,3 +211,5 @@ export const uploadProfileImage = async (formData: FormData) => {
     }
   }
 };
+
+export default AxiosInterceptor;

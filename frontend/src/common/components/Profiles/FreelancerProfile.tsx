@@ -1,26 +1,40 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/config/context";
 import { useNavigate } from "react-router-dom";
-import { fetchProfileData } from "../../utils/APIs/FreelancerApi";
+import AxiosInterceptor, { fetchProfileData } from "../../utils/APIs/FreelancerApi";
 import { profileCompletionForm } from "../ProfileCompletionParts/CompletionForm";
 import ImageUploadComponent from "../ExtraComponents/ImageUploadComponent";
 import FreelancerProfileUpdateForm from "../ExtraComponents/FreelancerProfileUpdateForm";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../Redux/Slices/freelancerSlice";
+import { persistor } from "../../../Redux/store";
 
 function FreelancerProfilePage() {
-  const { freelancerDetails, setFreelancerDetails,isEdit,setIsEdit} = useContext(AuthContext);
+
+  const {  isEdit,setIsEdit} = useContext(AuthContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const profileData = useSelector((state: any) => state.freelancer);
+  const freelancerDetails = profileData.freelancer
   const [baseData, setBaseData] = useState<profileCompletionForm>();
 //    const [isEdit, setIsEdit] = useState(false)
 //   const [imageSrc, setImageSrc] = useState<string>("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg");
 
+const handleLogout = () => {
+  console.log("called to logout");
+  
+  dispatch(logout()); // Dispatch the logout action
+  persistor.purge(); // Then purge the persisted data
+  navigate('/')
+};
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(freelancerDetails);
-      if (freelancerDetails && freelancerDetails._id) {
+      console.log(freelancerDetails,"redux profile data");
+      if (freelancerDetails.token) {
         try {
           const response = await fetchProfileData();
-          console.log(response.userDetails);
+          console.log(response,"das das dsad");
           setBaseData(response.userDetails);
           console.log(baseData,"base data here..");
           
@@ -35,38 +49,16 @@ function FreelancerProfilePage() {
     fetchData();
   }, [freelancerDetails, navigate]);
 
-
-  // useEffect(() => {
-  //   const storedDataString = localStorage.getItem('user_data');
-  //   if(storedDataString){
-  //     let obj = JSON.parse(storedDataString)
-  //     setFreelancerDetails(obj)
-  //   }
-  // }, [isEdit]);
-
-
-  // useEffect(() => {
-  //   if(freelancerDetails){
-  //       if(freelancerDetails?.profile!=""){
-  //           setImageSrc(freelancerDetails?.profile)
-  //       }else{
-  //           setImageSrc("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg")
-  //       }
-  //   }
-  // }, [freelancerDetails])
-  
-  const logoutHandler = () => {
-    localStorage.removeItem("user_data");
-    setFreelancerDetails(null);
-  };
+ 
   return (
     <>
+    <AxiosInterceptor/>
       <div className="bg-gray-50 :min-h-screen pb-10">
         <div className="flex md:flex-row flex-col text-gray-900 w-screen gap-10 px-10 pt-12">
 
 
-          <div className="w-2/5 md:w-1/1">
-            <div className="w-full max-w-md mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
+          <div className="md:w-2/5 w-1/1">
+            <div className="w-4/5 md:1/2  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-end px-4 pt-4">
                 
                 <p onClick={()=>{ isEdit ? setIsEdit(false) : setIsEdit(true) }} className="text-blue-800 cursor-pointer">  {isEdit ? "back" : "Edit " }</p>
@@ -86,7 +78,7 @@ function FreelancerProfilePage() {
                 </div>
               </div>
 
-              <div className="flex flex-col  items-center ">
+              <div className="flex flex-col   items-center ">
 
 
                 {freelancerDetails?.profile=="" ? 
@@ -110,7 +102,7 @@ function FreelancerProfilePage() {
                   Freelancer
                 </span>
                 <button
-                  onClick={logoutHandler}
+                  onClick={handleLogout}
                   type="button"
                   className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-20 py-2.5 me-2 my-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
                 >
@@ -133,7 +125,7 @@ function FreelancerProfilePage() {
                     <div className="flex justify-between space-x-4 rtl:space-x-reverse">
                       <div className="flex-shrink-0 font-medium">
                         <i className="fa-light fa-envelope m-2"></i>{" "}
-                        arshad@gmal.com
+                        {profileData.freelancer.email}
                       </div>
 
                       <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white"></div>
@@ -143,7 +135,7 @@ function FreelancerProfilePage() {
               </div>
             </div>
 
-            <div className="w-full mt-5 max-w-md mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-4/5 md:1/2  mt-5  mx-auto  border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex flex-col items-center">
                 <ul className="w-full px-5 py-3 divide-y divide-gray-200 dark:divide-gray-700">
                   <li className="pb-3 sm:pb-4">
@@ -195,7 +187,7 @@ function FreelancerProfilePage() {
 
           
 
-          <div className="w-3/5 md:w-1/1 ">
+          <div className="md:w-3/5 w-1/1 ">
             
             
             

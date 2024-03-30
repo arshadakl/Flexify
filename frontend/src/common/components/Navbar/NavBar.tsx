@@ -1,13 +1,28 @@
-import { useContext, useEffect } from "react"
+import {  useEffect } from "react"
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate,useLocation  } from "react-router-dom"
-import { AuthContext } from "../../utils/config/context"
-import { Toaster, toast } from 'sonner'
+// import { AuthContext } from "../../utils/config/context"
+import { toast } from 'sonner'
+import { logout } from "../../../Redux/Slices/freelancerSlice";
+import { persistor } from "../../../Redux/store";
+// import { handleLogout } from "../../services/freelancer";
+
 
 function NavBar({bg,fixed}:{bg:string,fixed:string}) {
+  const freelancerDetails = useSelector((state: any) => state.freelancer);
+  console.log(freelancerDetails,"redux data");
   const navigate = useNavigate()
-  const {freelancerDetails} = useContext(AuthContext)
   const location = useLocation();
   const {signpopup} = location.state?.signpopup || '';
+  const dispatch = useDispatch()
+
+  
+  const handleLogout = () => {
+    dispatch(logout());
+    persistor.purge(); 
+    navigate('/')
+  };
+ 
   useEffect(() => {
     console.log(signpopup);
     
@@ -16,15 +31,11 @@ function NavBar({bg,fixed}:{bg:string,fixed:string}) {
     }
   }, [signpopup])
   
-  useEffect(() => {
-    console.log(freelancerDetails);
-    
-  }, [freelancerDetails])
-  
+
 
   return (
     <>
-    <Toaster richColors position="bottom-right" />
+    
     <nav className={`transition duration-300 ease-out  border-gray-200 ${bg=="none" ? "text-white bg-transparent" : "text-black bg-gray-50"} ${fixed == "top" ? "fixed top-0 left-0 right-0" : ""}`}>
   <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
     
@@ -76,7 +87,15 @@ function NavBar({bg,fixed}:{bg:string,fixed:string}) {
             Discover works
           </a>
         </li>
-       {!freelancerDetails ?<li>
+        <li>
+          <a
+            onClick={handleLogout}
+            className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+          >
+            Logout
+          </a>
+        </li>
+       {!freelancerDetails.freelancer ?<li>
           <a onClick={()=>navigate('/login')} className="block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
           >
             Sign In 
@@ -84,11 +103,11 @@ function NavBar({bg,fixed}:{bg:string,fixed:string}) {
         </li>
         : null}
         <li>
-          {freelancerDetails !== null ? 
+          {freelancerDetails.freelancer !== null ? 
           <>
 
           <a onClick={()=>navigate('/profile')} className="outline outline-2 outline-offset-8  block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0 :text-white md::hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent" >
-            {freelancerDetails?.username}
+            {freelancerDetails.freelancer.username}
           </a>
 
 
