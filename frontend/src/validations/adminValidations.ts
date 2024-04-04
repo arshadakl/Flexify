@@ -1,5 +1,5 @@
 
-import { Admin, CategoryInter } from "../interfaces/Admin";
+import { Admin, CategoryInter, SubategoryInter } from "../interfaces/Admin";
 
 export const adminLoginValid = (admin: Admin): string => {
   console.log(admin);
@@ -24,6 +24,20 @@ export const addCategoryValid = (data: CategoryInter): string => {
 
   if (!data.description.trim()) {
     return "Please enter description.";
+  }
+  return "success"
+}
+
+export const addSubCategoryValid = (data: SubategoryInter): string => {
+  if (!data.name.trim()) {
+    return "Please enter Name of SubCategory.";
+  }
+
+  if (!data.description.trim()) {
+    return "Please enter description.";
+  }
+  if (!data.category.trim()) {
+    return "Please Select Main Category.";
   }
   return "success"
 }

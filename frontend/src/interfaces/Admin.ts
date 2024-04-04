@@ -8,3 +8,8 @@ export interface CategoryInter{
     title:string
     description:string
 }
+export interface SubategoryInter{
+    name:string
+    description:string,
+    category:string
+}

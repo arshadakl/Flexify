@@ -1,7 +1,9 @@
+import { useNavigate } from "react-router-dom"
 import Sidebar from "./Sidebar/Sidebar"
 // import UserManagment from "./userManagment"
 
 function DefaultLayout() {
+  const navigate = useNavigate()
   return (
     <>
      <nav className="fixed top-0 z-50 w-full bg-gray-900 border-gray-700 border-b-[1px]   dark:bg-gray-800 dark:border-gray-700">
@@ -30,13 +32,13 @@ function DefaultLayout() {
                   />
                 </svg>
               </button>
-              <a className="flex ms-2 md:me-24">
+              <p onClick={()=>navigate('/admin')} className="flex ms-2 md:me-24">
                 <img
                   src="/images/FlexifyWhite.png"
                   className="h-12 "
                   alt="FlowBite Logo"
                 />
-              </a>
+              </p>
             </div>
             <div className="flex items-center">
               <div className="flex items-center ms-3">

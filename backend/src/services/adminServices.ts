@@ -4,7 +4,7 @@ import { AdminRepository } from "../repositories/adminRepository";
 import { AdminRepositoryImpl } from "../repositories/adminRepositoryImpl";
 import bcrypt from "bcrypt"
 import { AdminJwtCreation } from "../utils/jwtCreation";
-import { ICategory } from "../interfaces/adminInterface";
+import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 
 
 
@@ -85,6 +85,7 @@ export class AdminServices {
         }
     }
 
+
     async getAllCategories():Promise<ICategory[] | undefined> {
         try {
             const allCategories = await this.adminRepository.getAllCategories()
@@ -104,6 +105,55 @@ export class AdminServices {
             }
             const deleteResponse = await this.adminRepository.deleteCategory(id)
             return await this.adminRepository.getAllCategories()
+            
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    //subcategory
+    async addSubCategoryServ(title:string,description:string,category:string):Promise<Boolean | undefined>{
+        try {
+            const isCategory = await this.adminRepository.findCategoryById(category)
+            if(!isCategory){
+                throw new Error("Main Category is not exists")
+            }
+            const isSubCategory = await this.adminRepository.findSubCategoryByName(title)
+            if(isSubCategory){
+                throw new Error("This Subcategory already exists")
+            }
+            const Subcategory = await this.adminRepository.addNewSubCategory(title, description,category)
+            console.log(Subcategory);
+            if(Subcategory){
+                return true
+            }
+            
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getAllSubCategories():Promise<ISubcategory[] | undefined> {
+        try {
+            const allCategories = await this.adminRepository.getAllSubCategories()
+           
+            if(allCategories){
+                return allCategories
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async deleteSubCategoryServ(id:string):Promise<ISubcategory[] | undefined> {
+        try {
+            const categories = await this.adminRepository.getOneSubCategorie(id)
+            if(!categories){
+                throw new Error("id not found")
+            }
+            const deleteResponse = await this.adminRepository.deleteSubCategory(id)
+            return await this.adminRepository.getAllSubCategories()
             
         } catch (error:any) {
             throw new Error(error.message)

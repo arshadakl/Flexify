@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
-import { Admin, CategoryInter } from '../../../interfaces/Admin';
+import { Admin, CategoryInter, SubategoryInter } from '../../../interfaces/Admin';
 
 const adminAPI = axios.create({
     baseURL: `${BASE_API_URL}/admin`
@@ -51,6 +51,8 @@ export const AddCategoryAPI = async(data:CategoryInter)=>{
 }
 
 
+
+
 export const getAllCategories = async ()=>{
     try {
         const response = await adminAPI.get('/allcategories');
@@ -64,6 +66,42 @@ export const getAllCategories = async ()=>{
 export const deleteCategoryAPI = async (id:string)=>{
     try {
         const response = await adminAPI.delete(`/deleteCategory?id=${id}`);
+        console.log(response);
+        return response.data
+    } catch (error) {
+        
+    }
+}
+
+//subcategory
+export const AddSubcategoryAPI = async(data:SubategoryInter)=>{
+    try {
+        console.log(data, "inspection");
+        
+        const response = await adminAPI.post('/addsubcategory',data)
+        // console.log(response);
+        return response.data
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
+export const getAllSubCategories = async ()=>{
+    try {
+        const response = await adminAPI.get('/allsubcategories');
+        console.log(response);
+        return response.data
+    } catch (error) {
+        
+    }
+}
+
+export const deleteSubCategoryAPI = async (id:string)=>{
+    try {
+        const response = await adminAPI.delete(`/deletesubCategory?id=${id}`);
         console.log(response);
         return response.data
     } catch (error) {

@@ -4,9 +4,9 @@ const AdminModel = require('../models/Admin').Admin
 const FreelancerModel = require('../models/Freelancer').Freelancer
 
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
-import { Category } from "../models/Category";
+import { Category, Subcategory } from "../models/Category";
 import { promises } from "dns";
-import {  ICategory } from "../interfaces/adminInterface";
+import {  ICategory, ISubcategory } from "../interfaces/adminInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 
@@ -27,10 +27,16 @@ export class AdminRepositoryImpl implements AdminRepository{
     async findAdminByName(adminId: string): Promise<any | undefined>{
        return await AdminModel.findOne({adminId: adminId})
     }
-
+    //main category
     async findCategoryByName(name: string): Promise<any | undefined>{
         return await Category.findOne({title: name})
     }
+
+    async findCategoryById(id: string): Promise<any | undefined>{
+        return await Category.findOne({_id: id})
+    }
+
+    
 
     async addNewCategory(title: string,description:string): Promise<any | undefined>{
         return await Category.create({title: title, description: description})
@@ -46,6 +52,27 @@ export class AdminRepositoryImpl implements AdminRepository{
 
     async deleteCategory(id:string):Promise<any> {
         return await Category.deleteOne({_id:id})
+    }
+
+    //sucatecory 
+    async findSubCategoryByName(name: string): Promise<any | undefined>{
+        return await Subcategory.findOne({name: name})
+    }
+
+    async addNewSubCategory(name: string,description:string,category:string): Promise<any | undefined>{
+        return await Subcategory.create({name: name, description: description,category: category})
+    }
+
+    async getAllSubCategories():Promise<ISubcategory[] | undefined>{
+        return await Subcategory.find({})
+    }
+
+    async getOneSubCategorie(id:string):Promise<ISubcategory | undefined | null> {
+        return await Subcategory.findOne({_id:id})
+    }
+
+    async deleteSubCategory(id:string):Promise<any> {
+        return await Subcategory.deleteOne({_id:id})
     }
 }
    

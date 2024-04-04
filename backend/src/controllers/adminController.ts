@@ -60,6 +60,8 @@ export class AdminController {
         }
     }
 
+    
+
     //get all categories
     async allCategories(req: Request, res: Response): Promise<any> {
         try {
@@ -82,6 +84,53 @@ export class AdminController {
                 throw new Error("id is missing")
             }
             const categories = await this.AdminService.deleteCategoryServ(id)
+            res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    //for add new Sub categories
+    async addSubCategory(req: Request, res: Response): Promise<any> {
+        const { name, description,category } = req.body
+        console.log(req.body);
+        
+        console.log(name, description);
+        try {
+            const categorie = await this.AdminService.addSubCategoryServ(name, description,category)
+            if (categorie) {
+                const updatedData = await this.AdminService.getAllSubCategories()
+                res.status(200).json({ status: 'success', data: updatedData })
+            }
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+
+    
+    //get all Subcategories
+    async allSubCategories(req: Request, res: Response): Promise<any> {
+        try {
+            const categories = await this.AdminService.getAllSubCategories()
+            console.log(categories)
+            
+            res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    //delete Subcategorie
+    async deleteSubCategory(req: Request, res: Response): Promise<any> {
+        try {
+            const id: string = req.query.id as string;
+            console.log(id);
+            
+            if(!id){
+                throw new Error("id is missing")
+            }
+            const categories = await this.AdminService.deleteSubCategoryServ(id)
             res.status(200).json({ status: 'success', data: categories })
         } catch (error: any) {
             res.json({ status: false, error: error.message })
