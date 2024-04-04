@@ -104,6 +104,7 @@ export class AdminServices {
                 throw new Error("id not found")
             }
             const deleteResponse = await this.adminRepository.deleteCategory(id)
+            const deleteSubCategory = await this.adminRepository.deleteSubCategoryByMain(id)
             return await this.adminRepository.getAllCategories()
             
         } catch (error:any) {

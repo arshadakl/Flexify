@@ -23,6 +23,7 @@ export interface AdminRepository {
     getAllSubCategories():Promise<ISubcategory[] | undefined>
     getOneSubCategorie(id:string):Promise<ISubcategory | undefined | null> 
     deleteSubCategory(id:string):Promise<any>
+    deleteSubCategoryByMain(category:string):Promise<any>
 
 }
 

@@ -74,5 +74,9 @@ export class AdminRepositoryImpl implements AdminRepository{
     async deleteSubCategory(id:string):Promise<any> {
         return await Subcategory.deleteOne({_id:id})
     }
+
+    async deleteSubCategoryByMain(category:string):Promise<any> {
+        return await Subcategory.deleteMany({category:category})
+    }
 }
    
