@@ -5,24 +5,15 @@ import FreelancerRoute from './Routes/FreelancerRoute';
 // import { AuthContext } from './common/utils/config/context';
 import AdminRouter from './Routes/AdminRouter';
 import ClientRouter from './Routes/ClientRouter';
+import { useEffect } from 'react';
+import {initFlowbite} from 'flowbite'
 
 
 function App() {
-  // const {setFreelancerDetails} = useContext(AuthContext)
-  // // const [user,setUser]= useState(false)
 
-  // useEffect(() => { 
-    
-  //   const storedDataString = localStorage.getItem('user_data');
-  //   if(storedDataString){
-  //     let obj = JSON.parse(storedDataString)
-  //     setFreelancerDetails(obj)
-  //   }
-    
-  // }, [])
-  
-
-  
+useEffect(() => {
+  initFlowbite()
+}, [])
 
   return (
     <BrowserRouter>

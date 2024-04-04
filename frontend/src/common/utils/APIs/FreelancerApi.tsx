@@ -32,9 +32,14 @@ interface SignupData {
   password: string;
 }
 
-interface VerificationData {
+export interface VerificationData {
   email: string;
   code: number;
+}
+
+interface resetPasswordData{
+  password: string;
+  token: string;
 }
 
 const AxiosInterceptor: React.FC = () => {
@@ -99,6 +104,32 @@ export const otpApi = async (verificationData: VerificationData) => {
     } else {
       throw new Error('An unexpected error occurred during OTP verification.');
     }
+  }
+};
+
+export const otpApiForgotpassword = async (verificationData: VerificationData) => {
+  try {
+    const response = await freelancersAPI.post('/forgotpasswordotp', verificationData);
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`OTP verification failed: ${error.message}`);
+    } else {
+      throw new Error('An unexpected error occurred during OTP verification.');
+    }
+  }
+};
+
+export const passwordReset = async (data:resetPasswordData) => {
+  try {
+    const response = await freelancersAPI.post('/passwordreset', data);
+    return response.data;
+  } catch (error: unknown) {
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(`OTP verification failed: ${error.message}`);
+    // } else {
+    //   throw new Error('An unexpected error occurred during OTP verification.');
+    // }
   }
 };
 
@@ -211,5 +242,23 @@ export const uploadProfileImage = async (formData: FormData) => {
     }
   }
 };
+
+
+export const forgotPassword = async (email: string) => {
+  try {
+    const response = await freelancersAPI.post('/forgotpassword', { email });
+    console.log(response);
+
+    return response.data;
+  } catch (error: unknown) {
+    // if (axios.isAxiosError(error)) {
+    //   throw new Error(`Google authentication failed: ${error.message}`);
+    // } else {
+    //   throw new Error('An unexpected error occurred during Google authentication.');
+    // }
+  }
+};
+
+
 
 export default AxiosInterceptor;

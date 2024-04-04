@@ -87,9 +87,33 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         return await FreelancerModel.updateOne({id,isVerified:1})
     }
 
-    async setNewOTP(email:string,otp:number){
-        return await Freelancer.updateOne({email,OTP:otp})
+    async setNewOTP(email:string,otp:number){ 
+        return await Freelancer.updateOne({email:email},
+            {
+                $set:{OTP:otp},
+                
+            }
+            )
+        
     }
+    async cleanOTP(email:string){
+        return await Freelancer.updateOne({email:email},{$set:{OTP:0}})
+    }
+
+    // async updatePassword(id:string, password:string):Promise<any>{
+    //     return await Freelancer.updateOne({_id:id},{$set:{password:password}})
+    // }
+
+    async updatePassword(id: string, password: string): Promise<any> {
+        return await Freelancer.updateOne(
+          { _id: id },
+          {
+            $set: { password: password },
+            $currentDate: { updatedAt: true }, // Update the updatedAt field with the current timestamp
+          }
+        );
+      }
+
 
     async findDetailsById(id: string): Promise<FreelancerDetails | null> {
         console.log("implement id",id);

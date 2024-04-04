@@ -1,11 +1,12 @@
-import React, { SyntheticEvent, useContext, useState } from "react";
+import React, { SyntheticEvent, useState } from "react";
 import { Toaster, toast } from "sonner";
-import { AuthContext } from "../../utils/config/context";
+// import { AuthContext } from "../../utils/config/context";
 import { profileCompletion } from "../../utils/APIs/FreelancerApi";
 
 import { useNavigate } from "react-router-dom";
 import { profileCompletionClient } from "../../utils/APIs/ClientApi";
-
+import { useDispatch } from "react-redux";
+import {  loginSuccess} from "../../../Redux/Slices/freelancerSlice";
 export interface profileCompletionForm {
   firstName: string;
   lastName: string;
@@ -28,9 +29,10 @@ export interface profileCompletionFormClient {
 const Profile = ({ userType }: { userType: string }) => {
   const [skills, setSkills] = useState<{ id: number; skill: string }[]>([]);
   const [input, setInput] = useState<string>("");
-  const { setFreelancerDetails } = useContext(AuthContext);
+  // const { setFreelancerDetails } = useContext(AuthContext);
   const navigate = useNavigate();
   const userId = localStorage.getItem("id");
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState<profileCompletionForm>({
     firstName: "",
@@ -151,13 +153,16 @@ const Profile = ({ userType }: { userType: string }) => {
 
     const response = await profileCompletion(formData);
     if (response.status) {
-      setFreelancerDetails(response.freelancer);
-      const userDataString = JSON.stringify(response.freelancer);
-      localStorage.setItem("user_data", userDataString);
-      navigate("/", { state: { signpopup: true } });
+      dispatch(loginSuccess(response.freelancer));
+
+      // setFreelancerDetails(response.freelancer);
+      // const userDataString = JSON.stringify(response.freelancer);
+      // localStorage.setItem("user_data", userDataString);
+      navigate("/");
       console.log("Form submitted successfully");
     }else{
       toast.error("some error occurred")
+      
     }
   };
 
@@ -203,8 +208,10 @@ const Profile = ({ userType }: { userType: string }) => {
     console.log("updated data ", formDataClient);
 
     const response = await profileCompletionClient(formDataClient);
-    setFreelancerDetails(response.freelancer);
-    navigate("/", { state: { signpopup: true } });
+    // setFreelancerDetails(response.freelancer);
+    dispatch(loginSuccess(response.freelancer));
+
+    navigate("/");
     console.log("Form submitted successfully");
   };
 

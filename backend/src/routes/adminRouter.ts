@@ -9,7 +9,12 @@ const adminRepository = new AdminRepositoryImpl();
 const adminService = new AdminServices(adminRepository);
 const adminController = new AdminController(adminService)
 
+
+router.post('/login',adminController.login.bind(adminController));
 router.get('/getallusers',adminController.getAllUsers.bind(adminController));
 router.patch('/blockuser',adminController.blockUser.bind(adminController));
+router.post('/addcategory',adminController.addCategory.bind(adminController));
+router.get('/allcategories',adminController.allCategories.bind(adminController));
+router.delete('/deleteCategory',adminController.deleteCategory.bind(adminController));
 
 export default router;

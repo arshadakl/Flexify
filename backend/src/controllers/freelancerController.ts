@@ -48,8 +48,9 @@ export class FreelancerController {
 
             //     res.status(200).json({freelancer,status:true});
             // } 
-        } catch (error) {
-            res.json({ error: "Invalid credentials", status: false });
+        } catch (error:any) {
+            // res.json({ error: "Invalid credentials", status: false });
+            res.status(400).json({ error: error.message,status: false });
         }
     }
 
@@ -73,14 +74,17 @@ export class FreelancerController {
         }
     }
 
+
     async GoogleAuthLogin(req: Request, res: Response): Promise<void> {
         const { key } = req.body
         console.log(key);
 
         try {
             const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
+            
             if (decodeResponse.email_verified) {
                 const response = await this.freelancerService.GoogleLoginEmailValidation(decodeResponse.email)
+                console.log(response,"for test      s ");
 
                 if ("token" in response && "options" in response && "freelancer" in response) {
                     const { token, options, freelancer } = response;
@@ -102,8 +106,11 @@ export class FreelancerController {
                     throw new Error("Token or options are undefined");
                 }
             }
-        } catch (error) {
-            res.json({ error: "User not found", status: false });
+        } catch (error:any) {
+            console.log(error.message);
+            
+            // res.json({ error: "User not found", status: false });
+            res.json({ error: error.message,status: false });
         }
     }
 
@@ -136,15 +143,20 @@ export class FreelancerController {
     async OtpVerification(req: Request, res: Response): Promise<void> {
         const { email, code } = req.body
         try {
-            const userId = await this.freelancerService.verifyOtp(email, code)
-            if (userId) {
-                console.log(userId);
+            const user = await this.freelancerService.OTPVerificationServ(email, code)
+            if(user.status){
+                const response= await this.freelancerService.doVerifyOtp(user.id)
+                if (user.id) {
+                console.log(user.id);
                 
-                res.status(200).json({ message: "user successfully verified", status: true, userId })
+                res.status(200).json({ message: "user successfully verified", status: true, userId:user.id })
             } else {
                 res.json({ status: false, error: "Incorrect OTP, Please try again." });
 
             }
+            }
+            // const userId = await this.freelancerService.OTPVerificationServ()
+            
 
         } catch (error) {
             res.json({ error: (error as Error).message, status: false });
@@ -163,6 +175,25 @@ export class FreelancerController {
 
         } catch (error) {
 
+        }
+    }
+
+        //signup
+    // ============================
+    async forgotpassword(req: Request, res: Response): Promise<void> {
+        const { email} = req.body;
+        try {
+            const isUser = await this.freelancerService.forgotPass(email)
+            if(isUser) {
+                const otpGenarte = await this.freelancerService.reSendotpServ(email)
+                console.log(otpGenarte);
+                res.status(200).json({ message: `Verification code sent to ${email}. Check your inbox to reset password.`, status: true });
+
+            }
+            
+        } catch (error:any) {
+            console.log("failed");
+            res.json({ error: error.message, status: false });
         }
     }
 
@@ -218,8 +249,12 @@ export class FreelancerController {
 
 
     async profiledata(req: Request, res: Response): Promise<void> {
+        // res.status(401).json({message : "You are blocked by admin"})
         try {
+            // console.log(req.headers);
             const token = req.headers.authorization
+            console.log(token,"controller token");
+            
             if (token) {
                 const userDetails = await this.freelancerService.profiledataService(token)
                 res.status(200).json({ userDetails, status: true })
@@ -258,6 +293,37 @@ export class FreelancerController {
         } catch (error) {
             console.error('Error uploading image to Cloudinary:', error);
             res.status(400).json({error,status:false});
+        }
+    }
+
+
+    async forgotPasswordOTP(req: Request, res: Response):Promise<void>{
+        const { email, code } = req.body
+        console.log(email, code);
+        
+        try {
+            const user = await this.freelancerService.OTPVerificationServ(email, code)
+            if(user.status){
+                const response = await this.freelancerService.managePreResetpassword(email)
+                if(response){
+                    res.status(201).json({status:true,token:response,message:"OTP verification successful. Please proceed to reset your password"})
+                }
+            }
+        } catch (error:any) {
+            res.json({status:false,error:error.message})
+        }
+    }
+
+
+    async resetPassword(req: Request, res: Response):Promise<void>{
+        const { password, token } = req.body
+        try {
+            const response = await this.freelancerService.managePostResetpassword(password,token)
+            if(response){
+                res.status(201).json({status:true,message:"All done! Your password is now updated"})
+            }
+        } catch (error:any) {
+            res.json({status:false,error:error.message})
         }
     }
 

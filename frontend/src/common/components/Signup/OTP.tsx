@@ -5,11 +5,12 @@ import { useNavigate } from "react-router-dom";
 import {  toast } from "sonner";
 import { AuthContext } from "../../utils/config/context";
 
-interface EmailVerificationProps {
-  email: string;
-}
+// interface EmailVerificationProps {
+//   email: string;
+// }
 
-export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) => {
+export const EmailVerification: React.FC<any> = (params) => {
+  const email = params.email;
   const handleBeforeUnload = (event: any) => {
     event.preventDefault();
     event.returnValue = "Please avoid refreshing this page."; // Optional custom message
@@ -72,6 +73,7 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) =
   useEffect(() => {
     if (timer === 0) {
       clearInterval(timer);
+      setError('The verification code has expired')
       setIsActive(false);
     }
   }, [timer]);
@@ -88,20 +90,26 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) =
     setError("");
     const code = Number(inputValues.join(""));
     const formData = { email, code };
-    const OTP_response: any = await otpApi(formData);
-    console.log(OTP_response, "OTP response");
-
-    if (OTP_response.status) {
-      setUserId(OTP_response.userId);
-      localStorage.setItem('id',OTP_response.userId);
-    navigate("/profilecompletion");
-
-    } else {
-      setError(OTP_response.error);
-      toast.error(OTP_response.error);
+    if(params.type=="forgot"){
+      //forgot password section
+      params.action(email, code)
+    }else{
+      //signup section
+      const OTP_response: any = await otpApi(formData);
+      console.log(OTP_response, "OTP response");
+  
+      if (OTP_response.status) {
+        setUserId(OTP_response.userId);
+        localStorage.setItem('id',OTP_response.userId);
+      navigate("/profilecompletion");
+  
+      } else {
+        setError(OTP_response.error);
+        toast.error(OTP_response.error);
+      }
     }
-    // inputRefs.current[0]?.focus();
-    // setInputValues(['', '', '', '']);
+    
+    
   };
 
   const resend = async () => {
@@ -163,6 +171,8 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) =
           </div>
         </form>
         <div className="text-sm text-slate-500 mt-4">
+        <p className="text-rose-600 font-medium">{error}</p>
+
           {timer === 0 ? (
             <p>
               Didn't receive code?{" "}
@@ -176,7 +186,6 @@ export const EmailVerification: React.FC<EmailVerificationProps> = ({ email }) =
           ) : (
             <p>Resend code in {timer} seconds</p>
           )}
-          <p className="text-rose-600 font-medium">{error}</p>
         </div>
       </div>
     </div>

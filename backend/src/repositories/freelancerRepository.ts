@@ -15,4 +15,5 @@ export interface FreelancerRepository {
     setNewOTP(email:string,otp:number):Promise<any>
     findDetailsById(id:string):Promise<FreelancerDetails | null>
     updateProfileImage(id:string,filepaht:string):Promise<Freelancer | null>
+    updatePassword(id:string,password:string):Promise<any>
 }

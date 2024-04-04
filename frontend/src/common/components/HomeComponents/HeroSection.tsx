@@ -1,6 +1,16 @@
 // import NavBar from "../Navbar/NavBar";
 
+import { useState } from "react";
+
 function HeroSection() {
+  const [isDropdown,setIsDropDown] = useState<Boolean>(false)
+  const manageDropdown = ()=>{
+    if(isDropdown==false){
+      setIsDropDown(true)
+    }else{
+      setIsDropDown(false)
+    }
+  }
   return (
     <>
       <div className="flex  lg:bg-[url('/images/heroBanner.jpg')] bg-flexy-green hero-banner h-50vh lg:h-80vh ">
@@ -25,8 +35,10 @@ function HeroSection() {
                         Your Email
                       </label>
                       <button
-                        id="dropdown-button"
-                        data-dropdown-toggle="dropdown"
+                        // id="dropdown-button"
+
+                        // data-dropdown-toggle="dropdown"
+                        onClick={manageDropdown}
                         className="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-gray-100 border border-gray-300 rounded-s-lg hover:bg-gray-200 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                         type="button"
                       >
@@ -48,8 +60,8 @@ function HeroSection() {
                         </svg>
                       </button>
                       <div
-                        id="dropdown"
-                        className="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                        id=""
+                        className={`z-10  ${isDropdown ? "": "hidden"} fixed mt-12 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700`}
                       >
                         <ul
                           className="py-2 text-sm text-gray-700 dark:text-gray-200"

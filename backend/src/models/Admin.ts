@@ -1,17 +1,13 @@
 
 
 import { Schema, Document, model } from 'mongoose';
-
-export interface Admin {
-    _id?: string;
-    username: string;
-    password: string ;
-}
+import { AdminInter } from '../interfaces/adminInterface';
 
 
-const AdminSchema = new Schema<Admin>({
+
+const AdminSchema = new Schema<AdminInter>({
     
-    username: { type: String, required: true },
+    adminId: { type: String, required: true },
     password: { type: String, required: true }
 });
 
