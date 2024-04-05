@@ -37,9 +37,19 @@ export class AdminRepositoryImpl implements AdminRepository{
     }
 
     
-
+    //category
     async addNewCategory(title: string,description:string): Promise<any | undefined>{
         return await Category.create({title: title, description: description})
+    }
+
+    async editCategory(title: string,description:string,_id:string): Promise<any | undefined>{
+        return await Category.updateOne(
+            {_id:_id},
+            {
+                $set:{title: title, description: description},
+                $currentDate: { updatedAt: true },
+            }
+            )
     }
 
     async getAllCategories():Promise<ICategory[] | undefined>{
@@ -57,6 +67,11 @@ export class AdminRepositoryImpl implements AdminRepository{
     //sucatecory 
     async findSubCategoryByName(name: string): Promise<any | undefined>{
         return await Subcategory.findOne({name: name})
+    }
+
+  
+    async findSubCategoryById(id: string): Promise<any | undefined>{
+        return await Subcategory.findOne({_id: id})
     }
 
     async addNewSubCategory(name: string,description:string,category:string): Promise<any | undefined>{
@@ -77,6 +92,16 @@ export class AdminRepositoryImpl implements AdminRepository{
 
     async deleteSubCategoryByMain(category:string):Promise<any> {
         return await Subcategory.deleteMany({category:category})
+    }
+
+    async editSubCategory(name: string,description:string,_id:string): Promise<any | undefined>{
+        return await Subcategory.updateOne(
+            {_id:_id},
+            {
+                $set:{name: name, description: description},
+                $currentDate: { updatedAt: true },
+            }
+            )
     }
 }
    

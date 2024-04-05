@@ -73,6 +73,18 @@ export const deleteCategoryAPI = async (id:string)=>{
     }
 }
 
+export const EditCategoryAPI = async(data:CategoryInter)=>{
+    try {
+        const response = await adminAPI.post('/editcategory',data)
+        // console.log(response);
+        return response.data
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
 //subcategory
 export const AddSubcategoryAPI = async(data:SubategoryInter)=>{
     try {
@@ -105,6 +117,20 @@ export const deleteSubCategoryAPI = async (id:string)=>{
         console.log(response);
         return response.data
     } catch (error) {
+        
+    }
+}
+
+export const EditSubcategoryAPI = async(data:SubategoryInter)=>{
+    try {
+        console.log(data, "inspection");
+        
+        const response = await adminAPI.post('/editsubcategory',data)
+        // console.log(response);
+        return response.data
+        
+    } catch (error) {
+        console.log(error);
         
     }
 }

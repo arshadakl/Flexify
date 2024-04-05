@@ -16,14 +16,18 @@ export interface AdminRepository {
     getAllCategories():Promise<ICategory[] | undefined>
     getOneCategorie(id:string):Promise<ICategory | undefined | null> 
     deleteCategory(id:string):Promise<any>
+    editCategory(title:string,description:string,_id:string):Promise<any>
 
     //subcategories
     findSubCategoryByName(name:string):Promise<any | undefined>
+    findSubCategoryById(id:string):Promise<any | undefined>
     addNewSubCategory(title:string,description:string,category:string):Promise<any>
     getAllSubCategories():Promise<ISubcategory[] | undefined>
     getOneSubCategorie(id:string):Promise<ISubcategory | undefined | null> 
     deleteSubCategory(id:string):Promise<any>
     deleteSubCategoryByMain(category:string):Promise<any>
+    editSubCategory(name:string,description:string,_id:string):Promise<any>
+
 
 }
 

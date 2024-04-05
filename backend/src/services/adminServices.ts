@@ -67,7 +67,7 @@ export class AdminServices {
         }
     }
 
-
+    // categies
     async addCategoryServ(title:string,description:string):Promise<Boolean | undefined>{
         try {
             const isCategory = await this.adminRepository.findCategoryByName(title)
@@ -75,6 +75,24 @@ export class AdminServices {
                 throw new Error("Category already exists")
             }
             const category = await this.adminRepository.addNewCategory(title, description)
+            console.log(category);
+            if(category){
+                return true
+            }
+            
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    //edit category
+    async editCategoryServ(title:string,description:string,_id:string):Promise<Boolean | undefined>{
+        try {
+            const isCategory = await this.adminRepository.findCategoryById(_id)
+            if(!isCategory){
+                throw new Error("Category not exists")
+            }
+            const category = await this.adminRepository.editCategory(title, description,_id)
             console.log(category);
             if(category){
                 return true
@@ -155,6 +173,27 @@ export class AdminServices {
             }
             const deleteResponse = await this.adminRepository.deleteSubCategory(id)
             return await this.adminRepository.getAllSubCategories()
+            
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async editSubCategoryServ(name:string,description:string,_id:string,category:string):Promise<Boolean | undefined>{
+        try {
+            const isCategory = await this.adminRepository.findCategoryById(category)
+            if(!isCategory){
+                throw new Error("Category not exists")
+            }
+            const isSubCategory = await this.adminRepository.findSubCategoryById(_id)
+            if(!isSubCategory){
+                throw new Error("sub Category not exists")
+            }
+            const subcategory = await this.adminRepository.editSubCategory(name, description,_id)
+            console.log(subcategory);
+            if(subcategory){
+                return true
+            }
             
         } catch (error:any) {
             throw new Error(error.message)

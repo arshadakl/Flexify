@@ -1,10 +1,11 @@
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { addSubCategoryValid } from "../../../validations/adminValidations";
 import { toast } from "sonner";
-import { AddSubcategoryAPI, getAllCategories } from "../../utils/APIs/AdminApi";
+import { AddSubcategoryAPI, EditSubcategoryAPI, getAllCategories } from "../../utils/APIs/AdminApi";
 import { initFlowbite } from "flowbite";
+import { SubategoryInter } from "../../../interfaces/Admin";
 
-function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
+function SubCategoryModal({ setSubCategories,isEdit }: { setSubCategories: any,isEdit:any }) {
   const [Category, setCategory] = useState<string>("");
   const [mainCategory, setMainCategory] = useState<string[]>()
   const [description, setDescription] = useState<string>("");
@@ -19,6 +20,17 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
     fetchData()
 
   }, []);
+
+
+  useEffect(() => {
+    if(isEdit.status){
+      setCategory(isEdit.data.name)
+      setDescription(isEdit.data.description)
+      setCategoryID(isEdit.data.category)
+    }
+  }, [isEdit])
+
+
   const closeModal = () => {
     if (buttonRef.current !== null) {
       buttonRef.current?.click();
@@ -28,7 +40,7 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     console.log(Category, description, categoryID);
-    const data = {
+    const data:SubategoryInter = {
       name: Category,
       description,
       category:categoryID
@@ -38,20 +50,37 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
       toast.error(isValid);
       return;
     }
-    const response = await AddSubcategoryAPI(data);
-    if (response.status) {
-      console.log(response.data);
-      setSubCategories(response.data);
-      toast.success("New Subcategory added successfully");
-      closeModal();
-    } else {
-      toast.error(response.error);
+    if(isEdit.status){
+      data._id = isEdit.data._id
+      const response = await EditSubcategoryAPI(data);
+      if (response.status) {
+        console.log(response.data);
+        setSubCategories(response.data);
+        toast.success("SubCategory edits saved!");
+        closeModal();
+      } else {
+        toast.error(response.error);
+      }
+    }else{
+      const response = await AddSubcategoryAPI(data);
+      if (response.status) {
+        console.log(response.data);
+        setSubCategories(response.data);
+        toast.success("New Subcategory added successfully");
+        setCategory("")
+        setDescription("")
+        setCategoryID("")
+        closeModal();
+      } else {
+        toast.error(response.error);
+      }
     }
+    
   };
   return (
     <>
       <div
-        id="subcategory-model"
+        id={isEdit.status ? isEdit.data._id :`subcategory-model`}
         tabIndex={-1}
         aria-hidden="true"
         className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
@@ -62,13 +91,14 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
             {/* Modal header */}
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Add new Subcategory
+                
+                {isEdit?.status ? "Update Subcategory" :"Add new Subcategory"}
               </h3>
               <button
                 type="button"
                 ref={buttonRef}
                 className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                data-modal-hide="subcategory-model"
+                data-modal-hide={isEdit.status ? isEdit.data._id :`subcategory-model`}
               >
                 <svg
                   className="w-3 h-3"
@@ -91,11 +121,11 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
             {/* Modal body */}
             <div className="p-4 md:p-5">
               <form className="space-y-4" onSubmit={handleSubmit}>
-                <div>
+                { !isEdit.status && <div>
                   <>
                     <label
                       htmlFor="countries"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className=" block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Select Main Category
                     </label>
@@ -113,11 +143,11 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
                       
                     </select>
                   </>
-                </div>
+                </div>}
                 <div>
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="text-start block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Name of subcategory
                   </label>
@@ -133,7 +163,7 @@ function SubCategoryModal({ setSubCategories }: { setSubCategories: any }) {
                   <>
                     <label
                       htmlFor="message"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="text-start block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                       Description
                     </label>

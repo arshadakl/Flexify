@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import SubCategoryModal from "../../common/components/ExtraComponents/subcategoryModal"
 import { initFlowbite } from "flowbite";
 import { deleteSubCategoryAPI, getAllSubCategories } from "../../common/utils/APIs/AdminApi";
-import SubCategoryTable from "../../common/components/ExtraComponents/SubCategoryTable";
+// import SubCategoryTable from "../../common/components/ExtraComponents/SubCategoryTable";
 import { toast } from "sonner";
+import SubCategoryTableTest from "../../common/components/ExtraComponents/SubCategoryTableTest";
 
 function AddSubCategory() {
   const [SubCategories, setSubCategories] = useState();
@@ -42,8 +43,8 @@ function AddSubCategory() {
           <i className="fa-sharp fa-regular fa-plus mx-2" />
           Add Subcategory
         </button>
-        <SubCategoryModal setSubCategories={setSubCategories}/>
-        <SubCategoryTable deleteSubCategory={deleteSubCategory} SubCategories={SubCategories} />
+        <SubCategoryModal isEdit={{status:false}} setSubCategories={setSubCategories}/>
+        <SubCategoryTableTest setSubCategories={setSubCategories} deleteSubCategory={deleteSubCategory} SubCategories={SubCategories} />
       </div>
     </>
   )

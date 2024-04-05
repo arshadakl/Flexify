@@ -1,14 +1,23 @@
-import { SyntheticEvent, useRef, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { addCategoryValid } from "../../../validations/adminValidations";
 import { toast } from "sonner";
-import { AddCategoryAPI } from "../../utils/APIs/AdminApi";
+import { AddCategoryAPI, EditCategoryAPI } from "../../utils/APIs/AdminApi";
+import { CategoryInter } from "../../../interfaces/Admin";
 
 
-function CategoryModal({setCategories}:{setCategories:any}) {
+function CategoryModal({setCategories,isEdit}:{setCategories:any,isEdit:any}) {
+  
   const [Category,setCategory] = useState<string>("")
   const [description , setDescription ] = useState<string>("")
   const buttonRef = useRef<HTMLButtonElement>(null);
 
+  useEffect(() => {
+    if(isEdit.status){
+      setCategory(isEdit.data.title)
+      setDescription(isEdit.data.description)
+    }
+  }, [isEdit])
+  
   const closeModal = () => {
     if (buttonRef.current !== null) {
       buttonRef.current?.click(); 
@@ -17,7 +26,7 @@ function CategoryModal({setCategories}:{setCategories:any}) {
   const handleSubmit = async (e:SyntheticEvent)=>{
     e.preventDefault()
     console.log(Category,description);
-    const data={
+    const data : CategoryInter={
       title: Category,
       description
     }
@@ -26,22 +35,39 @@ function CategoryModal({setCategories}:{setCategories:any}) {
       toast.error(isValid)
       return
     }
-    const response = await AddCategoryAPI(data)
-    if(response.status){
-      console.log(response.data);
-      setCategories(response.data)
-      toast.success('new category added successfully')
-      closeModal()
+    if(isEdit.status){
+      data._id = isEdit.data._id
+      const response = await EditCategoryAPI(data)
+      if(response.status){
+        console.log(response.data);
+        setCategories(response.data)
+        toast.success('Category edits saved!')
+        closeModal()
+      }else{
+        toast.error(response.error)
+      }
+      
     }else{
-      toast.error(response.error)
+      const response = await AddCategoryAPI(data)
+      if(response.status){
+        console.log(response.data);
+        setCategories(response.data)
+        toast.success('new category added successfully')
+        setCategory("")
+        setDescription("")
+        closeModal()
+      }else{
+        toast.error(response.error)
+      }
     }
+    
     
     
   }
   return (
     <>
       <div
-        id="authentication-modal"
+        id={isEdit.status ? isEdit.data._id :`authentication-modal`}
         tabIndex={-1}
         aria-hidden="true"
         className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
@@ -52,12 +78,13 @@ function CategoryModal({setCategories}:{setCategories:any}) {
             {/* Modal header */}
             <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Add new Category
+                {/* Add new Category */}
+                {isEdit?.status ? "Update Category" :"Add new Category"}
               </h3>
               <button
                 type="button" ref={buttonRef}
                 className="end-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                data-modal-hide="authentication-modal"
+                data-modal-hide={isEdit.status ? isEdit.data._id :`authentication-modal`}
               >
                 <svg
                   className="w-3 h-3"
@@ -83,7 +110,7 @@ function CategoryModal({setCategories}:{setCategories:any}) {
                 <div>
                   <label
                     htmlFor="email"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 text-start text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Title of Category
                   </label>
@@ -97,7 +124,7 @@ function CategoryModal({setCategories}:{setCategories:any}) {
                   <>
                     <label
                       htmlFor="message"
-                      className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      className="block text-start mb-2 text-sm font-medium text-gray-900 dark:text-white"
                     >
                      Description
                     </label>

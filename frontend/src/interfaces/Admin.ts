@@ -5,10 +5,12 @@ export interface Admin{
 }
 
 export interface CategoryInter{
+    _id?: string
     title:string
     description:string
 }
 export interface SubategoryInter{
+    _id?: string
     name:string
     description:string,
     category:string

@@ -42,9 +42,9 @@ function AddCategory() {
           Add Category
         </button>
       </div>
-      <CategoryModal setCategories={setCategories} />
+      <CategoryModal isEdit={{status:false}} setCategories={setCategories} />
       <div>
-        <CategoryTable Categories={Categories} deleteCategory={deleteCategory} />
+        <CategoryTable Categories={Categories} setCategories={setCategories} deleteCategory={deleteCategory} />
       </div>
     </>
   );

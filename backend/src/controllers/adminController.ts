@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { AdminServices } from "../services/adminServices";
+import { Category } from "../models/Category";
 
 export class AdminController {
     constructor(private readonly AdminService: AdminServices) { }
@@ -51,6 +52,20 @@ export class AdminController {
         console.log(title, description);
         try {
             const categorie = await this.AdminService.addCategoryServ(title, description)
+            if (categorie) {
+                const updatedData = await this.AdminService.getAllCategories()
+                res.status(200).json({ status: 'success', data: updatedData })
+            }
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async editCategory(req: Request, res: Response): Promise<any> {
+        const { title, description, _id } = req.body
+        console.log(title, description,_id);
+        try {
+            const categorie = await this.AdminService.editCategoryServ(title, description,_id)
             if (categorie) {
                 const updatedData = await this.AdminService.getAllCategories()
                 res.status(200).json({ status: 'success', data: updatedData })
@@ -132,6 +147,21 @@ export class AdminController {
             }
             const categories = await this.AdminService.deleteSubCategoryServ(id)
             res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+
+    async editSubCategory(req: Request, res: Response): Promise<any> {
+        const { name, description, _id,category } = req.body
+        console.log(name, description,_id,category);
+        try {
+            const categorie = await this.AdminService.editSubCategoryServ(name, description,_id,category)
+            if (categorie) {
+                const updatedData = await this.AdminService.getAllSubCategories()
+                res.status(200).json({ status: 'success', data: updatedData })
+            }
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }
