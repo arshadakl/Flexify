@@ -8,6 +8,7 @@ import Signup from "../common/components/Signup/Signup";
 import FreelancerProtect from "../freelancers/components/FreelancerProtect";
 import FreelancerLogoutProtect from "../freelancers/components/FreelancerLogoutProtect";
 import ForgotPasswordPage from "../Pages/ForgotPassword/ForgotPasswordPage";
+import CreatePost from "../Pages/freelancer/CreatePost";
 
 function FreelancerRoute() {
   return (
@@ -21,6 +22,7 @@ function FreelancerRoute() {
       </Route>
       <Route element={<FreelancerProtect />}>
         <Route path="profile" element={<FreelancerProfile />} />
+        <Route path="post" element={<CreatePost />} />
       </Route>
     </Routes>
   );

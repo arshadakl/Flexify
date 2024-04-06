@@ -48,9 +48,9 @@ export class FreelancerController {
 
             //     res.status(200).json({freelancer,status:true});
             // } 
-        } catch (error:any) {
+        } catch (error: any) {
             // res.json({ error: "Invalid credentials", status: false });
-            res.status(400).json({ error: error.message,status: false });
+            res.status(400).json({ error: error.message, status: false });
         }
     }
 
@@ -60,11 +60,11 @@ export class FreelancerController {
     async signup(req: Request, res: Response): Promise<void> {
         const { username, email, password } = req.body;
         console.log(req.body);
-        
+
         const freelancer: Freelancer = { username, email, password };
 
         try {
-           const userId = await this.freelancerService.signup(freelancer);
+            const userId = await this.freelancerService.signup(freelancer);
             res.status(201).json({ message: "Freelancer signed up successfully", status: true });
         } catch (error) {
             console.log("failed");
@@ -81,10 +81,10 @@ export class FreelancerController {
 
         try {
             const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
-            
+
             if (decodeResponse.email_verified) {
                 const response = await this.freelancerService.GoogleLoginEmailValidation(decodeResponse.email)
-                console.log(response,"for test      s ");
+                console.log(response, "for test      s ");
 
                 if ("token" in response && "options" in response && "freelancer" in response) {
                     const { token, options, freelancer } = response;
@@ -106,11 +106,11 @@ export class FreelancerController {
                     throw new Error("Token or options are undefined");
                 }
             }
-        } catch (error:any) {
+        } catch (error: any) {
             console.log(error.message);
-            
+
             // res.json({ error: "User not found", status: false });
-            res.json({ error: error.message,status: false });
+            res.json({ error: error.message, status: false });
         }
     }
 
@@ -144,19 +144,19 @@ export class FreelancerController {
         const { email, code } = req.body
         try {
             const user = await this.freelancerService.OTPVerificationServ(email, code)
-            if(user.status){
-                const response= await this.freelancerService.doVerifyOtp(user.id)
+            if (user.status) {
+                const response = await this.freelancerService.doVerifyOtp(user.id)
                 if (user.id) {
-                console.log(user.id);
-                
-                res.status(200).json({ message: "user successfully verified", status: true, userId:user.id })
-            } else {
-                res.json({ status: false, error: "Incorrect OTP, Please try again." });
+                    console.log(user.id);
 
-            }
+                    res.status(200).json({ message: "user successfully verified", status: true, userId: user.id })
+                } else {
+                    res.json({ status: false, error: "Incorrect OTP, Please try again." });
+
+                }
             }
             // const userId = await this.freelancerService.OTPVerificationServ()
-            
+
 
         } catch (error) {
             res.json({ error: (error as Error).message, status: false });
@@ -178,20 +178,20 @@ export class FreelancerController {
         }
     }
 
-        //signup
+    //signup
     // ============================
     async forgotpassword(req: Request, res: Response): Promise<void> {
-        const { email} = req.body;
+        const { email } = req.body;
         try {
             const isUser = await this.freelancerService.forgotPass(email)
-            if(isUser) {
+            if (isUser) {
                 const otpGenarte = await this.freelancerService.reSendotpServ(email)
                 console.log(otpGenarte);
                 res.status(200).json({ message: `Verification code sent to ${email}. Check your inbox to reset password.`, status: true });
 
             }
-            
-        } catch (error:any) {
+
+        } catch (error: any) {
             console.log("failed");
             res.json({ error: error.message, status: false });
         }
@@ -201,9 +201,9 @@ export class FreelancerController {
     // ===========================
     async profileCompletion(req: Request, res: Response): Promise<void> {
         try {
-            console.log(req.body,"body");
+            console.log(req.body, "body");
             const response = await this.freelancerService.profileCompletionServ(req.body);
-            console.log(response,"2nd response");
+            console.log(response, "2nd response");
             if ("token" in response && "options" in response && "freelancer" in response) {
                 const { token, options, freelancer } = response;
 
@@ -253,8 +253,8 @@ export class FreelancerController {
         try {
             // console.log(req.headers);
             const token = req.headers.authorization
-            console.log(token,"controller token");
-            
+            console.log(token, "controller token");
+
             if (token) {
                 const userDetails = await this.freelancerService.profiledataService(token)
                 res.status(200).json({ userDetails, status: true })
@@ -292,38 +292,64 @@ export class FreelancerController {
             res.status(200).json({ userData, status: true })
         } catch (error) {
             console.error('Error uploading image to Cloudinary:', error);
-            res.status(400).json({error,status:false});
+            res.status(400).json({ error, status: false });
         }
     }
 
 
-    async forgotPasswordOTP(req: Request, res: Response):Promise<void>{
+    async forgotPasswordOTP(req: Request, res: Response): Promise<void> {
         const { email, code } = req.body
         console.log(email, code);
-        
+
         try {
             const user = await this.freelancerService.OTPVerificationServ(email, code)
-            if(user.status){
+            if (user.status) {
                 const response = await this.freelancerService.managePreResetpassword(email)
-                if(response){
-                    res.status(201).json({status:true,token:response,message:"OTP verification successful. Please proceed to reset your password"})
+                if (response) {
+                    res.status(201).json({ status: true, token: response, message: "OTP verification successful. Please proceed to reset your password" })
                 }
             }
-        } catch (error:any) {
-            res.json({status:false,error:error.message})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
         }
     }
 
 
-    async resetPassword(req: Request, res: Response):Promise<void>{
+    async resetPassword(req: Request, res: Response): Promise<void> {
         const { password, token } = req.body
         try {
-            const response = await this.freelancerService.managePostResetpassword(password,token)
-            if(response){
-                res.status(201).json({status:true,message:"All done! Your password is now updated"})
+            const response = await this.freelancerService.managePostResetpassword(password, token)
+            if (response) {
+                res.status(201).json({ status: true, message: "All done! Your password is now updated" })
             }
-        } catch (error:any) {
-            res.json({status:false,error:error.message})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    //get all categories
+    async allCategories(req: Request, res: Response): Promise<any> {
+        try {
+            console.log(req.headers);
+
+            const categories = await this.freelancerService.getAllCategories()
+            console.log(categories)
+
+            return res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            return res.json({ status: false, error: error.message })
+        }
+    }
+
+    //get all Subcategories
+    async allSubCategories(req: Request, res: Response): Promise<any> {
+        try {
+            const categories = await this.freelancerService.getAllSubCategories()
+            console.log(categories)
+
+            res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
         }
     }
 

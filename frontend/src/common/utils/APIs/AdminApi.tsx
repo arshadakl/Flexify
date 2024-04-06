@@ -1,10 +1,32 @@
 import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
 import { Admin, CategoryInter, SubategoryInter } from '../../../interfaces/Admin';
+import store from '../../../Redux/store';
+import { handleError } from './ErrorHandlers/adminError';
 
 const adminAPI = axios.create({
     baseURL: `${BASE_API_URL}/admin`
 });
+
+
+
+adminAPI.interceptors.request.use(
+  (config) => {
+    // Get the token from your Redux store
+    const state = store.getState();
+    const admin = state.admin;
+    const token = admin?.admin;
+
+    if (token) {
+      config.headers['Authorization'] = `${token}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const doLogin =async (FormData:Admin)=>{
     try {
@@ -24,7 +46,8 @@ export const getAllusers = async()=>{
         return response.data
         
     } catch (error) {
-        return error
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -56,7 +79,6 @@ export const AddCategoryAPI = async(data:CategoryInter)=>{
 export const getAllCategories = async ()=>{
     try {
         const response = await adminAPI.get('/allcategories');
-        console.log(response);
         return response.data
     } catch (error) {
         

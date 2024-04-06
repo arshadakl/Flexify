@@ -6,7 +6,7 @@ const FreelancerModel = require('../models/Freelancer').Freelancer
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { Category, Subcategory } from "../models/Category";
 import { promises } from "dns";
-import {  ICategory, ISubcategory } from "../interfaces/adminInterface";
+import {  AdminInter, ICategory, ISubcategory } from "../interfaces/adminInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 
@@ -18,6 +18,10 @@ export class AdminRepositoryImpl implements AdminRepository{
 
     async findById(id: string): Promise<Freelancer | null> {
         return await FreelancerModel.findById(id);
+    }
+
+    async findAdminById(id: string): Promise<AdminInter | null> {
+        return await AdminModel.findById(id);
     }
 
     async blockUser(id: string, action:any): Promise<any> {

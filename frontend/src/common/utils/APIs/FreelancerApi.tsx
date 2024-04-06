@@ -4,9 +4,8 @@ import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
 import {  useSelector } from 'react-redux';
 import { profileCompletionForm } from '../../components/ProfileCompletionParts/CompletionForm';
-// import { useNavigate } from 'react-router-dom';
-// import { persistor } from '../../../Redux/store';
-import { handleError } from './ErrorHandle';
+
+import { handleError } from './ErrorHandlers/ErrorHandle';
 
 export const freelancersAPI = axios.create({
   baseURL: `${BASE_API_URL}/freelancers`,
@@ -259,6 +258,26 @@ export const forgotPassword = async (email: string) => {
   }
 };
 
+
+export const getAllCategories = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/allcategories');
+      console.log(response);
+      return response.data
+  } catch (error) {
+      
+  }
+}
+
+export const getAllSubCategories = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/allsubcategories');
+      console.log(response);
+      return response.data
+  } catch (error) {
+      
+  }
+}
 
 
 export default AxiosInterceptor;

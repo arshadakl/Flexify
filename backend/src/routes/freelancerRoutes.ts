@@ -31,4 +31,8 @@ router.post('/profileupdate',freelancerController.profileUpdate.bind(freelancerC
 router.get('/profiledata',protector,freelancerController.profiledata.bind(freelancerController))
 router.post('/uploadProfileImage',multerMid.single('file'),freelancerController.uploadImage.bind(freelancerController))
 
+router.get('/allcategories',freelancerController.allCategories.bind(freelancerController));
+router.get('/allsubcategories',freelancerController.allSubCategories.bind(freelancerController));
+
+
 export default router;

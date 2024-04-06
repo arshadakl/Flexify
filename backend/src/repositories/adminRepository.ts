@@ -1,6 +1,6 @@
 import { promises } from "dns";
 import { Freelancer } from "../models/Freelancer";
-import { ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { AdminInter, ICategory, ISubcategory } from "../interfaces/adminInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
@@ -8,7 +8,7 @@ export interface AdminRepository {
     findById(id: string): Promise<Freelancer | null>
     blockUser(id:string,action:any):Promise<any>
     findAdminByName(adminId:string):Promise<any | undefined>
-
+    findAdminById(id: string): Promise<AdminInter | null>
     //category
     findCategoryByName(name:string):Promise<any | undefined>
     findCategoryById(id:string):Promise<any | undefined>

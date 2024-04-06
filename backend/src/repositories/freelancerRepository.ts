@@ -1,5 +1,6 @@
 // freelancerRepository.ts
 
+import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 
 export interface FreelancerRepository {
@@ -16,4 +17,6 @@ export interface FreelancerRepository {
     findDetailsById(id:string):Promise<FreelancerDetails | null>
     updateProfileImage(id:string,filepaht:string):Promise<Freelancer | null>
     updatePassword(id:string,password:string):Promise<any>
+    getAllCategories():Promise<ICategory[] | undefined>
+    getAllSubCategories():Promise<ISubcategory[] | undefined>
 }

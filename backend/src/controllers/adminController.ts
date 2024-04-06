@@ -80,12 +80,14 @@ export class AdminController {
     //get all categories
     async allCategories(req: Request, res: Response): Promise<any> {
         try {
+            console.log(req.headers);
+            
             const categories = await this.AdminService.getAllCategories()
             console.log(categories)
             
-            res.status(200).json({ status: 'success', data: categories })
+            return res.status(200).json({ status: 'success', data: categories })
         } catch (error: any) {
-            res.json({ status: false, error: error.message })
+            return res.json({ status: false, error: error.message })
         }
     }
 

@@ -7,6 +7,7 @@ import { FreelancerController } from '../controllers/freelancerController';
 import jwt, { Secret } from "jsonwebtoken"
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from 'jsonwebtoken';
+import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 // import { uploadFile } from '../utils/Cloudinary';
 
 
@@ -383,6 +384,29 @@ export class FreelancerService {
         }
     }
 
+    async getAllCategories():Promise<ICategory[] | undefined> {
+        try {
+            const allCategories = await this.freelancerRepository.getAllCategories()
+            if(allCategories){
+                return allCategories
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async getAllSubCategories():Promise<ISubcategory[] | undefined> {
+        try {
+            const allCategories = await this.freelancerRepository.getAllSubCategories()
+           
+            if(allCategories){
+                return allCategories
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 
 
 }

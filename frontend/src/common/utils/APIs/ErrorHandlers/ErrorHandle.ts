@@ -1,8 +1,8 @@
 // import { useNavigate } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 // import { useLogout } from '../logoutUtils';
-import store, { persistor } from "../../../Redux/store";
-import { logout } from "../../../Redux/Slices/freelancerSlice";
+import store, { persistor } from "../../../../Redux/store";
+import { logout } from "../../../../Redux/Slices/freelancerSlice";
 // import { useNavigation } from '../config/NavigationContext';
 
 

@@ -6,6 +6,8 @@ import { FreelancerRepository } from "./freelancerRepository";
 const FreelancerModel = require('../models/Freelancer').Freelancer
 const FreelancerDetailsModel = require('../models/Freelancer').FreelancerDetails
 import bcrypt from "bcrypt"
+import { Category, Subcategory } from "../models/Category";
+import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 
 export class FreelancerRepositoryImpl implements FreelancerRepository {
     async findByUsername(username: string): Promise<Freelancer | null> {
@@ -135,5 +137,14 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             throw new Error("Failed to update profile image")
          }
 
+    }
+
+
+    async getAllCategories():Promise<ICategory[] | undefined>{
+        return await Category.find({})
+    }
+
+    async getAllSubCategories():Promise<ISubcategory[] | undefined>{
+        return await Subcategory.find({})
     }
 }
