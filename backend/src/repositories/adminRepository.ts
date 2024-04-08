@@ -1,6 +1,7 @@
 import { promises } from "dns";
 import { Freelancer } from "../models/Freelancer";
 import { AdminInter, ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { IWork } from "../interfaces/freelancerInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
@@ -27,7 +28,8 @@ export interface AdminRepository {
     deleteSubCategory(id:string):Promise<any>
     deleteSubCategoryByMain(category:string):Promise<any>
     editSubCategory(name:string,description:string,_id:string):Promise<any>
-
-
+    getAllWorks():Promise<IWork[] | null>
+    findWorkById(id: string): Promise<any>
+    suspendWork(id: string, action:any): Promise<any>
 }
 

@@ -1,43 +1,44 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/config/context";
 import { useNavigate } from "react-router-dom";
-import AxiosInterceptor, { fetchProfileData } from "../../utils/APIs/FreelancerApi";
+import AxiosInterceptor, { fetchProfileData} from "../../utils/APIs/FreelancerApi";
 import { profileCompletionForm } from "../ProfileCompletionParts/CompletionForm";
 import ImageUploadComponent from "../ExtraComponents/ImageUploadComponent";
 import FreelancerProfileUpdateForm from "../ExtraComponents/FreelancerProfileUpdateForm";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../Redux/Slices/freelancerSlice";
 import { persistor } from "../../../Redux/store";
+// import { IWork } from "../../../interfaces/Freelancer";
+import ProfileWorksList from "../ExtraComponents/ProfileWorksList";
 
 function FreelancerProfilePage() {
-
-  const {  isEdit,setIsEdit} = useContext(AuthContext);
+  const { isEdit, setIsEdit } = useContext(AuthContext);
   const navigate = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const profileData = useSelector((state: any) => state.freelancer);
-  const freelancerDetails = profileData.freelancer
+  const freelancerDetails = profileData.freelancer;
   const [baseData, setBaseData] = useState<profileCompletionForm>();
-//    const [isEdit, setIsEdit] = useState(false)
-//   const [imageSrc, setImageSrc] = useState<string>("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg");
+  // const [wordData, setWordData] = useState<IWork[]>();
+  //    const [isEdit, setIsEdit] = useState(false)
+  //   const [imageSrc, setImageSrc] = useState<string>("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg");
 
-const handleLogout = () => {
-  console.log("called to logout");
-  
-  dispatch(logout()); // Dispatch the logout action
-  persistor.purge(); // Then purge the persisted data
-  navigate('/')
-};
+  const handleLogout = () => {
+    console.log("called to logout");
+
+    dispatch(logout()); // Dispatch the logout action
+    persistor.purge(); // Then purge the persisted data
+    navigate("/");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(freelancerDetails,"redux profile data");
+      console.log(freelancerDetails, "redux profile data");
       if (freelancerDetails.token) {
         try {
           const response = await fetchProfileData();
-          console.log(response,"das das dsad");
+          console.log(response, "das das dsad");
           setBaseData(response.userDetails);
-          console.log(baseData,"base data here..");
-          
+          console.log(baseData, "base data here..");
         } catch (error) {
           console.error("Error fetching profile data:", error);
         }
@@ -49,29 +50,33 @@ const handleLogout = () => {
     fetchData();
   }, [freelancerDetails, navigate]);
 
- 
+
+
   return (
     <>
-    <AxiosInterceptor/>
+      <AxiosInterceptor />
       <div className="bg-gray-50 :min-h-screen pb-10">
         <div className="flex md:flex-row flex-col text-gray-900 w-screen gap-10 px-10 pt-12">
-
-
           <div className="md:w-2/5 w-1/1">
             <div className="w-4/5 md:1/2  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-end px-4 pt-4">
-                
-                <p onClick={()=>{ isEdit ? setIsEdit(false) : setIsEdit(true) }} className="text-blue-800 cursor-pointer">  {isEdit ? "back" : "Edit " }</p>
+                <p
+                  onClick={() => {
+                    isEdit ? setIsEdit(false) : setIsEdit(true);
+                  }}
+                  className="text-blue-800 cursor-pointer"
+                >
+                  {" "}
+                  {isEdit ? "back" : "Edit "}
+                </p>
                 <div
                   id="dropdown"
                   className="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
                 >
                   <ul className="py-2" aria-labelledby="dropdownButton">
                     <li>
-                      <p
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        {isEdit ? "back" : "Edit Profile" }
+                      <p className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">
+                        {isEdit ? "back" : "Edit Profile"}
                       </p>
                     </li>
                   </ul>
@@ -79,17 +84,19 @@ const handleLogout = () => {
               </div>
 
               <div className="flex flex-col   items-center ">
-
-
-                {freelancerDetails?.profile=="" ? 
-                <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
-                  src="https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg" alt="Bonnie image" /> : 
-                  <img className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
-                  src={freelancerDetails?.profile} alt="Bonnie image" /> 
-                  }
-
-
-
+                {freelancerDetails?.profile == "" ? (
+                  <img
+                    className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
+                    src="https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg"
+                    alt="Bonnie image"
+                  />
+                ) : (
+                  <img
+                    className="w-24 h-24 mb-3 rounded-full shadow-lg object-cover"
+                    src={freelancerDetails?.profile}
+                    alt="Bonnie image"
+                  />
+                )}
 
                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                   {freelancerDetails?.username}
@@ -185,18 +192,12 @@ const handleLogout = () => {
             </div>
           </div>
 
-          
-
-          <div className="md:w-3/5 w-1/1 ">
-            
-            
-            
-              
-              <div className="min-h-60  flex flex-col bg-white border shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
-              { !isEdit ?
-               <>
-                <div className="flex flex-auto flex-col justify-center items-center p-4 md:p-5">
-                  <svg
+          <div className="md:w-3/5  w-1/1 ">
+            <div className="min-h-60  flex flex-col bg-white border shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+              {!isEdit ? (
+                <>
+                  <div className="flex flex-auto flex-col justify-center  items-center p-4 md:p-5">
+                    {/* <svg
                     className="size-10 text-gray-500"
                     xmlns="http://www.w3.org/2000/svg"
                     width={24}
@@ -215,32 +216,49 @@ const handleLogout = () => {
                   </svg>
                   <p className="mt-5 text-sm text-gray-800 dark:text-gray-300">
                     No Post to show
-                  </p>
-                </div>
-                
-                </>
-            : 
-            <>
+                  </p> */}
 
-            {/* //edit page  */}
-            <div className="p-10">
-                <ImageUploadComponent/>
-                <FreelancerProfileUpdateForm data={baseData} set={setBaseData}   />
+                    {/* <div className="w-full flex min-h-full flex-wrap">
+                      
+
+                      {wordData?.map((work) => {
+                        return (
+                          <div className="w-2/6  border border-l-stone-300 cursor-pointer rounded  p-2 shadow duration-150  hover:shadow">
+                            <img
+                              className="w-full rounded-lg object-cover object-center"
+                              src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                              alt="product"
+                            />
+                            <p className="my-4 pl-4 font-bold text-gray-500">
+                              Product Name
+                            </p>
+                            <p className="ml-4 text-xl font-semibold text-gray-800">
+                              $399
+                            </p>
+                          </div>
+                        );
+                      })}
+
+
+                    </div> */}
+                    <ProfileWorksList/>
                   </div>
-            </>
-            }
-
-              </div>
-            
-           
-
+                </>
+              ) : (
+                <>
+                  {/* //edit page  */}
+                  <div className="p-10">
+                    <ImageUploadComponent />
+                    <FreelancerProfileUpdateForm
+                      data={baseData}
+                      set={setBaseData}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-
-
         </div>
-
-
-
       </div>
     </>
   );

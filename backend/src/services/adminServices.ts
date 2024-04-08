@@ -5,6 +5,7 @@ import { AdminRepositoryImpl } from "../repositories/adminRepositoryImpl";
 import bcrypt from "bcrypt"
 import { AdminJwtCreation } from "../utils/jwtCreation";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { IWork } from "../interfaces/freelancerInterface";
 
 
 
@@ -199,4 +200,45 @@ export class AdminServices {
             throw new Error(error.message)
         }
     }
+
+
+
+    async getAllWorkService():Promise<IWork[] | undefined> {
+        try {
+            const worksData = await this.adminRepository.getAllWorks()
+           
+            if(worksData){
+                return worksData
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async findWorkById(id:string):Promise<IWork | undefined> {
+        try {
+            const worksData = await this.adminRepository.findWorkById(id)
+           
+            if(worksData){
+                return worksData
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async suspendWork(work:IWork):Promise<IWork | undefined> {
+        try {
+            const action = work.isActive ? false : true
+            const worksData = await this.adminRepository.suspendWork(work._id,action)
+            console.log(worksData,"test data");
+            
+            if(worksData){
+                return worksData
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
 }

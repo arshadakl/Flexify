@@ -145,14 +145,28 @@ export const deleteSubCategoryAPI = async (id:string)=>{
 
 export const EditSubcategoryAPI = async(data:SubategoryInter)=>{
     try {
-        console.log(data, "inspection");
-        
         const response = await adminAPI.post('/editsubcategory',data)
-        // console.log(response);
         return response.data
         
     } catch (error) {
         console.log(error);
-        
+    }
+}
+
+export const getAllWorkAPI = async()=>{
+    try {
+        const response = await adminAPI.get('/allworks')
+        return response.data        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const suspendWorkAPI = async(id:string)=>{
+    try {
+        const response = await adminAPI.patch('/suspendworks',{id})
+        return response.data        
+    } catch (error) {
+        console.log(error);
     }
 }

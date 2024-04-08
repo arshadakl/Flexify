@@ -12,10 +12,10 @@ const PORT = 3000;
 
 connectDB()
 
-app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.json({ limit: '150mb' }));
 configCloudinary()
 
-app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '150mb', extended: true }));
 
 app.use(
     cors({

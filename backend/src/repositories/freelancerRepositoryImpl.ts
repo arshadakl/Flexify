@@ -7,7 +7,9 @@ const FreelancerModel = require('../models/Freelancer').Freelancer
 const FreelancerDetailsModel = require('../models/Freelancer').FreelancerDetails
 import bcrypt from "bcrypt"
 import { Category, Subcategory } from "../models/Category";
+import {WorkModel} from "../models/Works";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { IWork } from "../interfaces/freelancerInterface";
 
 export class FreelancerRepositoryImpl implements FreelancerRepository {
     async findByUsername(username: string): Promise<Freelancer | null> {
@@ -147,4 +149,22 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     async getAllSubCategories():Promise<ISubcategory[] | undefined>{
         return await Subcategory.find({})
     }
+
+    async findCategoriesById(id:string):Promise<ICategory | null>{
+        return await Category.findOne({_id:id})
+    }
+
+    async findSubCategoriesById(id:string):Promise<ISubcategory | null>{
+        return await Subcategory.findOne({_id:id})
+    }
+
+    async createWorkPost(workData:IWork):Promise<any>{
+        return await WorkModel.create(workData)
+    }
+
+    async getAllWorkOfUser(id:string):Promise<any>{
+        return await WorkModel.find({user:id})
+    }
+
+    
 }

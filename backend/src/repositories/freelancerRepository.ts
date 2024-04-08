@@ -1,6 +1,8 @@
 // freelancerRepository.ts
 
+import { promises } from "dns";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { IWork } from "../interfaces/freelancerInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 
 export interface FreelancerRepository {
@@ -19,4 +21,10 @@ export interface FreelancerRepository {
     updatePassword(id:string,password:string):Promise<any>
     getAllCategories():Promise<ICategory[] | undefined>
     getAllSubCategories():Promise<ISubcategory[] | undefined>
+    findSubCategoriesById(id:string):Promise<ISubcategory | null>
+    findCategoriesById(id:string):Promise<ICategory | null>
+    createWorkPost(workData:IWork):Promise<any>
+
+    getAllWorkOfUser(id:string):Promise<any>
+
 }

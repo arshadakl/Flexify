@@ -170,6 +170,38 @@ export class AdminController {
     }
 
 
+     //get all works
+    async getAllWorks(req: Request, res: Response): Promise<any> {
+        try {
+            
+            const Works = await this.AdminService.getAllWorkService()
+            console.log(Works)
+            
+            res.status(200).json({ status: true, data: Works })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+     //suspend request to over work 
+    async suspendWork(req: Request, res: Response): Promise<any> {
+        try {
+            console.log("Called");
+            
+            const isWork = await this.AdminService.findWorkById(req.body.id)
+            if(!isWork) {
+                throw new Error("Work not found")
+            }
+            const Works = await this.AdminService.suspendWork(isWork)
+            if(Works){
+                const Works = await this.AdminService.getAllWorkService()
+                res.status(200).json({ status: true, data: Works })
+            }
+            
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

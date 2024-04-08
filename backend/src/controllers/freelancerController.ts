@@ -1,14 +1,31 @@
 // src/controllers/freelancerController.ts
-import { Request, Response } from "express";
+import { Request, Response, response } from "express";
 import { FreelancerService } from "../services/freelancerService";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import ImageUploadRepository from "../repositories/ImageUploadRepository";
 import { Readable } from 'stream';
 import { uploadToCloudinary } from "../utils/Cloudinary";
 import fs from 'fs'
+// import { MulterFile } from "../interfaces/multerInterface";
 
 
+// Define a custom type for Multer file
+interface MulterFile {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    destination: string;
+    filename: string;
+    path: string;
+    size: number;
+}
 
+
+interface File {
+    path: string;
+    // Include other properties of File as needed
+}
 const imageUploadRepository = new ImageUploadRepository();
 
 export class FreelancerController {
@@ -272,6 +289,8 @@ export class FreelancerController {
 
     async uploadImage(req: Request, res: Response): Promise<void> {
         try {
+            // console.log(req.body);
+
             if (!req.file) {
                 res.status(400).send('No file uploaded');
                 return;
@@ -282,9 +301,10 @@ export class FreelancerController {
             if (!token) {
                 throw new Error('Invalid token')
             }
-
-            const result = await uploadToCloudinary(req.file.path);
-            console.log(result);
+            console.log(req.file);
+            
+            const result = await uploadToCloudinary(req.file.path, "profile");
+            // console.log(result);
             const userData = await this.freelancerService.updatePrfileImage(token, result.url)
             fs.unlinkSync(req.file.path);
             userData.password = ""
@@ -352,6 +372,68 @@ export class FreelancerController {
             res.json({ status: false, error: error.message })
         }
     }
+
+    //create new  work
+    async WorkSubmit(req: Request, res: Response): Promise<any> {
+        const workData = req.body
+        try {
+ 
+            const files = req.files as { [fieldname: string]: File[]; };
+
+            if (!files || !files['image1'] || files['image1'].length === 0) {
+                throw new Error('At least one image is required.');
+            }
+
+            const filePaths: string[] = [];
+            if (files['image1'] && files['image1'].length > 0) filePaths.push(files['image1'][0].path);
+            if (files['image2'] && files['image2'].length > 0) filePaths.push(files['image2'][0].path);
+            if (files['image3'] && files['image3'].length > 0) filePaths.push(files['image3'][0].path);
+
+            const responseImages = await this.freelancerService.uploadMultiFiles(filePaths,"workImages")
+            if(responseImages){
+                workData.image1 = responseImages.image1Url
+                workData.image2 = responseImages.image2Url
+                workData.image3 = responseImages.image3Url
+            }
+            // console.log(workData);
+            workData.user = req.user._id
+            const categoryDetails = await this.freelancerService.CategoryDataFetch(workData.category,workData.subcategory)
+            workData.categoryNames=[categoryDetails.categoryTitle,categoryDetails.subcategoryTitle]
+            const submitResponse = await this.freelancerService.WorkSubmitService(workData)
+            if(submitResponse){
+                res.status(200).json({ status: true })
+            }
+            
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+
+    async getallWorksOfUser(req: Request, res: Response): Promise<any> {
+        try {
+            
+            const userID = req.user._id
+            
+            if(!userID){
+                throw new Error("Unauthorized access")
+            }
+            console.log("called##s ### ## ###");
+            console.log(userID ,"user ID");
+            
+            const works = await this.freelancerService.getallWorksOfUserServ(userID)
+            // console.log(categories)
+            console.log(works)
+            
+
+            res.status(200).json({ status: 'success', data: works })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+
+
 
 
 }

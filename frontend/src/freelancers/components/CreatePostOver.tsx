@@ -24,12 +24,17 @@ function CreatePostOver(data:any) {
   };
   initFlowbite();
 
-  const handleChange: any = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    data.setFormData({
-      ...data.formData,
-      [event.target.name]: event.target.value,
-    });
+
+
+  const handleChange: any = (event: any) => {
+    if (data.formData.title.length <= 79 || event.nativeEvent.inputType === 'deleteContentBackward') {
+      data.setFormData({
+        ...data.formData,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -68,6 +73,7 @@ function CreatePostOver(data:any) {
 
   return (
     <>
+
       <div className="w-full  bg-slate-50 min-h-[80vh] py-5">
         <div className="block md:w-3/5 w-5/6 mx-auto p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <div className="flex flex-col gap-5">
@@ -88,12 +94,12 @@ function CreatePostOver(data:any) {
               <div className="w-4/6">
                 <textarea
                   id="message"
-                  rows={4} value={data.formData.title} name="title" onChange={(e)=>handleChange(e)}
-                  className="block p-2.5 w-full font-semibold text-xl text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  rows={3} value={data.formData.title} name="title" onChange={(e)=>{  handleChange(e) }}
+                  className="block p-2.5 w-full font-semibold text-2xl text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="I Will do something I'm really good at.."
                 />
                 <p className="text-end text-gray-400 text-[12px] italic">
-                  0 / 80 max
+                  {data.formData.title.length} / 80 max
                 </p>
               </div>
             </div>

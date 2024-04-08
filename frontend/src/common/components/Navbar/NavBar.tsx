@@ -101,6 +101,11 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                   Discover works
                 </p>
               </li>
+              {freelancerDetails.freelancer !== null ? <li>
+                <p onClick={()=>navigate('/post')} className="block cursor-pointer py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent">
+                  Post works
+                </p>
+              </li> : null}
 
               {freelancerDetails.freelancer !== null ? (
                 <li>

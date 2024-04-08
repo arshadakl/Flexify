@@ -26,4 +26,8 @@ router.get('/allsubcategories',adminController.allSubCategories.bind(adminContro
 router.delete('/deletesubCategory',protector,adminController.deleteSubCategory.bind(adminController));
 router.post('/editsubcategory',protector,adminController.editSubCategory.bind(adminController));
 
+router.get('/allworks',adminController.getAllWorks.bind(adminController));
+router.patch('/suspendworks',adminController.suspendWork.bind(adminController));
+
+
 export default router;

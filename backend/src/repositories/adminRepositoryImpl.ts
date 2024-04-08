@@ -7,6 +7,8 @@ import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { Category, Subcategory } from "../models/Category";
 import { promises } from "dns";
 import {  AdminInter, ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { WorkModel } from "../models/Works";
+import { IWork } from "../interfaces/freelancerInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 
@@ -106,6 +108,18 @@ export class AdminRepositoryImpl implements AdminRepository{
                 $currentDate: { updatedAt: true },
             }
             )
+    }
+    
+    async getAllWorks():Promise<IWork[] | null>{
+        return await WorkModel.find()
+    }
+    
+    async findWorkById(id: string): Promise<any> {
+        return await WorkModel.findOne({ _id: id });
+    }
+    
+    async suspendWork(id: string, action:any): Promise<any> {
+        return await WorkModel.updateOne({ _id: id }, { isActive: action });
     }
 }
    

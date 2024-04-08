@@ -8,6 +8,10 @@ import jwt, { Secret } from "jsonwebtoken"
 import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from 'jsonwebtoken';
 import { ICategory, ISubcategory } from '../interfaces/adminInterface';
+import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
+import { IWork } from '../interfaces/freelancerInterface';
+import fs from 'fs'
+
 // import { uploadFile } from '../utils/Cloudinary';
 
 
@@ -253,7 +257,7 @@ export class FreelancerService {
             const decodedToken = await this.validateJWT(token);
             const userData = await this.freelancerRepository.findDetailsById(decodedToken.id);
             if (userData) {
-                console.log(userData);
+                // console.log(userData);
                 return userData
             } else {
                 throw new Error("User not found ")
@@ -292,24 +296,19 @@ export class FreelancerService {
     }
 
 
-
-
-
-
     async jwtCreation(freelancer: Freelancer): Promise<any> {
         if (freelancer !== null) {
             if (!process.env.JWT_SECRET) {
                 throw new Error("JWT secret is not defined in environment variables.");
             }
-
+    
             const token = jwt.sign({ id: freelancer.id, email: freelancer.email }, process.env.JWT_SECRET, {
-                expiresIn: "2h",
+                expiresIn: "10h", // Change expiration to 10 hours
             });
-
+    
             freelancer.token = token;
             freelancer.password = "";
             const options = {
-                expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
                 httpOnly: true,
             };
             const credentials = { token, options, freelancer };
@@ -318,6 +317,7 @@ export class FreelancerService {
             throw new Error("Email not found");
         }
     }
+    
 
     async securityCode(freelancer: Freelancer): Promise<any> {
         if (freelancer !== null) {
@@ -384,29 +384,99 @@ export class FreelancerService {
         }
     }
 
-    async getAllCategories():Promise<ICategory[] | undefined> {
+    async getAllCategories(): Promise<ICategory[] | undefined> {
         try {
             const allCategories = await this.freelancerRepository.getAllCategories()
-            if(allCategories){
+            if (allCategories) {
                 return allCategories
             }
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
 
-    async getAllSubCategories():Promise<ISubcategory[] | undefined> {
+    async getAllSubCategories(): Promise<ISubcategory[] | undefined> {
         try {
             const allCategories = await this.freelancerRepository.getAllSubCategories()
-           
-            if(allCategories){
+
+            if (allCategories) {
                 return allCategories
             }
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
+
+    async WorkSubmitService(workData:IWork): Promise<any> {
+        try {
+            const response = await this.freelancerRepository.createWorkPost(workData)
+            console.log(response);
+            if(response){
+                return true
+            }
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async uploadMultiFiles(filePaths: string[], folderName: string) {
+        try {
+
+            const cloudinaryResponse = await uploadMultipleToCloudinary(filePaths, folderName);
+            if(!cloudinaryResponse){
+                throw new Error("Cloud Image Upload Failed, please try again")
+            }
+            const image1Url: string = cloudinaryResponse[0] ? cloudinaryResponse[0].url : '';
+            const image2Url: string = cloudinaryResponse[1] ? cloudinaryResponse[1].url : '';
+            const image3Url: string = cloudinaryResponse[2] ? cloudinaryResponse[2].url : '';
+
+            console.log(image1Url, image2Url, image3Url);
+            filePaths.forEach((path)=>{
+                fs.unlinkSync(path);
+            })
+            return { image1Url, image2Url, image3Url }
+
+
+        } catch (error) {
+
+        }
+    }
+
+    async CategoryDataFetch(categoryId: string, subCategoryId: string): Promise<any> {
+        try {
+            const categoryPromise = this.freelancerRepository.findCategoriesById(categoryId);
+            const subcategoryPromise = this.freelancerRepository.findSubCategoriesById(subCategoryId);
+    
+            return Promise.all([categoryPromise, subcategoryPromise])
+                .then(([category, subcategory]) => {
+                    let categoryTitle = category?.title
+                    let subcategoryTitle = subcategory?.name
+
+                    return { categoryTitle, subcategoryTitle };
+                })
+                .catch(error => {
+                    throw new Error(error.message);
+                });
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+    
+
+    async getallWorksOfUserServ(id:string): Promise<any> {
+        try {
+            const allWorks = await this.freelancerRepository.getAllWorkOfUser(id)
+
+            if (allWorks) {
+                return allWorks
+            }
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
 
 
 }

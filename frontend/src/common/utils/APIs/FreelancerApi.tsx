@@ -223,6 +223,8 @@ export const fetchProfileData = async () => {
   }
 };
 
+
+
 export const uploadProfileImage = async (formData: FormData) => {
   try {
     const response = await freelancersAPI.post('/uploadProfileImage', formData, {
@@ -262,7 +264,6 @@ export const forgotPassword = async (email: string) => {
 export const getAllCategories = async ()=>{
   try {
       const response = await freelancersAPI.get('/allcategories');
-      console.log(response);
       return response.data
   } catch (error) {
       
@@ -272,12 +273,39 @@ export const getAllCategories = async ()=>{
 export const getAllSubCategories = async ()=>{
   try {
       const response = await freelancersAPI.get('/allsubcategories');
-      console.log(response);
       return response.data
   } catch (error) {
       
   }
 }
 
+
+
+export const workPostAPI = async (formData:any)=>{
+  try {
+      const response = await freelancersAPI.post('/worksubmit',formData,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      });
+      console.log(response);
+      
+      return response.data
+  } catch (error) {
+      
+  }
+}
+
+export const getUsrAllWork = async ()=>{
+  try {
+    console.log("called allworj");
+      const response = await freelancersAPI.get('/getuserwork');
+      console.log(response,"work respose");
+      
+      return response.data
+  } catch (error) {
+      
+  }
+}
 
 export default AxiosInterceptor;

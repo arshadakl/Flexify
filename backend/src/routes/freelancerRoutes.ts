@@ -34,5 +34,14 @@ router.post('/uploadProfileImage',multerMid.single('file'),freelancerController.
 router.get('/allcategories',freelancerController.allCategories.bind(freelancerController));
 router.get('/allsubcategories',freelancerController.allSubCategories.bind(freelancerController));
 
+// router.post('/worksubmit',multerMid.single('image1'),freelancerController.WorkSubmit.bind(freelancerController));
+// router.post('/worksubmit',multerMid.array('images',3),freelancerController.WorkSubmit.bind(freelancerController));
+router.post('/worksubmit',protector,multerMid.fields([
+    { name: 'image1', maxCount: 1 },
+    { name: 'image2', maxCount: 1 },
+    { name: 'image3', maxCount: 1 }
+]),freelancerController.WorkSubmit.bind(freelancerController));
+
+router.get('/getuserwork',protector,freelancerController.getallWorksOfUser.bind(freelancerController));
 
 export default router;
