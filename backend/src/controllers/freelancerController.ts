@@ -1,6 +1,6 @@
 // src/controllers/freelancerController.ts
 import { Request, Response, response } from "express";
-import { FreelancerService } from "../services/freelancerService";
+import { FreelancerService } from "../services/freelancerServiceImpl";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import ImageUploadRepository from "../repositories/ImageUploadRepository";
 import { Readable } from 'stream';

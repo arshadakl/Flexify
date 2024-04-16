@@ -1,7 +1,7 @@
 
 import { Router } from "express";
 import { FreelancerController } from "../controllers/freelancerController";
-import { FreelancerService } from "../services/freelancerService";
+import { FreelancerService } from "../services/freelancerServiceImpl";
 import { FreelancerRepositoryImpl } from "../repositories/freelancerRepositoryImpl";
 import { multerMid } from "../middlewares/multerConfig";
 import { protector } from "../middlewares/freelancerAuth";

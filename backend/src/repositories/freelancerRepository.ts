@@ -27,7 +27,7 @@ export interface FreelancerRepository {
     findCategoriesById(id:string):Promise<ICategory | null>
     createWorkPost(workData:IWork):Promise<IWork>
 
-    getAllWorkOfUser(id:string):Promise<any>
+    getAllWorkOfUser(id: string): Promise<IWork[] | null>
     getAllActiveWorksToDiscover():Promise<any>
     deleteWork(id:string):Promise<DeleteResult>
 

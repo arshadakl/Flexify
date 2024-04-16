@@ -1,4 +1,3 @@
-import { promises } from "dns";
 import { Freelancer } from "../models/Freelancer";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
@@ -7,7 +6,7 @@ import { IOrder } from "../interfaces/clientInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
-    getAllUsersData():void
+    getAllUsersData(): Promise<Freelancer[] | null>
     findById(id: string): Promise<Freelancer | null>
     blockUser(id:string,action:any):Promise<UpdateWriteOpResult>
     findAdminByName(adminId:string):Promise<AdminInter | undefined>

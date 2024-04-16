@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { AdminServices } from "../services/adminServices";
+import { AdminServicesimple } from "../services/adminServiceImpl";
 import { Category } from "../models/Category";
 
 export class AdminController {
-    constructor(private readonly _adminService: AdminServices) { }
+    constructor(private readonly _adminService: AdminServicesimple) { }
 
     //admin login
     async login(req: Request, res: Response): Promise<any> {

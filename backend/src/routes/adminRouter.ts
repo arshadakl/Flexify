@@ -1,13 +1,13 @@
 import { Router } from "express";
 import { AdminRepositoryImpl } from "../repositories/adminRepositoryImpl";
-import { AdminServices } from "../services/adminServices";
+import { AdminServicesimple } from "../services/adminServiceImpl";
 import { AdminController } from "../controllers/adminController";
 import { protector } from "../middlewares/adminAuth";
 
 
 const router = Router();
 const adminRepository = new AdminRepositoryImpl();
-const adminService = new AdminServices(adminRepository);
+const adminService = new AdminServicesimple(adminRepository);
 const adminController = new AdminController(adminService)
 
 

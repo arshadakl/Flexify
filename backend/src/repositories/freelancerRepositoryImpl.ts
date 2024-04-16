@@ -186,7 +186,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         return await WorkModel.create(workData)
     }
 
-    async getAllWorkOfUser(id: string): Promise<any> {
+    async getAllWorkOfUser(id: string): Promise<IWork[] | null> {
         return await WorkModel.find({ user: id })
     }
 

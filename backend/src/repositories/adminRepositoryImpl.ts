@@ -17,7 +17,7 @@ import { Order } from "../models/Clients";
 
 
 export class AdminRepositoryImpl implements AdminRepository{
-    async getAllUsersData(){
+    async getAllUsersData():Promise<Freelancer[] | null>{
         return await Freelancer.find()
     }
 
