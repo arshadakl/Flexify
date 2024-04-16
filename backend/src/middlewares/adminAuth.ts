@@ -35,7 +35,9 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
       console.log("befor next called");
 
       const decodedToken = jwt.verify(token, jwtSecret) as JwtPayload;
-      console.log(decodedToken," #decodedToken ");
+      if (!decodedToken) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
       
       const admin = await adminRepository.findAdminById(decodedToken.id);
       console.log(admin, "admin");
@@ -43,9 +45,9 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
       if (!admin) {
         return res.status(401).json({ message: "Unauthorized: User not found" });
       }
+      req.admin = admin;
       
-      
-      next();
+       next();
     } catch (error) {
       if (error instanceof jwt.TokenExpiredError) {
         return res.status(401).json({ message: "session expired please login again" });

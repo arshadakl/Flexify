@@ -7,9 +7,13 @@ const FreelancerModel = require('../models/Freelancer').Freelancer
 const FreelancerDetailsModel = require('../models/Freelancer').FreelancerDetails
 import bcrypt from "bcrypt"
 import { Category, Subcategory } from "../models/Category";
-import {WorkModel} from "../models/Works";
-import { ICategory, ISubcategory } from "../interfaces/adminInterface";
-import { IWork } from "../interfaces/freelancerInterface";
+import { WorkModel } from "../models/Works";
+import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
+import { IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
+import { UpdateWriteOpResult } from "mongoose";
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
+
 
 export class FreelancerRepositoryImpl implements FreelancerRepository {
     async findByUsername(username: string): Promise<Freelancer | null> {
@@ -20,16 +24,16 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         return await FreelancerModel.findOne({ email });
     }
 
-    
+
     async find_ById(id: string): Promise<Freelancer | undefined> {
         console.log(id, "in implements FreelancerRepository");
-        
-        const res =  await FreelancerModel.findById(id);
-        console.log(res,"imp");
-        
+
+        const res = await FreelancerModel.findById(id);
+        console.log(res, "imp");
+
         return res
     }
-    
+
     async create(freelancer: Freelancer): Promise<void> {
         await FreelancerModel.create(freelancer);
     }
@@ -45,15 +49,19 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         // return false; 
     }
 
-   
 
 
-    async clearOTP(email:string){
-        await FreelancerModel.updateOne({email,OTP:-1})
+
+    async clearOTP(email: string) {
+        await FreelancerModel.updateOne({ email },
+            {
+                $set: { OTP: -1 }
+            }
+        )
     }
 
-    async FreelancerDetailsAdd(formData:any){
-       return await FreelancerDetailsModel.create(formData)
+    async FreelancerDetailsAdd(formData: any) {
+        return await FreelancerDetailsModel.create(formData)
     }
 
 
@@ -62,7 +70,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         try {
             console.log('Updating freelancer details for user:', formData.user);
             console.log('New data:', formData);
-    
+
             const result = await FreelancerDetailsModel.updateOne(
                 { user: formData.user },
                 {
@@ -71,12 +79,12 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         lastName: formData.lastName,
                         Country: formData.Country,
                         language: formData.language,
-                        skillsList: formData.skillsList, 
+                        skillsList: formData.skillsList,
                         bio: formData.bio
                     }
                 }
             );
-    
+
             console.log('Update result:', result);
             return result;
         } catch (error) {
@@ -85,23 +93,35 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         }
     }
 
-    
 
-    async doVerification(id:String){
-        return await FreelancerModel.updateOne({id,isVerified:1})
-    }
 
-    async setNewOTP(email:string,otp:number){ 
-        return await Freelancer.updateOne({email:email},
+    async doVerification(id: String) {
+        return await FreelancerModel.updateOne({ _id: id },
             {
-                $set:{OTP:otp},
-                
+                $set: { isVerified: 1 }
             }
-            )
-        
+        )
     }
-    async cleanOTP(email:string){
-        return await Freelancer.updateOne({email:email},{$set:{OTP:0}})
+
+    async doRolespecify(id: String, role: string): Promise<UpdateWriteOpResult> {
+        return await FreelancerModel.updateOne({ _id: id },
+            {
+                $set: { role: role }
+            }
+        )
+    }
+
+    async setNewOTP(email: string, otp: number) {
+        return await Freelancer.updateOne({ email: email },
+            {
+                $set: { OTP: otp },
+
+            }
+        )
+
+    }
+    async cleanOTP(email: string) {
+        return await Freelancer.updateOne({ email: email }, { $set: { OTP: 0 } })
     }
 
     // async updatePassword(id:string, password:string):Promise<any>{
@@ -110,61 +130,205 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
     async updatePassword(id: string, password: string): Promise<any> {
         return await Freelancer.updateOne(
-          { _id: id },
-          {
-            $set: { password: password },
-            $currentDate: { updatedAt: true }, // Update the updatedAt field with the current timestamp
-          }
+            { _id: id },
+            {
+                $set: { password: password },
+                $currentDate: { updatedAt: true }, // Update the updatedAt field with the current timestamp
+            }
         );
-      }
+    }
 
 
     async findDetailsById(id: string): Promise<FreelancerDetails | null> {
-        console.log("implement id",id);
-        return await FreelancerDetailsModel.findOne({user:id});
+        console.log("implement id", id);
+        return await FreelancerDetailsModel.findOne({ user: id });
     }
 
-    async updateProfileImage(id:string,filepath:string):Promise<Freelancer | null> {
-         const response = await Freelancer.updateOne({id,profile:filepath})
-         if(response){
+    async updateProfileImage(id: string, filepath: string): Promise<Freelancer | null> {
+        const response = await Freelancer.updateOne({ _id: id },
+            {
+                $set: { profile: filepath }
+            }
+        )
+        if (response) {
             console.log(id);
             const data = await Freelancer.findById(id);
-            if(data){
-                console.log(data,"updated profile image data");
+            if (data) {
+                console.log(data, "updated profile image data");
                 return data
-            }else{
+            } else {
                 throw new Error("data not found");
             }
-         }else{
+        } else {
             throw new Error("Failed to update profile image")
-         }
+        }
 
     }
 
 
-    async getAllCategories():Promise<ICategory[] | undefined>{
+    async getAllCategories(): Promise<ICategory[] | undefined> {
         return await Category.find({})
     }
 
-    async getAllSubCategories():Promise<ISubcategory[] | undefined>{
+    async getAllSubCategories(): Promise<ISubcategory[] | undefined> {
         return await Subcategory.find({})
     }
 
-    async findCategoriesById(id:string):Promise<ICategory | null>{
-        return await Category.findOne({_id:id})
+    async findCategoriesById(id: string): Promise<ICategory | null> {
+        return await Category.findOne({ _id: id })
     }
 
-    async findSubCategoriesById(id:string):Promise<ISubcategory | null>{
-        return await Subcategory.findOne({_id:id})
+    async findSubCategoriesById(id: string): Promise<ISubcategory | null> {
+        return await Subcategory.findOne({ _id: id })
     }
 
-    async createWorkPost(workData:IWork):Promise<any>{
+    async createWorkPost(workData: IWork): Promise<IWork> {
         return await WorkModel.create(workData)
     }
 
-    async getAllWorkOfUser(id:string):Promise<any>{
-        return await WorkModel.find({user:id})
+    async getAllWorkOfUser(id: string): Promise<any> {
+        return await WorkModel.find({ user: id })
     }
 
+    // async getAllActiveWorksToDiscover(): Promise<IWork[]> {
+    //     return await WorkModel.find({ isActive: true });
+    // }
+
+    async deleteWork(id: string): Promise<DeleteResult> {
+        return await WorkModel.deleteOne({ _id: id });
+    }
+
+
+    async getAllActiveWorksToDiscover(): Promise<any> {
+        try {
+            const response = await WorkModel.aggregate([
+                {
+                    $match: {
+                        isActive: true // Filter by isActive: true
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                { $unwind: "$user" },
+                {
+                    $lookup: {
+                        from: "freelancerdetails",
+                        localField: "user._id",
+                        foreignField: "user",
+                        as: "freelancerdetails"
+                    }
+                },
+                {
+                    $project: {
+                        user: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            profile: 1,
+                            role: 1 // Include fields you want to keep
+                        },
+                        title: 1,
+                        category: 1,
+                        subcategory: 1,
+                        categoryNames: 1,
+                        tags: 1,
+                        image1: 1,
+                        image2: 1,
+                        image3: 1,
+                        deliveryPeriod: 1,
+                        referenceMaterial: 1,
+                        logo: 1,
+                        description: 1,
+                        questionnaire: 1,
+                        amount: 1,
+                        isActive: 1,
+                        freelancerdetails: 1
+                    }
+                }
+            ]);
     
+            console.log(response, "Response"); // Log the response to see if there's any data returned
+    
+            return response; 
+    
+        } catch (error) {
+            console.log(error);
+    
+            throw new Error(`Error getting all active work details: ${error}`);
+        }
+    }
+
+
+    getWorkDetails = async (id: string) => {
+        try {
+
+            const response = await WorkModel.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },
+                // { $unwind: "$user.questionnaire" },
+                { $unwind: "$user" },
+                {
+                    $lookup: {
+                        from: "freelancerdetails",
+                        localField: "user._id",
+                        foreignField: "user",
+                        as: "freelancerdetails"
+                    }
+                },
+                { $unwind: "$freelancerdetails" },
+                {
+                    $project: {
+                        user: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            profile: 1,
+                            role: 1 
+                        },
+                        title: 1,
+                        category: 1,
+                        subcategory: 1,
+                        categoryNames: 1,
+                        tags: 1,
+                        image1: 1,
+                        image2: 1,
+                        image3: 1,
+                        deliveryPeriod: 1,
+                        referenceMaterial: 1,
+                        logo: 1,
+                        description: 1,
+                        questionnaire: 1,
+                        amount: 1,
+                        isActive: 1,
+                        freelancerdetails: 1
+                    }
+                }
+                
+            ]);
+
+            console.log(response, "first reposnse");
+
+            return response
+        } catch (error) {
+            console.log(error);
+
+            throw new Error(`Error getting work details: ${error}`);
+        }
+    };
+
+
+
 }

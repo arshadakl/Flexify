@@ -170,3 +170,12 @@ export const suspendWorkAPI = async(id:string)=>{
         console.log(error);
     }
 }
+
+export const getAllOrdersAPI = async()=>{
+    try {
+        const response = await adminAPI.get('/getallorders')
+        return response.data        
+    } catch (error) {
+        console.log(error);
+    }
+}

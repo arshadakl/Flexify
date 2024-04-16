@@ -19,7 +19,7 @@ app.use(bodyParser.urlencoded({ limit: '150mb', extended: true }));
 
 app.use(
     cors({
-      origin: ["http://localhost:5173"],
+      origin: ["http://localhost:5173",],
       methods: ["GET,PUT,PATCH,POST,DELETE",],
       credentials: true,
     })

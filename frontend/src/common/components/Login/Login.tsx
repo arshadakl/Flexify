@@ -3,14 +3,14 @@ import { LoginApi, googleAuthLogin } from "../../utils/APIs/FreelancerApi";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
-// import { AuthContext } from "../../utils/config/context";
 import { useDispatch } from "react-redux";
-// import { loginFreelancer } from '../../../Redux/Slices/freelancerSlice';
+import { motion } from "framer-motion";
 import {
   loginStart,
   loginSuccess,
   loginFailure,
 } from "../../../Redux/Slices/freelancerSlice";
+import { fadeIn } from "../../animations/Frame_Motion/variants";
 // interface EmailVerificationProps {
 //   email: string;
 // }
@@ -39,48 +39,6 @@ const Login = () => {
       [event.target.name]: event.target.value,
     });
   };
-
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-
-  //   // Validation
-  //   if (!formData.username.trim()) {
-  //     toast.error("Please enter a username.");
-  //     return;
-  //   }
-
-  //   if (formData.password.length < 6) {
-  //     toast.error("Password must be at least 6 characters long.");
-  //     return;
-  //   }
-
-  //   // All validations passed, proceed with signup
-  //   try {
-  //     const LoginResponse: any = await LoginApi(formData);
-  //     console.log(LoginResponse.status,"reposenseses");
-  //     if (LoginResponse.status) {
-  //       // setIsOTP(true);
-  //       toast.success("Successfully Logined")
-  //       setFreelancerDetails(LoginResponse.freelancer)
-
-  //       const userDataString = JSON.stringify(LoginResponse.freelancer);
-  //       localStorage.setItem('user_data', userDataString);
-
-  //       navigate('/')
-  //     } else {
-  //       toast.error(LoginResponse.error);
-  //     }
-  //   } catch (error) {
-  //     // Handle other errors
-  //     console.error("Error during signup:", error);
-  //     toast.error("Login failed. Please try again.");
-  //   }
-  // };
-
-  // interface LoginFormData {
-  //   username: string;
-  //   password: string;
-  // }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -135,7 +93,7 @@ const Login = () => {
       <section>
         {/* <Toaster richColors position="top-left" /> */}
         {/* component */}
-        <div className="flex h-screen ">
+        <motion.div  className="flex h-screen ">
           {/* Left Pane */}
           <img
             onClick={() => navigate("/")}
@@ -148,21 +106,21 @@ const Login = () => {
               <div className="flex flex-col  items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
                 <div className="w-screen bg-white  md:mt-0 sm:max-w-lg  xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                   <div className="p-6 space-y-1 md:space-y-6 sm:p-8">
-                    <img
+                    <img 
                       src="/images/FlexifyBlack.png"
                       className="w-52 mx-auto sm:mb-12 lg:hidden"
                       alt=""
                     />
-                    <h1 className="text-xl text-center lg:text-2xl m-0 p-0 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                    <motion.h1 variants={fadeIn("up",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="text-xl text-center lg:text-2xl m-0 p-0 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                       Welcome Back 👋
-                    </h1>
-                    <p
+                    </motion.h1>
+                    <motion.p  variants={fadeIn("down",0.4)} initial="hidden" whileInView={"show"}
                       className="font-poppins text-lg text-center font-light"
                       style={{ marginTop: "0.5rem" }}
                     >
                       Sign in now
-                    </p>
-                    <form
+                    </motion.p>
+                    <motion.form  variants={fadeIn("up",0.6)} initial="hidden" whileInView={"show"}
                       className="space-y-3 "
                       onSubmit={(e) => handleSubmit(e)}
                     >
@@ -197,12 +155,12 @@ const Login = () => {
                           />
                         </div>
                       </div>
-                      <p
+                      <motion.p  variants={fadeIn("left",1)} initial="hidden" whileInView={"show"}
                         onClick={() => navigate("/forgotpassword")}
                         className="text-end mx-12 text-sm text-blue-600 cursor-pointer"
                       >
                         Forgot Password?
-                      </p>
+                      </motion.p>
                       <button
                         type="submit"
                         className="w-4/5 mx-11 text-white bg-zinc-950 hover:bg-zinc-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-dark dark:hover:bg-primary-700 dark:focus:ring-primary-800"
@@ -234,17 +192,17 @@ const Login = () => {
                           Sign up
                         </a>
                       </p>
-                    </form>
+                    </motion.form>
                   </div>
                 </div>
               </div>
             </div>
           </div>
           {/* Right Pane */}
-          <div className="hidden signup-banner lg:flex bg-[url('/images/signup-banner3.jpg')]   items-center justify-center flex-1 bg-white text-black">
+          <motion.div variants={fadeIn("left",0.03)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="hidden signup-banner lg:flex bg-[url('/images/signup-banner3.jpg')]   items-center justify-center flex-1 bg-white text-black">
             <div className=" text-center"></div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
       )
     </>

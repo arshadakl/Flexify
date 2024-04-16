@@ -6,9 +6,12 @@ const FreelancerModel = require('../models/Freelancer').Freelancer
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { Category, Subcategory } from "../models/Category";
 import { promises } from "dns";
-import {  AdminInter, ICategory, ISubcategory } from "../interfaces/adminInterface";
+import {  AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { WorkModel } from "../models/Works";
 import { IWork } from "../interfaces/freelancerInterface";
+import { UpdateWriteOpResult } from "mongoose";
+import { IOrder } from "../interfaces/clientInterface";
+import { Order } from "../models/Clients";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 
@@ -26,29 +29,29 @@ export class AdminRepositoryImpl implements AdminRepository{
         return await AdminModel.findById(id);
     }
 
-    async blockUser(id: string, action:any): Promise<any> {
+    async blockUser(id: string, action:any): Promise<UpdateWriteOpResult> {
         return await FreelancerModel.updateOne({ _id: id }, { isBlocked: action });
     }
 
-    async findAdminByName(adminId: string): Promise<any | undefined>{
+    async findAdminByName(adminId: string): Promise<AdminInter | undefined>{
        return await AdminModel.findOne({adminId: adminId})
     }
     //main category
-    async findCategoryByName(name: string): Promise<any | undefined>{
+    async findCategoryByName(name: string): Promise<ICategory | null>{
         return await Category.findOne({title: name})
     }
 
-    async findCategoryById(id: string): Promise<any | undefined>{
+    async findCategoryById(id: string): Promise<ICategory | null>{
         return await Category.findOne({_id: id})
     }
 
     
     //category
-    async addNewCategory(title: string,description:string): Promise<any | undefined>{
+    async addNewCategory(title: string,description:string): Promise<ICategory | undefined>{
         return await Category.create({title: title, description: description})
     }
 
-    async editCategory(title: string,description:string,_id:string): Promise<any | undefined>{
+    async editCategory(title: string,description:string,_id:string): Promise<UpdateWriteOpResult>{
         return await Category.updateOne(
             {_id:_id},
             {
@@ -71,12 +74,12 @@ export class AdminRepositoryImpl implements AdminRepository{
     }
 
     //sucatecory 
-    async findSubCategoryByName(name: string): Promise<any | undefined>{
+    async findSubCategoryByName(name: string): Promise<ISubcategory | null>{
         return await Subcategory.findOne({name: name})
     }
 
   
-    async findSubCategoryById(id: string): Promise<any | undefined>{
+    async findSubCategoryById(id: string): Promise<ISubcategory | null>{
         return await Subcategory.findOne({_id: id})
     }
 
@@ -96,11 +99,11 @@ export class AdminRepositoryImpl implements AdminRepository{
         return await Subcategory.deleteOne({_id:id})
     }
 
-    async deleteSubCategoryByMain(category:string):Promise<any> {
+    async deleteSubCategoryByMain(category:string):Promise<DeleteResult > {
         return await Subcategory.deleteMany({category:category})
     }
 
-    async editSubCategory(name: string,description:string,_id:string): Promise<any | undefined>{
+    async editSubCategory(name: string,description:string,_id:string): Promise<UpdateWriteOpResult | undefined>{
         return await Subcategory.updateOne(
             {_id:_id},
             {
@@ -114,12 +117,20 @@ export class AdminRepositoryImpl implements AdminRepository{
         return await WorkModel.find()
     }
     
-    async findWorkById(id: string): Promise<any> {
+    async findWorkById(id: string): Promise<IWork | null> {
         return await WorkModel.findOne({ _id: id });
     }
     
-    async suspendWork(id: string, action:any): Promise<any> {
+    async suspendWork(id: string, action:any): Promise<UpdateWriteOpResult> {
         return await WorkModel.updateOne({ _id: id }, { isActive: action });
+    }
+    
+    async getAllOrders(): Promise<IOrder[] | null> {
+        try {
+            return await Order.find();
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
     }
 }
    

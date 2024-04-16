@@ -49,7 +49,7 @@ const AxiosInterceptor: React.FC = () => {
     const requestInterceptor = freelancersAPI.interceptors.request.use(
       (config) => {
         if (user) {
-          config.headers['Authorization'] = user.freelancer.token;
+          config.headers['Authorization'] = user.freelancer.token ;
         }
 
         return config;
@@ -146,6 +146,32 @@ export const profileCompletion = async (formData: profileCompletionForm) => {
     }
   }
 };
+export const roleSpecify = async (id:string,role:string) => {
+  try {
+    const response = await freelancersAPI.post('/rolespecify', {id:id,role:role});
+    console.log(response);
+
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`Profile completion failed: ${error.message}`);
+    } else {
+      throw new Error('An unexpected error occurred during profile completion.');
+    }
+  }
+};
+export const switchRoleAPI = async (role:string) => {
+  try {
+    const response = await freelancersAPI.post('/changerole', {role:role});
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(`Profile completion failed: ${error.message}`);
+    } else {
+      throw new Error('An unexpected error occurred during profile completion.');
+    }
+  }
+};
 
 export const profileUpdate = async (formData: profileCompletionForm) => {
   try {
@@ -208,7 +234,7 @@ export const fetchProfileData = async () => {
     console.log("called api");
 
     const response = await freelancersAPI.get('/profileData');
-    console.log(response);
+    console.log(response,"user PRofie data");
     
     return response.data;
   } catch (error: unknown) {
@@ -298,10 +324,36 @@ export const workPostAPI = async (formData:any)=>{
 
 export const getUsrAllWork = async ()=>{
   try {
-    console.log("called allworj");
       const response = await freelancersAPI.get('/getuserwork');
-      console.log(response,"work respose");
+      return response.data
+  } catch (error) {
       
+  }
+}
+
+export const getAllWorks = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/getAllWorks');
+      return response.data
+  } catch (error) {
+      
+  }
+}
+
+export const getSingleWorkAPI = async (id:string)=>{
+  try {
+    console.log(id);
+    
+      const response = await freelancersAPI.get( `/singlework/${id}`);
+      return response.data
+  } catch (error) {
+      
+  }
+}
+
+export const deleteWork = async (id:any)=>{
+  try {
+      const response = await freelancersAPI.delete(`/deletework?id=${id}`);
       return response.data
   } catch (error) {
       

@@ -1,4 +1,3 @@
-// src/routes/freelancerRoutes.ts
 
 import { Router } from "express";
 import { FreelancerController } from "../controllers/freelancerController";
@@ -26,6 +25,8 @@ router.post('/verification',freelancerController.OtpVerification.bind(freelancer
 router.post('/resendotp',freelancerController.reSendOtp.bind(freelancerController))
 router.post('/profileCompletion',freelancerController.profileCompletion.bind(freelancerController))
 router.post('/profileupdate',freelancerController.profileUpdate.bind(freelancerController))
+router.post('/rolespecify',freelancerController.rolespecify.bind(freelancerController))
+router.post('/changerole',protector,freelancerController.changeRole.bind(freelancerController))
 // router.get('/otp',mailServices.sendOtp.bind("arshadayanikkal@gmail.com","123"))
 
 router.get('/profiledata',protector,freelancerController.profiledata.bind(freelancerController))
@@ -34,8 +35,7 @@ router.post('/uploadProfileImage',multerMid.single('file'),freelancerController.
 router.get('/allcategories',freelancerController.allCategories.bind(freelancerController));
 router.get('/allsubcategories',freelancerController.allSubCategories.bind(freelancerController));
 
-// router.post('/worksubmit',multerMid.single('image1'),freelancerController.WorkSubmit.bind(freelancerController));
-// router.post('/worksubmit',multerMid.array('images',3),freelancerController.WorkSubmit.bind(freelancerController));
+
 router.post('/worksubmit',protector,multerMid.fields([
     { name: 'image1', maxCount: 1 },
     { name: 'image2', maxCount: 1 },
@@ -43,5 +43,8 @@ router.post('/worksubmit',protector,multerMid.fields([
 ]),freelancerController.WorkSubmit.bind(freelancerController));
 
 router.get('/getuserwork',protector,freelancerController.getallWorksOfUser.bind(freelancerController));
+router.get('/getAllWorks',freelancerController.getallWorksToDiscover.bind(freelancerController))
+router.get('/singlework/:id',freelancerController.getallSingleWorkDetails.bind(freelancerController))
+router.delete('/deletework',protector,freelancerController.deleteworkWork.bind(freelancerController))
 
 export default router;

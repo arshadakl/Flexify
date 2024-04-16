@@ -4,9 +4,11 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { AuthContext } from "../../utils/config/context";
+import {motion} from 'framer-motion'
 
 import { googleAuth, signupApi } from "../../utils/APIs/FreelancerApi";
 import PasswordValidation from "../../../validations/PasswordValidation";
+import { fadeIn } from "../../animations/Frame_Motion/variants";
 // useGoogleOneTapLogin
 // interface EmailVerificationProps {
 //   email: string;
@@ -96,6 +98,7 @@ const Signup = () => {
 
       if (AuthResponse.status) {
         setUserId(AuthResponse.id);
+        localStorage.setItem('id',AuthResponse.id);
         // setIsOTP(true);
         // navigate('/profilecompletion', { state: AuthResponse.id });
         navigate("/profilecompletion");
@@ -135,17 +138,17 @@ const Signup = () => {
                         className="w-52 mx-auto sm:mb-12 lg:hidden"
                         alt=""
                       />
-                      <h1 className="text-xl lg:text-2xl m-0 p-0 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+                      <motion.h1 variants={fadeIn("up",0.1)} whileInView={"show"} initial="hidden" className="text-xl lg:text-2xl m-0 p-0 font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                         Welcome Back 👋
-                      </h1>
-                      <p
+                      </motion.h1>
+                      <motion.p  variants={fadeIn("down",0.2)} whileInView={"show"} initial="hidden"
                         className="font-poppins text-lg font-light"
                         style={{ marginTop: "0.5rem" }}
                       >
                         Today is a new day. It's your day. You shape it. Sign in
                         to start grow with us.
-                      </p>
-                      <form
+                      </motion.p>
+                      <motion.form variants={fadeIn("up",0.4)} initial="hidden" whileInView={"show"} viewport={{once:true}}
                         className="space-y-4 "
                         onSubmit={(e) => handleSubmit(e)}
                       >
@@ -259,16 +262,16 @@ const Signup = () => {
                             Sign in
                           </a>
                         </p>
-                      </form>
+                      </motion.form>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
             {/* Right Pane */}
-            <div className="hidden signup-banner lg:flex bg-[url('/images/signup-banner3.jpg')]   items-center justify-center flex-1 bg-white text-black">
+            <motion.div variants={fadeIn("left",0.03)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="hidden signup-banner lg:flex bg-[url('/images/signup-banner3.jpg')]   items-center justify-center flex-1 bg-white text-black">
               <div className=" text-center"></div>
-            </div>
+            </motion.div>
           </div>
         </section>
       )}

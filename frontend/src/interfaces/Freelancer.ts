@@ -10,7 +10,22 @@ export interface Freelancer {
     token: string;
     username: string;
     _id: string;
+    role: string;
   }
+
+
+//   export interface Freelancer {
+//     id?: string;
+//     username: string;
+//     email: string;
+//     password: string;
+//     OTP?: number;
+//     token?: string;
+//     isVerified?: number;
+//     profile?: string;
+//     isBlocked?: string;
+//     role?: 'freelancer' | 'client' | 'notspecified';
+// }
 
   export interface DetailsINter {
     images: {

@@ -57,9 +57,11 @@ export class FreelancerService {
         const existingUsername = await this.freelancerRepository.findByUsername(freelancer.username);
         const existingEmail = await this.freelancerRepository.findByEmail(freelancer.email);
 
-        if (existingUsername || existingEmail) {
-            throw new Error("Username or email already exists");
-            // return
+        if(existingEmail){
+            throw new Error("email already exists");
+        }
+        if (existingUsername) {
+            throw new Error("Username already exists");
         }
 
         const hashedPassword = await bcrypt.hash(freelancer.password, 10);
@@ -103,24 +105,12 @@ export class FreelancerService {
         }
     }
 
-    // want to change functions
+ 
 
     async doVerifyOtp(id: string): Promise<string | undefined> {
         console.log(id, "reached");
 
         try {
-            // const userData = await this.freelancerRepository.findByEmail(email);
-
-            // if (!userData || !userData.OTP) {
-            //     throw new Error("Invalid email or missing OTP.");
-            // }
-
-            // console.log("Stored OTP:", userData.OTP);
-            // console.log("Entered OTP:", code);
-
-            // if (userData.OTP !== code) {
-            //     throw new Error("Incorrect OTP");
-            // }
 
             if (id) {
                 const verifiedData = await this.freelancerRepository.doVerification(id);
@@ -183,6 +173,34 @@ export class FreelancerService {
 
         if (FreelancerDs) {
             return FreelancerDs
+        } else {
+            throw new Error("wrong")
+        }
+
+    }
+
+    //role specyfication
+    async doRoleSpecify(id:string,role:string): Promise<Boolean> {
+        const response = await this.freelancerRepository.doRolespecify(id, role)
+        console.log(response);
+        
+        if (response) {
+            return true
+        } else {
+            throw new Error("wrong")
+        }
+
+    }
+    //role changing service
+    async doRoleChange(id:string,role:string): Promise<Freelancer> {
+        const response = await this.freelancerRepository.doRolespecify(id, role)
+        if (response) {
+            const userData = await this.freelancerRepository.find_ById(id)
+            if(userData) {
+                return userData
+            }else{
+                throw new Error("user not found")
+            }
         } else {
             throw new Error("wrong")
         }
@@ -252,10 +270,10 @@ export class FreelancerService {
     }
 
 
-    async profiledataService(token: string) {
+    async profiledataService(id: string) {
         try {
-            const decodedToken = await this.validateJWT(token);
-            const userData = await this.freelancerRepository.findDetailsById(decodedToken.id);
+            // const decodedToken = await this.validateJWT(token);
+            const userData = await this.freelancerRepository.findDetailsById(id);
             if (userData) {
                 // console.log(userData);
                 return userData
@@ -477,6 +495,43 @@ export class FreelancerService {
         }
     }
 
+
+    async getallWorksToDiscoverService(): Promise<any> {
+        try {
+            const allWorks = await this.freelancerRepository.getAllActiveWorksToDiscover()
+
+            if (allWorks) {
+                return allWorks
+            }
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async deleteWorkPost(id:string): Promise<any> {
+        try {
+            const deleteResponse = await this.freelancerRepository.deleteWork(id)
+
+            if (deleteResponse) {
+                return true
+            }
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getSingleWorkDetails(id:string): Promise<any> {
+        try {
+            // const singleDetails = await this.freelancerRepository.singlePostDetails(id)
+            const singleDetails = await this.freelancerRepository.getWorkDetails(id)
+            if(singleDetails){
+                return singleDetails
+            }
+
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
 
 
 }

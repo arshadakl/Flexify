@@ -1,4 +1,5 @@
 import React, { createContext, useState } from "react";
+import { IWork } from "../../../interfaces/Freelancer";
 
 // Define the Freelancer interface
 export interface Freelancer {
@@ -12,6 +13,8 @@ export interface Freelancer {
     profile: string;
 }
 
+
+
 // Define the AuthContextValue interface with proper types for setters
 interface AuthContextValue {
     userId?: string | null;
@@ -22,6 +25,8 @@ interface AuthContextValue {
     setIsEdit: (value: boolean) => void;
     imageSrc: string;
     setImageSrc: (value: string) => void;
+    selectedWork: IWork | null; // New
+    setSelectedWork: (value: IWork | null) => void; // New
 }
 
 // Initial context value with default functions
@@ -34,6 +39,8 @@ const initialContextValue: AuthContextValue = {
     setIsEdit: () => {},
     imageSrc: "https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg",
     setImageSrc: () => {},
+    selectedWork: null, // New
+    setSelectedWork: () => {}, // New
 };
 
 // Create the context with the initial value
@@ -46,6 +53,7 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [freelancerDetails, setFreelancerDetails] = useState<Freelancer | null>(null);
     const [isEdit, setIsEdit] = useState(false);
     const [imageSrc, setImageSrc] = useState<string>("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg");
+    const [selectedWork, setSelectedWork] = useState<IWork | null>(null);
 
     // Context value with updated types for setters
     const contextValue: AuthContextValue = {
@@ -57,6 +65,8 @@ const ContextProvider = ({ children }: { children: React.ReactNode }) => {
         setIsEdit,
         imageSrc,
         setImageSrc,
+        selectedWork, // New
+        setSelectedWork, // New
     };
 
     return (

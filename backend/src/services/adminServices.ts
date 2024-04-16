@@ -6,6 +6,7 @@ import bcrypt from "bcrypt"
 import { AdminJwtCreation } from "../utils/jwtCreation";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
+import { IOrder } from "../interfaces/clientInterface";
 
 
 
@@ -227,15 +228,26 @@ export class AdminServices {
         }
     }
 
-    async suspendWork(work:IWork):Promise<IWork | undefined> {
+    async suspendWork(work:IWork):Promise<Boolean | undefined> {
         try {
             const action = work.isActive ? false : true
             const worksData = await this.adminRepository.suspendWork(work._id,action)
             console.log(worksData,"test data");
             
             if(worksData){
-                return worksData
+                return true
             }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    //get all orders
+    // ---------------
+    async getAllOrders():Promise<IOrder[] | null> {
+        try {
+            const orderData = await this.adminRepository.getAllOrders()
+            if(!orderData) throw new Error("No order found")
+            return orderData    
         } catch (error:any) {
             throw new Error(error.message)
         }

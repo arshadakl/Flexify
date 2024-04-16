@@ -4,7 +4,7 @@ import { Toaster, toast } from "sonner";
 import { profileCompletion } from "../../utils/APIs/FreelancerApi";
 
 import { useNavigate } from "react-router-dom";
-import { profileCompletionClient } from "../../utils/APIs/ClientApi";
+// import { profileCompletionClient } from "../../utils/APIs/ClientApi";
 import { useDispatch } from "react-redux";
 import {  loginSuccess} from "../../../Redux/Slices/freelancerSlice";
 export interface profileCompletionForm {
@@ -27,6 +27,8 @@ export interface profileCompletionFormClient {
 }
 
 const Profile = ({ userType }: { userType: string }) => {
+  
+  
   const [skills, setSkills] = useState<{ id: number; skill: string }[]>([]);
   const [input, setInput] = useState<string>("");
   // const { setFreelancerDetails } = useContext(AuthContext);
@@ -44,15 +46,7 @@ const Profile = ({ userType }: { userType: string }) => {
     user: userId,
   });
 
-  const [formDataClient, setFormDataClient] =
-    useState<profileCompletionFormClient>({
-      firstName: "",
-      lastName: "",
-      Country: "",
-      language: "",
-      bio: "",
-      user: userId,
-    });
+
 
   // useEffect(() => {
   //   console.log("user ID : ", userId);
@@ -96,16 +90,7 @@ const Profile = ({ userType }: { userType: string }) => {
     console.log(formData);
   };
 
-  // for client
-  const handleChangeClient: any = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    setFormDataClient({
-      ...formDataClient,
-      [event.target.name]: event.target.value,
-    });
-    console.log(formDataClient);
-  };
+
 
   const handleSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -167,59 +152,11 @@ const Profile = ({ userType }: { userType: string }) => {
   };
 
   //for client
-  // ------------
-  const handleSubmitClient = async (e: SyntheticEvent) => {
-    e.preventDefault();
-
-    let isValid = true;
-    const errors: { [key: string]: string } = {};
-
-    if (formDataClient.firstName.trim() === "") {
-      errors.firstName = "First name is required";
-      isValid = false;
-    }
-
-    if (formDataClient.lastName.trim() === "") {
-      errors.lastName = "Last name is required";
-      isValid = false;
-    }
-
-    if (formDataClient.Country === "") {
-      errors.Country = "Please select your country";
-      isValid = false;
-    }
-
-    if (formDataClient.language === "") {
-      errors.language = "Please select your language";
-      isValid = false;
-    }
-
-    if (formDataClient.bio.trim().length < 5) {
-      errors.bio = "Bio must be at least 5 characters";
-      isValid = false;
-    }
-
-    if (!isValid) {
-      Object.values(errors).forEach((error) => toast.error(error));
-      console.log(errors);
-      return;
-    }
-
-    console.log("updated data ", formDataClient);
-
-    const response = await profileCompletionClient(formDataClient);
-    // setFreelancerDetails(response.freelancer);
-    dispatch(loginSuccess(response.freelancer));
-
-    navigate("/");
-    console.log("Form submitted successfully");
-  };
+ 
 
   return (
     <>
-      {" "}
-      {userType == "freelancer" ? (
-        <>
+      
           {/* component */}
           <div className="flex h-screen ">
             <Toaster richColors position="top-left" />
@@ -237,7 +174,7 @@ const Profile = ({ userType }: { userType: string }) => {
                         alt="Click here.."
                       />
                       <h1 className="text-xl lg:text-4xl font-poppins m-0 p-0 font-semibold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Sign up to find work <br /> you love
+                       {userType=="freelancer" ? <>Sign up to find work <br /> you love</> : <>Sign up <br /> to hire talent</>}
                       </h1>
                       <form
                         className="space-y-2 "
@@ -420,144 +357,7 @@ const Profile = ({ userType }: { userType: string }) => {
             </div>
           </div>
         </>
-      ) : (
-        <>
-          {/* component */}
-          <div className="flex h-screen ">
-            <Toaster richColors position="top-left" />
-            {/* Left Pane */}
-            {/* <img src="/images/FlexifyBlack.png" className="absolute w-28 m-8  lg:block hidden" alt="" /> */}
-            <div className="w-full bg-white lg:w-1/2 flex items-center justify-end sm:justify-center">
-              <div className="max-w-md  w-full  mx-auto">
-                {/* Your form elements go here */}
-                <div className="flex flex-col  items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-                  <div className="w-screen bg-white  md:mt-0 sm:max-w-lg  xl:p-0 dark:bg-gray-800 dark:border-gray-700">
-                    <div className="p-6 space-y-1 md:space-y-6 sm:p-8">
-                      <img
-                        src="/images/FlexifyBlack.png"
-                        className="w-52 mx-auto sm:mb-12 lg:hidden"
-                        alt=""
-                      />
-                      <h1 className="text-xl lg:text-4xl font-poppins m-0 p-0 font-semibold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                        Sign up <br /> to hire talent
-                      </h1>
-                      <form
-                        className="space-y-2 "
-                        onSubmit={(e) => handleSubmitClient(e)}
-                      >
-                        <div className="w-full flex justify-between">
-                          <div className=" w-80 m-1">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              First Name
-                            </label>
-                            <input
-                              type="text"
-                              value={formDataClient.firstName}
-                              name="firstName"
-                              onChange={handleChangeClient}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              placeholder="first name"
-                              required
-                            />
-                          </div>
-                          <div className="w-80 m-1">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Last Name
-                            </label>
-                            <input
-                              value={formDataClient.lastName}
-                              name="lastName"
-                              onChange={handleChangeClient}
-                              type="text"
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                              placeholder="last name"
-                              required
-                            />
-                          </div>
-                        </div>
-
-                        <div className="w-full flex justify-between">
-                          <div className="w-80 m-1">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Country
-                            </label>
-                            <select
-                              id="countries"
-                              value={formDataClient.Country}
-                              name="Country"
-                              onChange={handleChangeClient}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
-                              <option value="" disabled>
-                                Select your region
-                              </option>
-                              <option>India</option>
-                              <option>United States</option>
-                              <option>Canada</option>
-                              <option>Germany</option>
-                            </select>
-                          </div>
-
-                          <div className="w-80 m-1">
-                            <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                              Primary language
-                            </label>
-                            <select
-                              id="languages"
-                              value={formDataClient.language}
-                              name="language"
-                              onChange={handleChangeClient}
-                              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
-                              <option value="" disabled>
-                                Select your language
-                              </option>
-                              <option>English</option>
-                              <option>Malayalam</option>
-                              <option>Spanish</option>
-                              <option>Arabic</option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block mb-2 mt-5 text-sm font-medium text-gray-900 dark:text-white">
-                            Bio about yourself for work
-                          </label>
-                          <textarea
-                            value={formDataClient.bio}
-                            name="bio"
-                            onChange={handleChangeClient}
-                            id="message"
-                            rows={5}
-                            className="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Write here..."
-                            defaultValue={""}
-                          />
-                        </div>
-
-                        <hr />
-                        <button
-                          type="submit"
-                          onClick={(e) => handleSubmitClient(e)}
-                          className="w-full text-white bg-zinc-950 hover:bg-zinc-900 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-dark dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                        >
-                          Create your profile
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            {/* Right Pane */}
-            <div className="hidden signup-banner lg:flex bg-[url('/images/signup-bannerClien.jpg')]   items-center justify-center flex-1 bg-white text-black">
-              <div className=" text-center"></div>
-            </div>
-          </div>
-        </>
-      )}
-    </>
+     
   );
 };
 

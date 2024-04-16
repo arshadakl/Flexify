@@ -7,6 +7,7 @@ import DashboardPage from "../Pages/admin/Dashboard";
 import LayoutParant from "../admin/components/LayoutParant";
 import CategoryManagement from '../Pages/admin/CategoryManagement'
 import PostManagement from "../Pages/admin/PostManagement";
+import Orders from "../Pages/admin/Orders";
 function AdminRouter() {
   const { admin } = useSelector((state: any) => state.admin);
 
@@ -22,6 +23,7 @@ function AdminRouter() {
           <Route path="/users" element={<UserManagementPage />} />
           <Route path="/category" element={<CategoryManagement />} />
           <Route path="/post" element={<PostManagement />} />
+          <Route path="/orders" element={<Orders />} />
         </Route>
 
       </Route>

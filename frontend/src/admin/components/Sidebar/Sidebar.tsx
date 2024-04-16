@@ -86,6 +86,14 @@ function Sidebar() {
         </svg>
         <span className="ml-2 text-sm font-medium">Posts</span>
       </p>
+      <p onClick={()=>navigate('/admin/orders')}
+        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        
+      >
+       <i className="fa-sharp fa-regular fa-house-laptop" />
+
+        <span className="ml-2 text-sm font-medium">Orders</span>
+      </p>
     </div>
     <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">
       

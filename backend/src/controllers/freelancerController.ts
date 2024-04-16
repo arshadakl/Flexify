@@ -6,30 +6,16 @@ import ImageUploadRepository from "../repositories/ImageUploadRepository";
 import { Readable } from 'stream';
 import { uploadToCloudinary } from "../utils/Cloudinary";
 import fs from 'fs'
+import { File } from "../interfaces/multerInterface";
 // import { MulterFile } from "../interfaces/multerInterface";
 
 
-// Define a custom type for Multer file
-interface MulterFile {
-    fieldname: string;
-    originalname: string;
-    encoding: string;
-    mimetype: string;
-    destination: string;
-    filename: string;
-    path: string;
-    size: number;
-}
 
 
-interface File {
-    path: string;
-    // Include other properties of File as needed
-}
 const imageUploadRepository = new ImageUploadRepository();
 
 export class FreelancerController {
-    constructor(private readonly freelancerService: FreelancerService) { }
+    constructor(private readonly _freelancerService: FreelancerService) { }
 
 
     //login functions
@@ -39,7 +25,7 @@ export class FreelancerController {
         const { username, password } = req.body;
         console.log(req.body)
         try {
-            const response = await this.freelancerService.login(username, password);
+            const response = await this._freelancerService.login(username, password);
             if (response == null) {
                 throw new Error("Failed to login")
             }
@@ -81,13 +67,10 @@ export class FreelancerController {
         const freelancer: Freelancer = { username, email, password };
 
         try {
-            const userId = await this.freelancerService.signup(freelancer);
+            const userId = await this._freelancerService.signup(freelancer);
             res.status(201).json({ message: "Freelancer signed up successfully", status: true });
-        } catch (error) {
-            console.log("failed");
-
-            res.json({ error: "Username or email already exists", status: false });
-            // res.json({ status:false });
+        } catch (error:any) {
+            res.json({ error: error.message, status: false });
         }
     }
 
@@ -97,11 +80,11 @@ export class FreelancerController {
         console.log(key);
 
         try {
-            const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
+            const decodeResponse = await this._freelancerService.GoogleKeyValidation(key)
 
             if (decodeResponse.email_verified) {
-                const response = await this.freelancerService.GoogleLoginEmailValidation(decodeResponse.email)
-                console.log(response, "for test      s ");
+                const response = await this._freelancerService.GoogleLoginEmailValidation(decodeResponse.email)
+                console.log(response, "for tests ");
 
                 if ("token" in response && "options" in response && "freelancer" in response) {
                     const { token, options, freelancer } = response;
@@ -135,7 +118,7 @@ export class FreelancerController {
         // console.log(req.body);
         const { key } = req.body
         try {
-            const decodeResponse = await this.freelancerService.GoogleKeyValidation(key)
+            const decodeResponse = await this._freelancerService.GoogleKeyValidation(key)
             console.log(decodeResponse);
             if (decodeResponse.email_verified) {
                 const { name, email, jti } = decodeResponse
@@ -144,7 +127,7 @@ export class FreelancerController {
                     username: name, profile: "",
                     email, password: jti || " "
                 }
-                const response = await this.freelancerService.signup(data);
+                const response = await this._freelancerService.signup(data);
 
                 res.status(201).json({ message: "User signed up successfully", status: true, id: response });
             }
@@ -160,9 +143,9 @@ export class FreelancerController {
     async OtpVerification(req: Request, res: Response): Promise<void> {
         const { email, code } = req.body
         try {
-            const user = await this.freelancerService.OTPVerificationServ(email, code)
+            const user = await this._freelancerService.OTPVerificationServ(email, code)
             if (user.status) {
-                const response = await this.freelancerService.doVerifyOtp(user.id)
+                const response = await this._freelancerService.doVerifyOtp(user.id)
                 if (user.id) {
                     console.log(user.id);
 
@@ -172,7 +155,7 @@ export class FreelancerController {
 
                 }
             }
-            // const userId = await this.freelancerService.OTPVerificationServ()
+            // const userId = await this._freelancerService.OTPVerificationServ()
 
 
         } catch (error) {
@@ -186,7 +169,7 @@ export class FreelancerController {
     async reSendOtp(req: Request, res: Response): Promise<void> {
         try {
             const email = req.body.email
-            const response = await this.freelancerService.reSendotpServ(email)
+            const response = await this._freelancerService.reSendotpServ(email)
             console.log(response);
             res.status(200).json({ status: true })
 
@@ -200,9 +183,9 @@ export class FreelancerController {
     async forgotpassword(req: Request, res: Response): Promise<void> {
         const { email } = req.body;
         try {
-            const isUser = await this.freelancerService.forgotPass(email)
+            const isUser = await this._freelancerService.forgotPass(email)
             if (isUser) {
-                const otpGenarte = await this.freelancerService.reSendotpServ(email)
+                const otpGenarte = await this._freelancerService.reSendotpServ(email)
                 console.log(otpGenarte);
                 res.status(200).json({ message: `Verification code sent to ${email}. Check your inbox to reset password.`, status: true });
 
@@ -214,12 +197,58 @@ export class FreelancerController {
         }
     }
 
+        // resend OTP 
+    //================================
+
+    async rolespecify(req: Request, res: Response): Promise<void> {
+        try {
+            const {id,role} = req.body
+            console.log(id,role);
+            
+            const response = await this._freelancerService.doRoleSpecify(id,role)
+           if(response){
+               res.status(200).json({ status: true,message:"user role specified"})
+           }
+
+        } catch (error:any) {
+            res.json({ status: false,error:error.message})
+
+        }
+    }
+
+    //change role
+    async changeRole(req: Request, res: Response): Promise<void> {
+        try {
+            console.log(req.body, "role change called");
+            
+            const {role} = req.body
+            console.log(role);
+            
+            if (role !== 'freelancer' && role !== 'client') {
+                throw new Error("Invalid role");
+            }
+            
+            
+            console.log(req.user, "user data");
+            
+            const {_id} = req.user
+            console.log(_id,role,"tet");
+            
+            const userData = await this._freelancerService.doRoleChange(_id,role)
+            res.status(200).json({ status: true,message:"Role change success",userData:userData})
+           
+        } catch (error:any) {
+            res.json({ status: false,error:error.message})
+
+        }
+    }
+
     // profile completion functions 
     // ===========================
     async profileCompletion(req: Request, res: Response): Promise<void> {
         try {
             console.log(req.body, "body");
-            const response = await this.freelancerService.profileCompletionServ(req.body);
+            const response = await this._freelancerService.profileCompletionServ(req.body);
             console.log(response, "2nd response");
             if ("token" in response && "options" in response && "freelancer" in response) {
                 const { token, options, freelancer } = response;
@@ -249,7 +278,7 @@ export class FreelancerController {
     async profileUpdate(req: Request, res: Response): Promise<void> {
         try {
             console.log(req.body, "new profile");
-            const response = await this.freelancerService.profileUpdateServ(req.body);
+            const response = await this._freelancerService.profileUpdateServ(req.body);
             console.log(response, "2nd response");
             if (response) {
                 // console.log("control response: ", response);
@@ -269,11 +298,11 @@ export class FreelancerController {
         // res.status(401).json({message : "You are blocked by admin"})
         try {
             // console.log(req.headers);
-            const token = req.headers.authorization
-            console.log(token, "controller token");
-
-            if (token) {
-                const userDetails = await this.freelancerService.profiledataService(token)
+            // const token = req.headers.authorization
+            // console.log(token, "controller token");
+            const userId = req.user._id
+            if (userId) {
+                const userDetails = await this._freelancerService.profiledataService(userId)
                 res.status(200).json({ userDetails, status: true })
             } else {
                 throw new Error("Invalid Request")
@@ -286,7 +315,7 @@ export class FreelancerController {
         }
     }
 
-
+    //profile image updating
     async uploadImage(req: Request, res: Response): Promise<void> {
         try {
             // console.log(req.body);
@@ -305,7 +334,7 @@ export class FreelancerController {
             
             const result = await uploadToCloudinary(req.file.path, "profile");
             // console.log(result);
-            const userData = await this.freelancerService.updatePrfileImage(token, result.url)
+            const userData = await this._freelancerService.updatePrfileImage(token, result.url)
             fs.unlinkSync(req.file.path);
             userData.password = ""
             userData.OTP = 0
@@ -322,9 +351,9 @@ export class FreelancerController {
         console.log(email, code);
 
         try {
-            const user = await this.freelancerService.OTPVerificationServ(email, code)
+            const user = await this._freelancerService.OTPVerificationServ(email, code)
             if (user.status) {
-                const response = await this.freelancerService.managePreResetpassword(email)
+                const response = await this._freelancerService.managePreResetpassword(email)
                 if (response) {
                     res.status(201).json({ status: true, token: response, message: "OTP verification successful. Please proceed to reset your password" })
                 }
@@ -338,7 +367,7 @@ export class FreelancerController {
     async resetPassword(req: Request, res: Response): Promise<void> {
         const { password, token } = req.body
         try {
-            const response = await this.freelancerService.managePostResetpassword(password, token)
+            const response = await this._freelancerService.managePostResetpassword(password, token)
             if (response) {
                 res.status(201).json({ status: true, message: "All done! Your password is now updated" })
             }
@@ -352,7 +381,7 @@ export class FreelancerController {
         try {
             console.log(req.headers);
 
-            const categories = await this.freelancerService.getAllCategories()
+            const categories = await this._freelancerService.getAllCategories()
             console.log(categories)
 
             return res.status(200).json({ status: 'success', data: categories })
@@ -364,7 +393,7 @@ export class FreelancerController {
     //get all Subcategories
     async allSubCategories(req: Request, res: Response): Promise<any> {
         try {
-            const categories = await this.freelancerService.getAllSubCategories()
+            const categories = await this._freelancerService.getAllSubCategories()
             console.log(categories)
 
             res.status(200).json({ status: 'success', data: categories })
@@ -389,17 +418,17 @@ export class FreelancerController {
             if (files['image2'] && files['image2'].length > 0) filePaths.push(files['image2'][0].path);
             if (files['image3'] && files['image3'].length > 0) filePaths.push(files['image3'][0].path);
 
-            const responseImages = await this.freelancerService.uploadMultiFiles(filePaths,"workImages")
+            const responseImages = await this._freelancerService.uploadMultiFiles(filePaths,"workImages")
             if(responseImages){
                 workData.image1 = responseImages.image1Url
                 workData.image2 = responseImages.image2Url
                 workData.image3 = responseImages.image3Url
             }
-            // console.log(workData);
+            console.log(workData);
             workData.user = req.user._id
-            const categoryDetails = await this.freelancerService.CategoryDataFetch(workData.category,workData.subcategory)
+            const categoryDetails = await this._freelancerService.CategoryDataFetch(workData.category,workData.subcategory)
             workData.categoryNames=[categoryDetails.categoryTitle,categoryDetails.subcategoryTitle]
-            const submitResponse = await this.freelancerService.WorkSubmitService(workData)
+            const submitResponse = await this._freelancerService.WorkSubmitService(workData)
             if(submitResponse){
                 res.status(200).json({ status: true })
             }
@@ -421,12 +450,64 @@ export class FreelancerController {
             console.log("called##s ### ## ###");
             console.log(userID ,"user ID");
             
-            const works = await this.freelancerService.getallWorksOfUserServ(userID)
+            const works = await this._freelancerService.getallWorksOfUserServ(userID)
             // console.log(categories)
-            console.log(works)
+            // console.log(works)
             
 
             res.status(200).json({ status: 'success', data: works })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async getallWorksToDiscover(req: Request, res: Response): Promise<any> {
+        try {
+            console.log("called");
+            
+            const works = await this._freelancerService.getallWorksToDiscoverService()
+            // console.log(categories)
+            console.log(works)
+            res.status(200).json({ status: 'success', data: works })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+    //get Single work Post details
+    async getallSingleWorkDetails(req: Request, res: Response): Promise<any> {
+        try {
+            const {id} = req.params
+            if(!id){
+                throw new Error("Invalid request")
+            }
+            const worksData = await this._freelancerService.getSingleWorkDetails(id)
+            console.log(worksData);
+            
+            // // console.log(categories)
+            // console.log(works)
+            res.status(200).json({ status: 'success', data: worksData })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async deleteworkWork(req: Request, res: Response): Promise<any> {
+        try {
+            const userID = req.user._id
+            if(!userID){
+                throw new Error("Unauthorized access")
+            }
+            const id: string = req.query.id as string;
+
+        //    const deleteRequest = await this._freelancerService()
+            const deleteResponse = await this._freelancerService.deleteWorkPost(id)
+            if(deleteResponse){
+                const works = await this._freelancerService.getallWorksOfUserServ(userID)
+                res.status(200).json({ status: 'success', data: works })
+
+            }
+            
+
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }

@@ -6,26 +6,14 @@ export interface Freelancer {
     id?: string;
     username: string;
     email: string;
-    password: string ;
-    OTP?:Number,
-    token?:string,
-    isVerified?:Number
-    profile?:string,
-    isBlocked?:string
+    password: string;
+    OTP?: number;
+    token?: string;
+    isVerified?: number;
+    profile?: string;
+    isBlocked?: string;
+    role?: 'freelancer' | 'client' | 'notspecified';
 }
-
-
-const FreelancerSchema = new Schema<Freelancer>({
-    username: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    OTP: {type:Number, require:true},
-    token:{type:String},
-    isVerified:{type:Number,required:true},
-    profile:{type:String},
-    isBlocked:{type:String}
-});
-
 
 
 export interface FreelancerDetails{
@@ -35,8 +23,23 @@ export interface FreelancerDetails{
     language: string;
     skillsList: string[],
     bio: string;
-    user: string;
+    user: Schema.Types.ObjectId;
 }
+
+
+const FreelancerSchema = new Schema<Freelancer>({
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    OTP: { type: Number, required: true },
+    token: { type: String },
+    isVerified: { type: Number, required: true },
+    profile: { type: String },
+    isBlocked: { type: String },
+    role: { type: String, enum: ['freelancer', 'client', 'notspecified'], default: 'notspecified' }
+});
+
+
 
 const FreelancerDetailsSchema = new Schema<FreelancerDetails>({
     firstName: { type: String, required: true },
@@ -45,7 +48,7 @@ const FreelancerDetailsSchema = new Schema<FreelancerDetails>({
     language:  { type: String, required: true },
     skillsList:  { type: [String], required: true },
     bio: { type: String, required: true },
-    user:  { type: String, required: true }
+    user:  { type: Schema.Types.ObjectId, required: true }
 })
 
 export const Freelancer = model('Freelancer', FreelancerSchema);

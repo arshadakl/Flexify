@@ -10,6 +10,9 @@ import { logout } from "../../../Redux/Slices/freelancerSlice";
 import { persistor } from "../../../Redux/store";
 // import { IWork } from "../../../interfaces/Freelancer";
 import ProfileWorksList from "../ExtraComponents/ProfileWorksList";
+import {motion} from 'framer-motion'
+import { fadeIn } from "../../animations/Frame_Motion/variants";
+
 
 function FreelancerProfilePage() {
   const { isEdit, setIsEdit } = useContext(AuthContext);
@@ -101,12 +104,12 @@ function FreelancerProfilePage() {
                 <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                   {freelancerDetails?.username}
                 </h5>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
+                <span className="text-sm text-gray-500 dark:text-gray-400 capitalize">
                   <i
-                    className="fa-solid fa-badge-check"
+                    className="fa-solid fa-badge-check "
                     style={{ color: "#1a62d5" }}
                   />{" "}
-                  Freelancer
+                  {freelancerDetails.role}
                 </span>
                 <button
                   onClick={handleLogout}
@@ -192,55 +195,12 @@ function FreelancerProfilePage() {
             </div>
           </div>
 
-          <div className="md:w-3/5  w-1/1 ">
+          {/* <div > */}
+            <motion.div variants={fadeIn("up",0.01)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="md:w-3/5  w-1/1 "> 
             <div className="min-h-60  flex flex-col bg-white border shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
               {!isEdit ? (
                 <>
                   <div className="flex flex-auto flex-col justify-center  items-center p-4 md:p-5">
-                    {/* <svg
-                    className="size-10 text-gray-500"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width={24}
-                    height={24}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={1}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <line x1={22} x2={2} y1={12} y2={12} />
-                    <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
-                    <line x1={6} x2="6.01" y1={16} y2={16} />
-                    <line x1={10} x2="10.01" y1={16} y2={16} />
-                  </svg>
-                  <p className="mt-5 text-sm text-gray-800 dark:text-gray-300">
-                    No Post to show
-                  </p> */}
-
-                    {/* <div className="w-full flex min-h-full flex-wrap">
-                      
-
-                      {wordData?.map((work) => {
-                        return (
-                          <div className="w-2/6  border border-l-stone-300 cursor-pointer rounded  p-2 shadow duration-150  hover:shadow">
-                            <img
-                              className="w-full rounded-lg object-cover object-center"
-                              src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                              alt="product"
-                            />
-                            <p className="my-4 pl-4 font-bold text-gray-500">
-                              Product Name
-                            </p>
-                            <p className="ml-4 text-xl font-semibold text-gray-800">
-                              $399
-                            </p>
-                          </div>
-                        );
-                      })}
-
-
-                    </div> */}
                     <ProfileWorksList/>
                   </div>
                 </>
@@ -257,7 +217,8 @@ function FreelancerProfilePage() {
                 </>
               )}
             </div>
-          </div>
+            </motion.div>
+          {/* </div> */}
         </div>
       </div>
     </>

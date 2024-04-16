@@ -1,7 +1,7 @@
 import { Schema,  model, Model } from 'mongoose';
 import { IWork } from '../interfaces/freelancerInterface';
 
-const WorkSchema: Schema = new Schema({
+export const WorkSchema: Schema = new Schema({
     user:{
         type:Schema.Types.ObjectId,
         ref: 'Freelancer',

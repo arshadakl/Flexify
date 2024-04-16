@@ -21,3 +21,8 @@ export interface ICategory extends Document {
     category: Schema.Types.ObjectId; 
     createdAt: Date;
   }
+
+  export interface DeleteResult {
+    acknowledged: boolean;
+    deletedCount: number;
+  }

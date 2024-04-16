@@ -1,6 +1,8 @@
 // import NavBar from "../Navbar/NavBar";
 
+import { motion,MotionConfig } from "framer-motion";
 import { useState } from "react";
+import { fadeIn } from "../../animations/Frame_Motion/variants";
 
 function HeroSection() {
   const [isDropdown,setIsDropDown] = useState<Boolean>(false)
@@ -13,7 +15,11 @@ function HeroSection() {
   }
   return (
     <>
-      <div className="flex  lg:bg-[url('/images/heroBanner.jpg')] bg-flexy-green hero-banner h-50vh lg:h-80vh ">
+    <MotionConfig transition={{ duration: 1 }}>
+      <motion.div 
+      // initial={{ opacity: 0 }} animate={{ opacity: 1 }} 
+      variants={fadeIn("down",0.5)} initial="hidden" whileInView={"show"} viewport={{once:true}}
+      className="flex  lg:bg-[url('/images/heroBanner.jpg')] bg-flexy-green hero-banner h-50vh lg:h-80vh ">
         {/* Left Pane */}
         {/* <img src="/images/FlexifyBlack.png" className="absolute w-28 m-8  lg:block hidden" alt="" /> */}
         {/* <NavBar/> */}
@@ -23,10 +29,11 @@ function HeroSection() {
             <div className="flex flex-col  items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
               <div className="w-screen   md:mt-0 sm:max-w-lg  xl:p-0 dark:bg-gray-800 dark:border-gray-700">
                 <div className="p-6 space-y-1 md:space-y-6 sm:p-8">
-                  <h1 className="text-2xl text-white lg:text-4xl font-poppins m-0 py-5 font-semibold leading-tight tracking-tight   dark:text-white">
+                  <motion.h1 variants={fadeIn("up",0.8)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="text-2xl text-white lg:text-4xl font-poppins m-0 py-5 font-semibold leading-tight tracking-tight   dark:text-white">
                   Find the right freelance <br />service, right away
-                  </h1>
+                  </motion.h1> 
                   <form className="max-w-lg mx-auto">
+                    <motion.div variants={fadeIn("right",1)} initial="hidden" whileInView={"show"} viewport={{once:true}}>
                     <div className="flex">
                       <label
                         htmlFor="search-dropdown"
@@ -131,6 +138,8 @@ function HeroSection() {
                         </button>
                       </div>
                     </div>
+                    </motion.div>
+
                   </form>
                 </div>
               </div>
@@ -143,7 +152,8 @@ function HeroSection() {
             
           </div>
         </div> */}
-      </div>
+      </motion.div>
+      </MotionConfig>
     </>
   );
 }

@@ -86,7 +86,7 @@ function ImageUploadComponent() {
         {/* Display selected image */}
         <img
           className="mx-auto w-24 h-24 mb-3 rounded-full shadow-lg object-cover cursor-pointer"
-          src={imageSrc}
+          src={imageSrc ? imageSrc : "https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg"}
           alt="Bonnie image"
           onClick={handleImageClick}
         />
