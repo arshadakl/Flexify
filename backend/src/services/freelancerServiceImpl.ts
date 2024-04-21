@@ -515,5 +515,41 @@ export class FreelancerService {
         }
     }
 
+    async getActivePosts(freelancerId:string): Promise<IWork[] | null>{
+        try {
+           const response = await this.freelancerRepository.getAllActivepost(freelancerId)
+           return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getSuspendedPosts(freelancerId:string): Promise<IWork[] | null>{
+        try {
+            const response = await this.freelancerRepository.getAllSuspendedpost(freelancerId)
+           return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getSingleWork(workId:string):Promise<IWork | null>{
+        try {
+            const response = await this.freelancerRepository.getSingleWork(workId)
+           return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async updateWorkDetails(data:any,workId:string):Promise<any>{
+        try {
+            const response = await this.freelancerRepository.updateWork(data,workId)
+           return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
 
 }

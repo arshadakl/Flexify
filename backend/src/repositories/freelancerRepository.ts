@@ -35,4 +35,10 @@ export interface FreelancerRepository {
     // singlePostDetails(id:string):Promise<any>
     getWorkDetails(id:string):Promise<any>
     getRecivedWork(id:string):Promise<IOrder[] | null>
+
+    getAllActivepost(freelancerId:string):Promise<IWork[] | null>
+    getAllSuspendedpost(freelancerId:string):Promise<IWork[] | null>
+
+    getSingleWork(workId:string):Promise<IWork | null>
+    updateWork(data:any,workId:string):Promise<UpdateWriteOpResult>
 }

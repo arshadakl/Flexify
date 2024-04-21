@@ -440,6 +440,23 @@ export class FreelancerController {
     }
 
 
+    //update WorkData
+    async updateWorkData(req: Request, res: Response): Promise<any> {
+        try {
+            const {id,data} = req.body
+            console.log(id,data,"updating data called");
+            
+            const works = await this._freelancerService.updateWorkDetails(data,id)
+            if(works){
+                res.status(200).json({ status: 'success'})
+            }else{
+                throw new Error
+            }
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
     async getallWorksOfUser(req: Request, res: Response): Promise<any> {
         try {
             
@@ -520,6 +537,32 @@ export class FreelancerController {
             const FreelancerID = req.user._id
             const OrdersDetails = await this._freelancerService.getRecivedWorkDetails(FreelancerID)
             res.status(200).json({ status: 'success', orders: OrdersDetails})
+        } catch (error:any) {
+            res.json({status: false, error: error.message})
+        }
+    }
+
+    async getPosts(req: Request, res: Response):Promise<void>{
+        try {
+            const FreelancerID = req.user._id
+            const ActiveOrders = await this._freelancerService.getActivePosts(FreelancerID)
+            const SuspendedOrders = await this._freelancerService.getSuspendedPosts(FreelancerID)
+
+            res.status(200).json({ status: 'success', active: ActiveOrders,suspended:SuspendedOrders})
+        } catch (error:any) {
+            res.json({status: false, error: error.message})
+        }
+    }
+
+
+    async getSingleWork(req: Request, res: Response):Promise<void>{
+        try {
+            const workId = req.query.id
+            console.log(workId);
+            
+            if(!workId) throw new Error("workId not specified")
+            const workDetails = await this._freelancerService.getSingleWork(workId as string)
+            res.status(200).json({ status: 'success', post: workDetails})
         } catch (error:any) {
             res.json({status: false, error: error.message})
         }

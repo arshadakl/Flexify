@@ -206,7 +206,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             const response = await WorkModel.aggregate([
                 {
                     $match: {
-                        isActive: true // Filter by isActive: true
+                        isActive: true 
                     }
                 },
                 {
@@ -280,7 +280,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         as: "user"
                     }
                 },
-                // { $unwind: "$user.questionnaire" },
+                
                 { $unwind: "$user" },
                 {
                     $lookup: {
@@ -358,6 +358,59 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         }
     }
 
+
+    // get all active post
+    async getAllActivepost(freelancerId:string):Promise<IWork[] | null>{
+        try {
+            const works = await WorkModel.aggregate([
+                {$match:{user:freelancerId,isActive: true}},
+            ])
+            if(!works) throw new Error("Work not found");
+            return works
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    // get all suspended post
+    async getAllSuspendedpost(freelancerId:string):Promise<IWork[] | null>{
+        try {
+            const works = await WorkModel.aggregate([
+                {$match:{user:freelancerId,isActive: false}},
+            ])
+            return works
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async getSingleWork(workId:string):Promise<IWork | null>{
+        try {
+            const response = await WorkModel.findById(workId)
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async updateWork(data:any,workId:string):Promise<UpdateWriteOpResult>{
+        try {
+            console.log(data);
+            
+            const response = await WorkModel.updateOne(
+                { _id: workId },
+                {
+                    $set: data
+                }
+            )
+            console.log(response);
+            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 
 
 }

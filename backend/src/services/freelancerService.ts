@@ -34,5 +34,11 @@ export interface freelancerService{
     deleteWorkPost(id:string): Promise<any>
     getSingleWorkDetails(id:string): Promise<any>
     getRecivedWorkDetails(id:string): Promise<IOrder[] | null >
+
+    getActivePosts(freelancerId:string): Promise<IWork[] | null>
+    getSuspendedPosts(freelancerId:string): Promise<IWork[] | null>
+
+    getSingleWork(workId:string):Promise<IWork | null>
+    updateWorkDetails(data:any,workId:string):Promise<any>
     
 }

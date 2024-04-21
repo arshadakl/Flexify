@@ -13,6 +13,8 @@ import Works from "../Pages/works/Works";
 import SinglePage from "../Pages/works/SinglePage";
 import RoleLoading from "../common/animations/RoleLoading";
 import DashboardFreelancer from "../Pages/freelancer/Dashboard";
+import MyPosts from "../Pages/freelancer/MyPosts";
+import EditPost from "../Pages/freelancer/EditPost";
 
 function FreelancerRoute() {
   return (
@@ -32,6 +34,8 @@ function FreelancerRoute() {
       <Route element={<FreelancerProtect />}>
         <Route path="profile" element={<FreelancerProfile />} />
         <Route path="post" element={<CreatePost />} />
+        <Route path="edit-post" element={<EditPost />} />
+        <Route path="my-post" element={<MyPosts />} />
         <Route path="dashboard" element={<DashboardFreelancer />} />
       </Route>
     </Routes>

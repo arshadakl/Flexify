@@ -376,4 +376,43 @@ export const getRecivedOrdersAPI = async ()=>{
   }
 }
 
+export const getAllPost = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/allpost');
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+export const getSingleWork = async (id:string)=>{
+  try {
+    console.log(id,"work id");
+    
+      const response = await freelancersAPI.get(`/getSingleWork?id=${id}`);
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+export const updateWorkAPI = async (form:any,id:string)=>{
+  try {
+      const data= {id:id,data:form};
+      const response = await freelancersAPI.patch(`/updatework`,data);      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+
+
 export default AxiosInterceptor;

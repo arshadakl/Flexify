@@ -212,9 +212,14 @@ function FreelancerProfilePage() {
 
                     {freelancerDetails.role == "freelancer" ? (
                       <>
-                        <div className=" bg-white py-2 px-5 flex gap-7 w-full">
-                          <p className="font-semibold" >Active Post</p>
-                          <p className="hover:font-semibold  cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
+                        <div className=" bg-white py-2 px-5 flex gap-7 w-full ">
+                          <div>
+                          <p className="font-semibold hover:font-bold cursor-pointer mx-5" onClick={()=>navigate('/my-post')} >My Post</p>
+                          </div>
+                          <div>
+                          <p className="font-semibold hover:font-bold cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
+
+                          </div>
                         </div>
                         <ProfileWorksList />
                       </>
