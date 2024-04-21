@@ -12,6 +12,7 @@ import CreatePost from "../Pages/freelancer/CreatePost";
 import Works from "../Pages/works/Works";
 import SinglePage from "../Pages/works/SinglePage";
 import RoleLoading from "../common/animations/RoleLoading";
+import DashboardFreelancer from "../Pages/freelancer/Dashboard";
 
 function FreelancerRoute() {
   return (
@@ -31,6 +32,7 @@ function FreelancerRoute() {
       <Route element={<FreelancerProtect />}>
         <Route path="profile" element={<FreelancerProfile />} />
         <Route path="post" element={<CreatePost />} />
+        <Route path="dashboard" element={<DashboardFreelancer />} />
       </Route>
     </Routes>
   );

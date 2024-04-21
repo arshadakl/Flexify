@@ -3,15 +3,19 @@ import { FormatDateString } from "../../utils/Services/dateFormater";
 import { ShortenDescription } from "../../utils/Services/shortenDescription";
 import CategoryModal from "./categoryModal";
 
-
-function CategoryTable({Categories,deleteCategory,setCategories}: {
+function CategoryTable({
+  Categories,
+  deleteCategory,
+  setCategories,
+  page,setPage
+}: {
   Categories: any;
   deleteCategory: any;
-  setCategories:any
+  setCategories: any;
+  page:number;
+  setPage:any
 }) {
   console.log(Categories, "Category");
-
-
 
   return (
     <>
@@ -40,7 +44,7 @@ function CategoryTable({Categories,deleteCategory,setCategories}: {
               </div>
 
               {Categories?.map((item: any) => {
-                initFlowbite()
+                initFlowbite();
                 return (
                   <div className="table-row-group divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-slate-800">
                     <div className="table-row">
@@ -55,17 +59,22 @@ function CategoryTable({Categories,deleteCategory,setCategories}: {
                       </div>
                       <div className="table-cell px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button
-                          type="button" data-modal-target={item._id}
+                          type="button"
+                          data-modal-target={item._id}
                           data-modal-toggle={item._id}
                           className="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400"
                         >
                           Edit
                         </button>
-                        <CategoryModal isEdit={{status:true,data:item}} setCategories={setCategories} />
+                        <CategoryModal
+                          isEdit={{ status: true, data: item }}
+                          setCategories={setCategories}
+                        />
                       </div>
                       <div className="table-cell px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                         <button
-                          type="button" data-modal-target={`Delete${item._id}`}
+                          type="button"
+                          data-modal-target={`Delete${item._id}`}
                           data-modal-toggle={`Delete${item._id}`}
                           className="inline-flex items-center bg-black text-white gap-x-2 px-5 py-2 text-sm font-semibold rounded-lg border border-transparent  hover:text-white disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-400"
                         >
@@ -121,14 +130,14 @@ function CategoryTable({Categories,deleteCategory,setCategories}: {
                             </svg>
 
                             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
-                            {item.title}
+                              {item.title}
                             </h3>
                             <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                               Are you sure you want to delete this Category?
                             </h3>
                             <button
                               data-modal-hide={`Delete${item._id}`}
-                              onClick={()=>deleteCategory(item._id)}
+                              onClick={() => deleteCategory(item._id)}
                               type="button"
                               className="text-white bg-gray-900 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
                             >
@@ -145,11 +154,42 @@ function CategoryTable({Categories,deleteCategory,setCategories}: {
                         </div>
                       </div>
                     </div>
-
                   </div>
                 );
               })}
+             
             </div>
+            <>
+                <div className="w-full flex px-5 py-2 justify-end ">
+                  <nav aria-label="Page navigation example">
+                    <ul className="inline-flex -space-x-px text-sm">
+                      <li>
+                        <button disabled={page==1 ? true : false} onClick={()=>setPage(page-1)}
+                          className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Previous
+                        </button >
+                      </li>
+                      <li>
+                        <p aria-current="page"
+                          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          {page}
+                        </p>
+                      </li>
+                    
+                     
+                      <li>
+                        <p onClick={()=>setPage(page+1)}
+                          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Next
+                        </p>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </>
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ router.patch('/blockuser',protector,adminController.blockUser.bind(adminControll
 
 router.post('/addcategory',protector,adminController.addCategory.bind(adminController));
 router.get('/allcategories',adminController.allCategories.bind(adminController));
+router.get('/allcategoriespagenation',adminController.allCategoriesPage.bind(adminController));
 router.delete('/deleteCategory',protector,adminController.deleteCategory.bind(adminController));
 router.post('/editcategory',protector,adminController.editCategory.bind(adminController));
 
@@ -30,6 +31,7 @@ router.get('/allworks',adminController.getAllWorks.bind(adminController));
 router.patch('/suspendworks',protector,adminController.suspendWork.bind(adminController));
 
 router.get('/getallorders',adminController.getallOrders.bind(adminController));
+router.get('/getalltransaction',adminController.getallTransaction.bind(adminController));
 
 
 export default router;

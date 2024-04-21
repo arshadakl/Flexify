@@ -46,5 +46,6 @@ router.get('/getuserwork',protector,freelancerController.getallWorksOfUser.bind(
 router.get('/getAllWorks',freelancerController.getallWorksToDiscover.bind(freelancerController))
 router.get('/singlework/:id',freelancerController.getallSingleWorkDetails.bind(freelancerController))
 router.delete('/deletework',protector,freelancerController.deleteworkWork.bind(freelancerController))
+router.get('/recivedorders',protector,freelancerController.getRecivedWork.bind(freelancerController))
 
 export default router;

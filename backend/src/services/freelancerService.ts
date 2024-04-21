@@ -2,6 +2,7 @@ import { JwtPayload } from "jsonwebtoken";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
+import { IOrder } from "../interfaces/clientInterface";
 
 export interface freelancerService{
     login(username: string, password: string): Promise<Freelancer | null>
@@ -32,5 +33,6 @@ export interface freelancerService{
     getallWorksToDiscoverService(): Promise<any>
     deleteWorkPost(id:string): Promise<any>
     getSingleWorkDetails(id:string): Promise<any>
+    getRecivedWorkDetails(id:string): Promise<IOrder[] | null >
     
 }

@@ -80,12 +80,31 @@ export class AdminController {
     //get all categories
     async allCategories(req: Request, res: Response): Promise<any> {
         try {
-            console.log(req.headers);
+            
             
             const categories = await this._adminService.getAllCategories()
-            console.log(categories)
+            console.log(categories,"this is new Data")
             
             return res.status(200).json({ status: 'success', data: categories })
+        } catch (error: any) {
+            return res.json({ status: false, error: error.message })
+        }
+    }
+    //get all categories
+    async allCategoriesPage(req: Request, res: Response): Promise<any> {
+        try {
+            const page = parseInt((req.query.page as string))
+            // console.log(req.headers);
+            console.log(page ,"this is page number");
+            
+            
+            const categories = await this._adminService.getAllCategoriesPage(page)
+            if(!categories?.data || !categories.totalPages){
+                throw new Error("Categories not found")
+            }
+            console.log(categories,"this is new Data")
+            
+            return res.status(200).json({ status: 'success', data: categories.data,page:categories.totalPages })
         } catch (error: any) {
             return res.json({ status: false, error: error.message })
         }
@@ -130,7 +149,7 @@ export class AdminController {
     async allSubCategories(req: Request, res: Response): Promise<any> {
         try {
             const categories = await this._adminService.getAllSubCategories()
-            console.log(categories)
+            // console.log(categories)
             
             res.status(200).json({ status: 'success', data: categories })
         } catch (error: any) {
@@ -208,6 +227,15 @@ export class AdminController {
         try {
            const OrderData = await this._adminService.getAllOrders()
             res.status(200).json({status:true,orders:OrderData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+     //get all transactions
+    async getallTransaction(req: Request, res: Response): Promise<any> {
+        try {
+           const transactions = await this._adminService.getAllTransactions()
+            res.status(200).json({status:true,data:transactions})
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }

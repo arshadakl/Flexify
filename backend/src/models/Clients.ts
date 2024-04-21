@@ -1,7 +1,7 @@
 import { Schema, Document, model } from 'mongoose';
 import { IWork } from '../interfaces/freelancerInterface';
 import { WorkSchema } from './Works';
-import { IOrder } from '../interfaces/clientInterface';
+import { IOrder, IRequirement } from '../interfaces/clientInterface';
 
 
 export interface clientDetails{
@@ -32,8 +32,26 @@ const OrderSchema = new Schema<IOrder>({
     category: { type: [String], required: true },
     amount: { type: Number, required: true },
     WorkDetails: { type: WorkSchema, required: true },
-    date: { type: Number, required: true, default: Date.now } ,
-    status:{ type: String, required: true}
+    date: { type: Number, required: true, default: Date.now },
+    status:{ type: String, required: true},
+    requirementStatus : { type: Boolean, required: true}
 })
 
+const answerSchema = new Schema({
+    question: { type: String, required: true },
+    answer: { type: String, required: true }
+});
+
+const RequirementSchema = new Schema<IRequirement>({
+    orderId: { type: Schema.Types.ObjectId, required: true, ref: 'Orders' }, 
+    workId: { type: Schema.Types.ObjectId, required: true, ref: 'Work' }, 
+    freelancerId: { type: Schema.Types.ObjectId, required: true, ref: 'Freelancer' }, 
+    clientId: { type: Schema.Types.ObjectId, required: true, ref: 'Client' }, 
+    logo:{ type: String},
+    referenceMaterial:{ type: String},
+    answers:  [answerSchema],
+    date: { type: Number, required: true, default: Date.now } 
+})
+
+export const Requirement = model('Requirement', RequirementSchema);
 export const Order = model('Orders', OrderSchema);

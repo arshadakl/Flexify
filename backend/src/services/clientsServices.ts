@@ -5,6 +5,9 @@ import { ClientRepositoryImpl } from '../repositories/clientsRepository';
 import { FreelancerRepository } from "../repositories/freelancerRepository";
 import jwt from "jsonwebtoken"
 import Stripe from 'stripe';
+import { uploadMultipleToCloudinary } from "../utils/Cloudinary";
+import fs from 'fs'
+
 
 export class ClientService {
     constructor(private readonly clientRepository: ClientRepositoryImpl, private readonly freelancerRepository: FreelancerRepository) { }
@@ -97,7 +100,7 @@ export class ClientService {
             if (!workDetails) {
                 throw new Error('Work details not found');
             }
-    
+
             const purchaseDetails = [{
                 price_data: {
                     currency: "usd",
@@ -110,7 +113,7 @@ export class ClientService {
                 },
                 quantity: 1
             }];
-    
+
             const session = await stripe.checkout.sessions.create({
                 payment_method_types: ["card"],
                 line_items: purchaseDetails,
@@ -118,24 +121,24 @@ export class ClientService {
                 success_url: "http://localhost:5173/client/success",
                 cancel_url: "http://localhost:5173/client/fail",
             });
-    
+
             console.log(session.id, " session ID #############################");
             return session.id;
         } catch (error: any) {
             throw new Error(error.message);
         }
     }
-    
+
 
     //Transaction creation 
-    async TransactionCreation(session: string, workId: string,user:string): Promise<any> {
+    async TransactionCreation(session: string, workId: string, user: string): Promise<any> {
         try {
             console.log("called,", session, workId);
-            
+
             const workDetails = await this.clientRepository.FindWorkById(workId);
             if (!workDetails) throw new Error("workId not found")
             const transactionData = {
-                user:user,
+                user: user,
                 session_id: session,
                 work_id: workDetails._id,
                 amount: workDetails.amount,
@@ -149,12 +152,10 @@ export class ClientService {
         }
     }
     //Transaction creation 
-    async TransactionUpdate(session: string,status:string): Promise<any> {
+    async TransactionUpdate(session: string, status: string): Promise<any> {
         try {
-            console.log("called,", session);
-            
-            const workDetails = await this.clientRepository.updateTransaction(session,status);
-            if(workDetails){
+            const workDetails = await this.clientRepository.updateTransaction(session, status);
+            if (workDetails) {
                 return workDetails
             }
         } catch (error) {
@@ -163,47 +164,132 @@ export class ClientService {
     }
 
     //order creation 
-    async createNewOrder(session: string,payment_intent:string): Promise<any> {
+    async createNewOrder(session: string, payment_intent: string): Promise<IOrder | undefined> {
         try {
             console.log("called,", session);
-            const transactionData =  await this.clientRepository.FindTransactionBySession(session)
-            if(!transactionData){
+            const transactionData = await this.clientRepository.FindTransactionBySession(session)
+            if (!transactionData) {
                 throw new Error("Could not find transaction")
             }
             const workDetails = await this.clientRepository.FindWorkById(transactionData?.work_id as string)
-            if(!workDetails) throw new Error("Could not find work")
-            const orderDetails:IOrder ={
+            if (!workDetails) throw new Error("Could not find work")
+            const orderDetails: IOrder = {
                 workId: transactionData?.work_id,
                 // transactionId: transactionData._id
-                amount:workDetails?.amount as number,
+                amount: workDetails?.amount as number,
                 category: workDetails?.categoryNames as string[],
-                freelancerId:workDetails?.user as string,
+                freelancerId: workDetails?.user as string,
                 clientId: transactionData.user,
                 payment_intent,
-                WorkDetails:workDetails,
-                date:Date.now(),
-                status: "pending"
+                WorkDetails: workDetails,
+                date: Date.now(),
+                status: "pending",
+                requirementStatus:false
             }
-            
+
             const order = await this.clientRepository.createOrder(orderDetails);
-            if(order){
-                return workDetails
+            if (order) {
+                return order
             }
         } catch (error) {
 
         }
     }
 
-       //used for get all orders of client 
-      // ---------------------------------
-       async getAllOrders(user: string,): Promise<any> {
+    //used for get all orders of client 
+    // ---------------------------------
+    async getAllOrders(user: string,): Promise<any> {
         try {
             const orders = await this.clientRepository.getAllordersOfClient(user);
-            if(orders){
+            if (orders) {
                 return orders
             }
         } catch (error) {
 
+        }
+    }
+    //get orders Single 
+    // ---------------------------------
+    async getSingleOrderDetails(id: string,): Promise<IOrder | null> {
+        try {
+            const orders = await this.clientRepository.getSingleOrder(id);
+            if (!orders) throw new Error("No order")
+            return orders
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    //submit Requirements 
+    // ---------------------------------
+    async submitRequirements(formData:any,files:any): Promise<Boolean | undefined> {
+        try {
+            const filePaths: string[] = [];
+            if (files['logo'] && files['logo'].length > 0) filePaths.push(files['logo'][0].path);
+            if (files['referenceMaterial'] && files['referenceMaterial'].length > 0) filePaths.push(files['referenceMaterial'][0].path);
+            const responseFiles = await this.uploadRequirementFile(filePaths,"requirements")
+            console.log(responseFiles);
+            
+            const data = {
+                logo : responseFiles.logo ? responseFiles.logo : "",
+                referenceMaterial : responseFiles.referenceMaterial ? responseFiles.referenceMaterial : "",
+                ...formData
+            }
+            console.log(data);
+            
+            const response = await this.clientRepository.addRequirements(data)
+            if(response){
+                const requirementsStatusReponse = await this.clientRepository.changeRequirementStatus(data.orderId,true)
+                return true
+            }   
+            
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    
+    async uploadRequirementFile(filePaths: string[], folderName: string):Promise<any> {
+        try {
+
+            const cloudinaryResponse = await uploadMultipleToCloudinary(filePaths, folderName);
+            if(!cloudinaryResponse){
+                throw new Error("Cloud file Upload Failed, please try again")
+            }
+            const logo: string = cloudinaryResponse[0] ? cloudinaryResponse[0].url : '';
+            const referenceMaterial: string = cloudinaryResponse[1] ? cloudinaryResponse[1].url : '';
+
+            filePaths.forEach((path)=>{
+                fs.unlinkSync(path);
+            })
+
+            return { logo,referenceMaterial }
+
+
+        } catch (error) {
+
+        }
+    }
+
+
+    async getLatestTransaction(clientId: string): Promise<ITransaction | undefined>{
+        try {
+            const latestTransaction = await this.clientRepository.getLatestTransaction(clientId)
+            if(latestTransaction){
+                return latestTransaction[0]
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async updateOrderIdTotransaction(sessionId:string,orderId: string): Promise<any>{
+        try {
+            const response = await this.clientRepository.addOrderIdToTransaction(sessionId,orderId)
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
         }
     }
 }

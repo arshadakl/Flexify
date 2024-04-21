@@ -278,11 +278,8 @@ export const forgotPassword = async (email: string) => {
 
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error)) {
-    //   throw new Error(`Google authentication failed: ${error.message}`);
-    // } else {
-    //   throw new Error('An unexpected error occurred during Google authentication.');
-    // }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -292,7 +289,8 @@ export const getAllCategories = async ()=>{
       const response = await freelancersAPI.get('/allcategories');
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -301,7 +299,8 @@ export const getAllSubCategories = async ()=>{
       const response = await freelancersAPI.get('/allsubcategories');
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -318,7 +317,8 @@ export const workPostAPI = async (formData:any)=>{
       
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -327,7 +327,8 @@ export const getUsrAllWork = async ()=>{
       const response = await freelancersAPI.get('/getuserwork');
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -336,7 +337,8 @@ export const getAllWorks = async ()=>{
       const response = await freelancersAPI.get('/getAllWorks');
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -347,7 +349,8 @@ export const getSingleWorkAPI = async (id:string)=>{
       const response = await freelancersAPI.get( `/singlework/${id}`);
       return response.data
   } catch (error) {
-      
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 
@@ -356,7 +359,20 @@ export const deleteWork = async (id:any)=>{
       const response = await freelancersAPI.delete(`/deletework?id=${id}`);
       return response.data
   } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+export const getRecivedOrdersAPI = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/recivedorders');
+      console.log(response.data);
       
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 }
 

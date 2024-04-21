@@ -2,7 +2,7 @@ import { Freelancer } from "../models/Freelancer";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
-import { IOrder } from "../interfaces/clientInterface";
+import { IOrder, ITransaction } from "../interfaces/clientInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
@@ -15,7 +15,7 @@ export interface AdminRepository {
     findCategoryByName(name:string):Promise<ICategory | null>
     findCategoryById(id:string):Promise<ICategory | null>
     addNewCategory(title:string,description:string):Promise<ICategory | undefined>
-    getAllCategories():Promise<ICategory[] | undefined>
+    getAllCategories(page:number):Promise<any>
     getOneCategorie(id:string):Promise<ICategory | undefined | null> 
     deleteCategory(id:string):Promise<any>
     editCategory(title:string,description:string,_id:string):Promise<UpdateWriteOpResult >
@@ -33,5 +33,6 @@ export interface AdminRepository {
     findWorkById(id: string): Promise<IWork | null>
     suspendWork(id: string, action:any): Promise<UpdateWriteOpResult>
     getAllOrders(): Promise<IOrder[] | null>
+    getAllTransaction(): Promise<ITransaction[] | null>
 }
 

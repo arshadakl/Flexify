@@ -2,20 +2,21 @@ import { initFlowbite } from "flowbite";
 import { useEffect, useState } from "react";
 import CategoryModal from "../../common/components/ExtraComponents/categoryModal";
 import CategoryTable from "../../common/components/ExtraComponents/CategoryTable";
-import { deleteCategoryAPI, getAllCategories } from "../../common/utils/APIs/AdminApi";
+import { deleteCategoryAPI, getAllCategoriesPage } from "../../common/utils/APIs/AdminApi";
 import { toast } from "sonner";
 
 function AddCategory() {
     const [Categories, setCategories] = useState();
+    const [currentPage,setCurrentPage] = useState(1)
   useEffect(() => {
     initFlowbite();
     const fetchData = async() =>{
-        const categoriesData = await getAllCategories()
+        const categoriesData = await getAllCategoriesPage(currentPage)
         setCategories(categoriesData.data)
     }
     fetchData()
 
-  }, []);
+  }, [currentPage]);
 
   const deleteCategory = async(id:string)=>{
         console.log(id,"called parent ");
@@ -44,7 +45,7 @@ function AddCategory() {
       </div>
       <CategoryModal isEdit={{status:false}} setCategories={setCategories} />
       <div>
-        <CategoryTable Categories={Categories} setCategories={setCategories} deleteCategory={deleteCategory} />
+        <CategoryTable page={currentPage} setPage={setCurrentPage} Categories={Categories} setCategories={setCategories} deleteCategory={deleteCategory} />
       </div>
     </>
   );

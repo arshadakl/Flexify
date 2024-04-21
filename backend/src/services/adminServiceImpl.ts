@@ -6,7 +6,7 @@ import bcrypt from "bcrypt"
 import { AdminJwtCreation } from "../utils/jwtCreation";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
-import { IOrder } from "../interfaces/clientInterface";
+import { IOrder, ITransaction } from "../interfaces/clientInterface";
 import { Freelancer } from "../models/Freelancer";
 import { AdminServices } from "./adminServices";
 
@@ -106,9 +106,20 @@ export class AdminServicesimple implements AdminServices {
     }
 
 
-    async getAllCategories():Promise<ICategory[] | undefined> {
+    async getAllCategories():Promise<any> {
         try {
             const allCategories = await this.adminRepository.getAllCategories()
+            if(allCategories){
+                return allCategories
+            }
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getAllCategoriesPage(page:number):Promise<any> {
+        try {
+            const allCategories = await this.adminRepository.getAllCategoriesPagenation(page)
             if(allCategories){
                 return allCategories
             }
@@ -248,6 +259,17 @@ export class AdminServicesimple implements AdminServices {
             const orderData = await this.adminRepository.getAllOrders()
             if(!orderData) throw new Error("No order found")
             return orderData    
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    //get all Transactions
+    // ---------------
+    async getAllTransactions():Promise<ITransaction[] | null> {
+        try {
+            const transactions = await this.adminRepository.getAllTransaction()
+            if(!transactions) throw new Error("No found")
+            return transactions    
         } catch (error:any) {
             throw new Error(error.message)
         }

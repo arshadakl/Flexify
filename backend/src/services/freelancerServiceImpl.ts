@@ -11,6 +11,7 @@ import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
 import { IWork } from '../interfaces/freelancerInterface';
 import fs from 'fs'
+import { IOrder } from '../interfaces/clientInterface';
 
 // import { uploadFile } from '../utils/Cloudinary';
 
@@ -459,8 +460,7 @@ export class FreelancerService {
     async getallWorksOfUserServ(id:string): Promise<IWork[] | null> {
         try {
             const allWorks = await this.freelancerRepository.getAllWorkOfUser(id)
-            if(!allWorks) throw new Error("Could not get all works of user")
-            
+            if(!allWorks) throw new Error("Could not get all works of user")            
             return allWorks
             
         } catch (error: any) {
@@ -502,6 +502,15 @@ export class FreelancerService {
             }
 
         } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getRecivedWorkDetails(id:string): Promise<IOrder[] | null >{
+        try {
+            const OrderDetails = await this.freelancerRepository.getRecivedWork(id)
+            return OrderDetails
+        } catch (error:any) {
             throw new Error(error.message)
         }
     }

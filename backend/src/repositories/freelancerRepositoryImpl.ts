@@ -12,6 +12,8 @@ import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterf
 import { IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import mongoose from 'mongoose';
+import { Order } from "../models/Clients";
+import { IOrder } from "../interfaces/clientInterface";
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -328,6 +330,33 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             throw new Error(`Error getting work details: ${error}`);
         }
     };
+
+
+    async getRecivedWork(id:string):Promise<IOrder[] | null>{
+        try {
+            // const works = await Order.find({freelancerId: id});
+            const works = await Order.aggregate([
+                {$match:{freelancerId: new mongoose.Types.ObjectId(id)}},
+                {$lookup:{
+                    from: "freelancers",
+                        localField: "clientId",
+                        foreignField: "_id",
+                        as: "client"
+                }},
+                {$project: {
+                    client:{
+                        username:1,
+                        profile:1,
+                        email:1
+                    }
+                }}
+            ])
+            if(!works) throw new Error("Work not found");
+            return works
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
 
 
 

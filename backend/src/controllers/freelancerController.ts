@@ -426,6 +426,7 @@ export class FreelancerController {
             }
             console.log(workData);
             workData.user = req.user._id
+            workData.questionnaire = JSON.parse(workData.questionnaire)
             const categoryDetails = await this._freelancerService.CategoryDataFetch(workData.category,workData.subcategory)
             workData.categoryNames=[categoryDetails.categoryTitle,categoryDetails.subcategoryTitle]
             const submitResponse = await this._freelancerService.WorkSubmitService(workData)
@@ -513,6 +514,16 @@ export class FreelancerController {
         }
     }
 
+
+    async getRecivedWork(req: Request, res: Response):Promise<void>{
+        try {
+            const FreelancerID = req.user._id
+            const OrdersDetails = await this._freelancerService.getRecivedWorkDetails(FreelancerID)
+            res.status(200).json({ status: 'success', orders: OrdersDetails})
+        } catch (error:any) {
+            res.json({status: false, error: error.message})
+        }
+    }
 
 
 

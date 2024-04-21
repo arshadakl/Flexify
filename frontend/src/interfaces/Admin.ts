@@ -15,3 +15,14 @@ export interface SubategoryInter{
     description:string,
     category:string
 }
+
+export interface ITransaction{
+    _id?:string ,
+    session_id:string,
+    work_id: string,
+    amount:number,
+    purpose:string,
+    payment_status:string
+    user:string
+    
+}

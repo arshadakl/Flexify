@@ -2,6 +2,7 @@ import axios from 'axios';
 import { BASE_API_URL } from '../config/constants';
 import { profileCompletionFormClient } from '../../components/ProfileCompletionParts/CompletionForm';
 import store from '../../../Redux/store';
+import { handleError } from './ErrorHandlers/ErrorHandle';
 
 const clientAPI = axios.create({
     baseURL: `${BASE_API_URL}/client`
@@ -35,7 +36,8 @@ export const profileCompletionClient = async (formData:profileCompletionFormClie
         return response.data
         
     } catch (error) {
-        
+      const errorMessage = handleError(error);
+      throw errorMessage;
     }
 }
 
@@ -50,7 +52,8 @@ export const checkoutAPI = async (id:string)=>{
         return response.data
         
     } catch (error) {
-        
+      const errorMessage = handleError(error);
+      throw errorMessage;
     }
 }
 
@@ -59,7 +62,42 @@ export const getAllOrdersAPI = async ()=>{
         const response = await clientAPI.get('/clientorders');
         return response.data
     } catch (error) {
-        
+      const errorMessage = handleError(error);
+      throw errorMessage;
+    }
+}
+
+export const getLastOrderIdAPI = async ()=>{
+    try {
+        const response = await clientAPI.get('/latestorderid');
+        return response.data
+    } catch (error) {
+      const errorMessage = handleError(error);
+      throw errorMessage;
+    }
+}
+
+export const singleorderDetailsAPI = async (id:string)=>{
+    try {
+        const response = await clientAPI.get(`/singleorder?orderId=${id}`);
+        return response.data
+    } catch (error) {
+      const errorMessage = handleError(error);
+      throw errorMessage;
+    }
+}
+
+export const requirementsSubmitAPI = async (formData:any)=>{
+    try {
+        const response = await clientAPI.post('/requirementsubmit',formData,{
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+        return response.data
+    } catch (error) {
+      const errorMessage = handleError(error);
+      throw errorMessage;
     }
 }
 

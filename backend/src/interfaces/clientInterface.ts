@@ -7,8 +7,10 @@ export interface ITransaction{
     work_id:Schema.Types.ObjectId | string,
     amount:number,
     purpose:string,
-    payment_status:string
-    user:string
+    payment_status:string,
+    user:string,
+    date?:number,
+    orderId?:Schema.Types.ObjectId | string
     
 }
 
@@ -25,5 +27,20 @@ export interface IOrder {
     amount:number,
     WorkDetails: IWork,
     date?:number,
-    status: statusType
+    status: statusType,
+    requirementStatus?:Boolean,
+}   
+
+export interface IRequirement {
+    _id?:Schema.Types.ObjectId | string,
+    workId:Schema.Types.ObjectId | string,
+    freelancerId:Schema.Types.ObjectId | string,
+    clientId:Schema.Types.ObjectId | string,
+    logo:string,
+    referenceMaterial:string,
+    description:string
+    answers:string[],
+    date?:number,
+    status: statusType,
+    orderId:Schema.Types.ObjectId | string,
 }   

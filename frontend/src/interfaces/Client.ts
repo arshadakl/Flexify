@@ -11,5 +11,6 @@ export interface IOrder {
     amount:number,
     WorkDetails: IWork,
     date?:number,
-    status:string
+    status:string,
+    requirementStatus?:Boolean
 }   

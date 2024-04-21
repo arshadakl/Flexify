@@ -18,18 +18,29 @@ const SubCategoryTableTest: React.FC<SubCategoryTableTestProps> = ({
   setSubCategories,
 }) => {
   const [mainCategory, setMainCategory] = useState<any[]>([]);
-
+  const [item,setItem]= useState(false)
+  const [page,setPage] = useState<number>(0)
   useEffect(() => {
     const fetchData = async () => {
+      console.log("called category call");
+      
       const mainCategories = await getAllCategories();
+      console.log(mainCategories);
+      
       setMainCategory(mainCategories.data);
+      setItem(true)
     };
     fetchData();
   }, []);
-
+  useEffect(() => {
+    console.log(mainCategory.length,page);
+    
+  }, [page])
+  
   return (
     <>
-      {mainCategory?.map((main) => {
+      {item && [0].map(() => {
+        const main = mainCategory[page]
         const subItems = SubCategories?.filter(
           (item: SubategoryInter) => item.category === main._id
         );
@@ -131,12 +142,50 @@ const SubCategoryTableTest: React.FC<SubCategoryTableTestProps> = ({
                       </div>
                     ))}
                   </div>
+                 
                 </div>
+                
               </div>
+              
             </div>
           </div>
         );
-      })}
+      }
+      
+      )}
+       <>
+                <div className="w-full flex px-5 py-2 justify-end ">
+                  <nav aria-label="Page navigation example">
+                    <ul className="inline-flex -space-x-px text-sm">
+                      <li>
+                        <button
+                         disabled={page==0 ? true : false} onClick={()=>setPage(page-1)}
+                          className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Previous
+                        </button >
+                      </li>
+                      <li>
+                        <p aria-current="page"
+                          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          {page+1}
+                        </p>
+                      </li>
+                    
+                     
+                      <li>
+                        <button disabled={page==mainCategory.length-1 ? true : false}
+                         onClick={()=>setPage(page+1)} 
+                          className="flex cursor-pointer items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Next
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { ICategory, ISubcategory } from "../interfaces/adminInterface"
-import { IOrder } from "../interfaces/clientInterface"
+import { IOrder, ITransaction } from "../interfaces/clientInterface"
 import { IWork } from "../interfaces/freelancerInterface"
 
 export interface AdminServices{
@@ -8,7 +8,8 @@ export interface AdminServices{
     doBlockUser(id: string): Promise<any>
     addCategoryServ(title:string,description:string):Promise<Boolean | undefined>
     editCategoryServ(title:string,description:string,_id:string):Promise<Boolean | undefined>
-    getAllCategories():Promise<ICategory[] | undefined>
+    getAllCategories():Promise<any>
+    getAllCategoriesPage(page:number):Promise<any>
     deleteCategoryServ(id:string):Promise<ICategory[] | undefined>
     addSubCategoryServ(title:string,description:string,category:string):Promise<Boolean | undefined>
     getAllSubCategories():Promise<ISubcategory[] | undefined>
@@ -18,5 +19,5 @@ export interface AdminServices{
     findWorkById(id:string):Promise<IWork | undefined>
     suspendWork(work:IWork):Promise<Boolean | undefined>
     getAllOrders():Promise<IOrder[] | null>
-
+    getAllTransactions():Promise<ITransaction[] | null>
 }

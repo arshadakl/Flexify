@@ -78,7 +78,17 @@ export const AddCategoryAPI = async(data:CategoryInter)=>{
 
 export const getAllCategories = async ()=>{
     try {
-        const response = await adminAPI.get('/allcategories');
+        const response = await adminAPI.get("/allcategories");
+        return response.data
+    } catch (error) {
+        
+    }
+}
+
+
+export const getAllCategoriesPage = async (page:number)=>{
+    try {
+        const response = await adminAPI.get(`/allcategoriespagenation?page=${page}`);
         return response.data
     } catch (error) {
         
@@ -174,6 +184,15 @@ export const suspendWorkAPI = async(id:string)=>{
 export const getAllOrdersAPI = async()=>{
     try {
         const response = await adminAPI.get('/getallorders')
+        return response.data        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export const getalltransactionAPI = async()=>{
+    try {
+        const response = await adminAPI.get('/getalltransaction')
         return response.data        
     } catch (error) {
         console.log(error);

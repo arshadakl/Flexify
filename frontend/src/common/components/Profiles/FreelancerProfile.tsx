@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../utils/config/context";
 import { useNavigate } from "react-router-dom";
-import AxiosInterceptor, { fetchProfileData} from "../../utils/APIs/FreelancerApi";
+import AxiosInterceptor, {
+  fetchProfileData,
+} from "../../utils/APIs/FreelancerApi";
 import { profileCompletionForm } from "../ProfileCompletionParts/CompletionForm";
 import ImageUploadComponent from "../ExtraComponents/ImageUploadComponent";
 import FreelancerProfileUpdateForm from "../ExtraComponents/FreelancerProfileUpdateForm";
@@ -10,9 +12,10 @@ import { logout } from "../../../Redux/Slices/freelancerSlice";
 import { persistor } from "../../../Redux/store";
 // import { IWork } from "../../../interfaces/Freelancer";
 import ProfileWorksList from "../ExtraComponents/ProfileWorksList";
-import {motion} from 'framer-motion'
+import { motion } from "framer-motion";
 import { fadeIn } from "../../animations/Frame_Motion/variants";
-
+// import OrdersTable from "../../../admin/components/OrdersTable";
+import ProfileOrders from "../../../clients/components/ProfileOrders";
 
 function FreelancerProfilePage() {
   const { isEdit, setIsEdit } = useContext(AuthContext);
@@ -53,12 +56,10 @@ function FreelancerProfilePage() {
     fetchData();
   }, [freelancerDetails, navigate]);
 
-
-
   return (
     <>
       <AxiosInterceptor />
-      <div className="bg-gray-50 :min-h-screen pb-10">
+      <div className="bg-slate-100 :min-h-screen pb-10">
         <div className="flex md:flex-row flex-col text-gray-900 w-screen gap-10 px-10 pt-12">
           <div className="md:w-2/5 w-1/1">
             <div className="w-4/5 md:1/2  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
@@ -133,7 +134,7 @@ function FreelancerProfilePage() {
                     </div>
 
                     <div className="flex justify-between space-x-4 rtl:space-x-reverse">
-                      <div className="flex-shrink-0 font-medium">
+                      <div className="flex-shrink-0  font-medium md:text-md text-sm">
                         <i className="fa-light fa-envelope m-2"></i>{" "}
                         {profileData.freelancer.email}
                       </div>
@@ -145,7 +146,7 @@ function FreelancerProfilePage() {
               </div>
             </div>
 
-            <div className="w-4/5 md:1/2  mt-5  mx-auto  border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="w-4/5 md:1/2  mt-5  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex flex-col items-center">
                 <ul className="w-full px-5 py-3 divide-y divide-gray-200 dark:divide-gray-700">
                   <li className="pb-3 sm:pb-4">
@@ -196,28 +197,67 @@ function FreelancerProfilePage() {
           </div>
 
           {/* <div > */}
-            <motion.div variants={fadeIn("up",0.01)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="md:w-3/5  w-1/1 "> 
-            <div className="min-h-60  flex flex-col bg-white border shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
+          <motion.div
+            variants={fadeIn("up", 0.01)}
+            initial="hidden"
+            whileInView={"show"}
+            viewport={{ once: true }}
+            className="md:w-3/5  w-1/1 "
+          >
+            <div className="min-h-60 transition-all flex flex-col shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
               {!isEdit ? (
                 <>
-                  <div className="flex flex-auto flex-col justify-center  items-center p-4 md:p-5">
-                    <ProfileWorksList/>
+                  <div className="flex  flex-col justify-center  items-center  ">
+                    {/* <ProfileWorksList/> */}
+
+                    {freelancerDetails.role == "freelancer" ? (
+                      <>
+                        <div className=" bg-white py-2 px-5 flex gap-7 w-full">
+                          <p className="font-semibold" >Active Post</p>
+                          <p className="hover:font-semibold  cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
+                        </div>
+                        <ProfileWorksList />
+                      </>
+                    ) : (
+                      <>
+                        <div className="font-poppins flex flex-col w-full min-h-full">
+                          <h1 className="underline py-5">Active Orders</h1>
+                        <ProfileOrders  />
+
+                        </div>
+                        {/* <OrdersTable  /> */}
+                      </>
+                    )}
                   </div>
                 </>
               ) : (
                 <>
                   {/* //edit page  */}
-                  <div className="p-10">
+                  <div className=" bg-white py-2 px-5 flex gap-7 w-full">
+                          <p className="font-semibold" >Active Post</p>
+                          <p className="hover:font-semibold  cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
+                        </div>
+                        <div className="font-poppins w-full flex min-h-full">
+        <h1 className="underline py-3 font-semibold">Edit Profile</h1>
+
+        </div>
+                  <motion.div className="p-10 mt-5 bg-white"
+                   variants={fadeIn("up", 0.1)}
+                   initial="hidden"
+                   whileInView={"show"}
+                   viewport={{ once: true }}
+                  >
+                    
                     <ImageUploadComponent />
                     <FreelancerProfileUpdateForm
                       data={baseData}
                       set={setBaseData}
                     />
-                  </div>
+                  </motion.div>
                 </>
               )}
             </div>
-            </motion.div>
+          </motion.div>
           {/* </div> */}
         </div>
       </div>

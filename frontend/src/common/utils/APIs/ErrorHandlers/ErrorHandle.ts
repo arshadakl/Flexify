@@ -31,6 +31,11 @@ export const handleError = (
 
 
                     return new Error('You are blocked by the admin.');
+                } else if(axiosError.response.data.message === 'Login expired') {
+                    store.dispatch(logout());
+                    persistor.purge();
+                    window.location.href="/login"
+                    return new Error('you are logged out');
                 } else {
                     return new Error('You are not authorized to access this resource.');
                 }

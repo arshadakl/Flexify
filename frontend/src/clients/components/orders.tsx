@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { getAllOrdersAPI } from "../../common/utils/APIs/ClientApi";
 import { IOrder } from "../../interfaces/Client";
 import { FormatDateString } from "../../common/utils/Services/dateFormater";
+import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
+import { useNavigate } from "react-router-dom";
 
 function Orders() {
   const [orders, setOrders] = useState<IOrder[]>();
+  const navigate = useNavigate()
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllOrdersAPI();
@@ -16,7 +19,8 @@ function Orders() {
 
   return (
     <>
-      <div className="p-20 bg-slate-100 w-screen h-screen">
+      <div className=" bg-slate-100 w-full h-screen">
+        <div className="w-11/12 mx-auto py-10">
         <h1 className="text-3xl font-semibold mx-5">Orders</h1>
         <hr className="my-4" />
         <div>
@@ -38,8 +42,9 @@ function Orders() {
                     Category
                   </th>
                   <th scope="col" className="px-6 py-3">
-                    Category
+                    Work Status
                   </th>
+                  <th scope="col" className="px-1 py-3"></th>
                   <th scope="col" className="px-1 py-3"></th>
                 </tr>
               </thead>
@@ -54,7 +59,7 @@ function Orders() {
                         scope="row"
                         className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {order.WorkDetails.title}
+                        {ShortenDescription(order.WorkDetails.title,15)}
                       </th>
                       
                       <td className="px-6 py-4">
@@ -66,8 +71,17 @@ function Orders() {
                       <td className="px-6 py-4">{order.category[0]}</td>
                       <td className="px-6 py-4 capitalize font-semibold font-poppins text-yellow-500"><i className="fa-regular fa-circle-dot fa-beat-fade" /> <span className="capitalize">{order.status}</span></td>
                       <td className="px-1 py-4">
-                        <button className=" py-2 px-5 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 ">
-                        Connect Freelancer
+                        { !order.requirementStatus ? <button onClick={()=>navigate(`/client/orders/requirements?order=${order._id}`)} className=" py-2 px-5 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 ">
+                        <i className="fa-solid fa-rectangle-history-circle-plus mx-2" />Add Requirements
+                        </button> : 
+                        <button disabled={true} className=" py-2 px-5 me-2 mb-2 text-md font-medium text-gray-300 focus:outline-none bg-white rounded-lg border border-gray-200  ">
+                        <i className="fa-solid fa-file-circle-check mx-2 text-green-300" />Requirements Added 
+                        </button>
+                        }
+                      </td>
+                      <td className="px-1 py-4">
+                        <button className=" py-2 px-4 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 ">
+                        <i className="fa-solid fa-messages mx-3" />Connect Freelancer
                         </button>
                       </td>
                     </tr>
@@ -76,6 +90,7 @@ function Orders() {
               </tbody>
             </table>
           </div>
+        </div>
         </div>
       </div>
     </>

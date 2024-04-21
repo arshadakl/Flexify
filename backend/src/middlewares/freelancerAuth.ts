@@ -33,7 +33,7 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
 
     const decodedToken = jwt.verify(token, jwtSecret) as JwtPayload;
     if (!decodedToken) {
-      return res.status(401).json({ message: "Unauthorized" });
+      return res.status(401).json({ message: "Login expired" });
     }
 
     const user = await freelancerRepository.find_ById(decodedToken.id);

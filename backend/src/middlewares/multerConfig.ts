@@ -29,10 +29,10 @@ const storage = multer.diskStorage({
     },
 });
 
-export const multerMid = multer({
+export const  multerMid = multer({
     storage: storage,
     limits: {
-        fileSize: 10 * 1024 * 1024 // 10MB
+        fileSize: 1000 * 1024 * 1024 // 10MB
     }
 });
 

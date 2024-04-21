@@ -8,7 +8,7 @@ import { IWork, MyError, SingleWorkDetails } from "../interfaces/freelancerInter
 import { TransactionModel } from "../models/Transaction";
 import { IOrder, ITransaction } from "../interfaces/clientInterface";
 import { UpdateWriteOpResult } from "mongoose";
-import { Order } from "../models/Clients";
+import { Order, Requirement } from "../models/Clients";
 
 export class ClientRepositoryImpl implements ClientRepository {
 
@@ -53,7 +53,7 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async createOrder(order:IOrder): Promise<any> {
+    async createOrder(order:IOrder): Promise<IOrder> {
         try {
             return await Order.create(order)
         } catch (error: any) {
@@ -65,6 +65,55 @@ export class ClientRepositoryImpl implements ClientRepository {
         try {
             return await Order.find({clientId:client})
         } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getSingleOrder(id:string): Promise<IOrder | null> {
+        try {
+            return await Order.findOne({_id:id})
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+    async addOrderIdToTransaction(sessionId:string,orderId:string):Promise<UpdateWriteOpResult> {
+        try {
+            return await TransactionModel.updateOne({session_id:sessionId},{$addToSet:{orderId:orderId}})
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async addRequirements(data:any):Promise<any> {
+        try {
+            const response = await Requirement.create(data)
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async changeRequirementStatus(orderId:string,status:Boolean):Promise<any>{
+        try {
+            console.log(orderId,status," this is the arguments");
+            
+            const response = await Order.updateOne({_id:orderId}, {
+                $set:{requirementStatus:status}
+            })
+            console.log(response);
+            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getLatestTransaction(clientId:string):Promise<ITransaction[] | null>{
+        try {
+            const latestTransaction = await TransactionModel.find({user:clientId}).sort({date: -1}).limit(1)
+            if(!latestTransaction) throw new Error("Couldn't find latest transaction")
+            return latestTransaction
+        } catch (error:any) {
             throw new Error(error.message)
         }
     }

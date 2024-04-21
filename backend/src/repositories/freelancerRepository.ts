@@ -5,6 +5,7 @@ import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterf
 import { IWork } from "../interfaces/freelancerInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { UpdateWriteOpResult } from "mongoose";
+import { IOrder } from "../interfaces/clientInterface";
 
 export interface FreelancerRepository {
     findByUsername(username: string): Promise<Freelancer | null>;
@@ -33,5 +34,5 @@ export interface FreelancerRepository {
 
     // singlePostDetails(id:string):Promise<any>
     getWorkDetails(id:string):Promise<any>
-
+    getRecivedWork(id:string):Promise<IOrder[] | null>
 }
