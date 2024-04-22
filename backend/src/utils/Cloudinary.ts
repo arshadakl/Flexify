@@ -14,7 +14,8 @@ function configCloudinary(){
 
 export const uploadToCloudinary = async (filePath: string, folderName: string): Promise<any> => {
   try {
-    const result = await cloudinary.v2.uploader.upload(filePath, { folder: folderName });
+    
+    const result = await cloudinary.v2.uploader.upload(filePath, { folder: folderName, resource_type: 'auto' });
     console.log(result);
     
     return result;

@@ -98,11 +98,8 @@ export const otpApi = async (verificationData: VerificationData) => {
     const response = await freelancersAPI.post('/verification', verificationData);
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`OTP verification failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during OTP verification.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -111,11 +108,8 @@ export const otpApiForgotpassword = async (verificationData: VerificationData) =
     const response = await freelancersAPI.post('/forgotpasswordotp', verificationData);
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`OTP verification failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during OTP verification.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -124,11 +118,8 @@ export const passwordReset = async (data:resetPasswordData) => {
     const response = await freelancersAPI.post('/passwordreset', data);
     return response.data;
   } catch (error: unknown) {
-    // if (axios.isAxiosError(error)) {
-    //   throw new Error(`OTP verification failed: ${error.message}`);
-    // } else {
-    //   throw new Error('An unexpected error occurred during OTP verification.');
-    // }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -139,11 +130,8 @@ export const profileCompletion = async (formData: profileCompletionForm) => {
 
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Profile completion failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during profile completion.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 export const roleSpecify = async (id:string,role:string) => {
@@ -153,11 +141,8 @@ export const roleSpecify = async (id:string,role:string) => {
 
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Profile completion failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during profile completion.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 export const switchRoleAPI = async (role:string) => {
@@ -165,11 +150,8 @@ export const switchRoleAPI = async (role:string) => {
     const response = await freelancersAPI.post('/changerole', {role:role});
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Profile completion failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during profile completion.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -178,11 +160,8 @@ export const profileUpdate = async (formData: profileCompletionForm) => {
     const response = await freelancersAPI.post('/profileUpdate', formData);
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Profile update failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during profile update.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -191,11 +170,8 @@ export const reSendOTP = async (email: string) => {
     const response = await freelancersAPI.post('/resendOtp', { email });
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Resending OTP failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred while resending OTP.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -206,11 +182,8 @@ export const googleAuth = async (key: string) => {
 
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Google authentication failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during Google authentication.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -262,11 +235,8 @@ export const uploadProfileImage = async (formData: FormData) => {
 
     return response.data;
   } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Uploading profile image failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred while uploading profile image.');
-    }
+    const errorMessage = handleError(error);
+    throw errorMessage;
   }
 };
 
@@ -354,6 +324,16 @@ export const getSingleWorkAPI = async (id:string)=>{
   }
 }
 
+export const singleOrderDetails = async (id:string)=>{
+  try {
+      const response = await freelancersAPI.get( `/singleorder/${id}`);
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
 export const deleteWork = async (id:any)=>{
   try {
       const response = await freelancersAPI.delete(`/deletework?id=${id}`);
@@ -406,6 +386,20 @@ export const updateWorkAPI = async (form:any,id:string)=>{
   try {
       const data= {id:id,data:form};
       const response = await freelancersAPI.patch(`/updatework`,data);      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+export const submitOrderWork = async (form:any)=>{
+  try {     
+      const response = await freelancersAPI.post('/submitorderwork',form,{
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      }); 
       return response.data
   } catch (error) {
     const errorMessage = handleError(error);

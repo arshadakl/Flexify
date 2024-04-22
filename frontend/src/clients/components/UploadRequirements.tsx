@@ -7,9 +7,11 @@ import {
 import { IOrder } from "../../interfaces/Client";
 import { FormatDateString } from "../../common/utils/Services/dateFormater";
 import { toast } from "sonner";
+import Loading from "../../common/components/ExtraComponents/Loading";
 
 function UploadRequirements() {
-
+  const [isLoad,setIsLoad] = useState<boolean>(false)
+  
   const navigate = useNavigate()
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -109,6 +111,7 @@ function UploadRequirements() {
     if (isValid !== "success") {
       toast.warning(isValid);
     } else {
+      setIsLoad(true)
       const formData = new FormData();
       formData.append("description", description);
       if(order?.freelancerId) formData.append("freelancerId", order?.freelancerId);
@@ -120,6 +123,7 @@ function UploadRequirements() {
       formData.append("answers", JSON.stringify(questionnaireResponses));
       const response = await requirementsSubmitAPI(formData);
       
+      setIsLoad(false)
 
       if(response.status){
         navigate('/client/orders')
@@ -132,6 +136,7 @@ function UploadRequirements() {
 
   return (
     <>
+    {isLoad ? <Loading/> : null}
       <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
         <div className=" md:w-4/6 w-11/12  mx-auto">
           <h1 className="text-xl font-poppins">Submit Work Requirement</h1>

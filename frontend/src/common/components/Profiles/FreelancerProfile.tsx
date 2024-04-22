@@ -214,11 +214,21 @@ function FreelancerProfilePage() {
                       <>
                         <div className=" bg-white py-2 px-5 flex gap-7 w-full ">
                           <div>
-                          <p className="font-semibold hover:font-bold cursor-pointer mx-5" onClick={()=>navigate('/my-post')} >My Post</p>
+                            <p
+                              className="font-semibold hover:font-bold cursor-pointer mx-5"
+                              onClick={() => navigate("/my-post")}
+                            >
+                              My Post
+                            </p>
                           </div>
+                        
                           <div>
-                          <p className="font-semibold hover:font-bold cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
-
+                            <p
+                              className="font-semibold hover:font-bold cursor-pointer"
+                              onClick={() => navigate("/dashboard")}
+                            >
+                              Dashboard
+                            </p>
                           </div>
                         </div>
                         <ProfileWorksList />
@@ -227,8 +237,7 @@ function FreelancerProfilePage() {
                       <>
                         <div className="font-poppins flex flex-col w-full min-h-full">
                           <h1 className="underline py-5">Active Orders</h1>
-                        <ProfileOrders  />
-
+                          <ProfileOrders />
                         </div>
                         {/* <OrdersTable  /> */}
                       </>
@@ -238,21 +247,44 @@ function FreelancerProfilePage() {
               ) : (
                 <>
                   {/* //edit page  */}
-                  <div className=" bg-white py-2 px-5 flex gap-7 w-full">
-                          <p className="font-semibold" >Active Post</p>
-                          <p className="hover:font-semibold  cursor-pointer" onClick={()=>navigate('/dashboard')}>Dashboard</p>
+                  <div className=" bg-white py-2 px-5 flex gap-7 w-full ">
+                          <div>
+                            <p
+                              className="font-semibold hover:font-bold cursor-pointer mx-5"
+                              onClick={() => navigate("/my-post")}
+                            >
+                              My Post
+                            </p>
+                          </div>
+                          <div>
+                            <p
+                              className="font-semibold hover:font-bold cursor-pointer"
+                              onClick={() => navigate("/work-orders")}
+                            >
+                              My Orders
+                            </p>
+                          </div>
+                          <div>
+                            <p
+                              className="font-semibold hover:font-bold cursor-pointer"
+                              onClick={() => navigate("/dashboard")}
+                            >
+                              Dashboard
+                            </p>
+                          </div>
                         </div>
-                        <div className="font-poppins w-full flex min-h-full">
-        <h1 className="underline py-3 font-semibold">Edit Profile</h1>
-
-        </div>
-                  <motion.div className="p-10 mt-5 bg-white"
-                   variants={fadeIn("up", 0.1)}
-                   initial="hidden"
-                   whileInView={"show"}
-                   viewport={{ once: true }}
+                  <div className="font-poppins w-full flex min-h-full">
+                    <h1 className="underline py-3 font-semibold">
+                      Edit Profile
+                    </h1>
+                  </div>
+                  <motion.div
+                    className="p-10 mt-5 bg-white"
+                    variants={fadeIn("up", 0.1)}
+                    initial="hidden"
+                    whileInView={"show"}
+                    viewport={{ once: true }}
                   >
-                    
                     <ImageUploadComponent />
                     <FreelancerProfileUpdateForm
                       data={baseData}

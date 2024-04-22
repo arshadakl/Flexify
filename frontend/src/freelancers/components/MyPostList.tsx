@@ -79,7 +79,7 @@ function MyPostList() {
           <div className=" md:w-8/12 w-2/2 ">
             <h1 className="text-xl font-poppins capitalize">{tab} Works</h1>
             <hr className="my-2" />
-            <motion.div
+            { <motion.div
               variants={fadeIn("down", 0.2)}
               initial="hidden"
               whileInView={"show"}
@@ -91,7 +91,14 @@ function MyPostList() {
                   posts={tab == "active" ? activePost : suspendedPost}
                 />
               )}
-            </motion.div>
+              {activePost?.length==0 && tab == "active" && <div className="text-center py-5 font-semibold text-slate-300">
+                No Work Found
+              </div> }
+              {suspendedPost?.length==0 && tab !== "active" && <div className="text-center py-5 font-semibold text-slate-300">
+                No Suspended Work Found
+              </div> }
+            </motion.div>}
+            
           </div>
         </div>
       </div>

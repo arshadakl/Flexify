@@ -11,7 +11,7 @@ import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
 import { IWork } from '../interfaces/freelancerInterface';
 import fs from 'fs'
-import { IOrder } from '../interfaces/clientInterface';
+import { IOrder, ISubmissions } from '../interfaces/clientInterface';
 
 // import { uploadFile } from '../utils/Cloudinary';
 
@@ -58,7 +58,7 @@ export class FreelancerService {
         const existingUsername = await this.freelancerRepository.findByUsername(freelancer.username);
         const existingEmail = await this.freelancerRepository.findByEmail(freelancer.email);
 
-        if(existingEmail){
+        if (existingEmail) {
             throw new Error("email already exists");
         }
         if (existingUsername) {
@@ -106,7 +106,7 @@ export class FreelancerService {
         }
     }
 
- 
+
 
     async doVerifyOtp(id: string): Promise<string | undefined> {
         console.log(id, "reached");
@@ -181,10 +181,10 @@ export class FreelancerService {
     }
 
     //role specyfication
-    async doRoleSpecify(id:string,role:string): Promise<Boolean> {
+    async doRoleSpecify(id: string, role: string): Promise<Boolean> {
         const response = await this.freelancerRepository.doRolespecify(id, role)
         console.log(response);
-        
+
         if (response) {
             return true
         } else {
@@ -193,13 +193,13 @@ export class FreelancerService {
 
     }
     //role changing service
-    async doRoleChange(id:string,role:string): Promise<Freelancer> {
+    async doRoleChange(id: string, role: string): Promise<Freelancer> {
         const response = await this.freelancerRepository.doRolespecify(id, role)
         if (response) {
             const userData = await this.freelancerRepository.find_ById(id)
-            if(userData) {
+            if (userData) {
                 return userData
-            }else{
+            } else {
                 throw new Error("user not found")
             }
         } else {
@@ -220,7 +220,7 @@ export class FreelancerService {
     }
 
 
-    
+
     async GoogleLoginEmailValidation(email: string): Promise<any> {
         try {
             const user = await this.freelancerRepository.findByEmail(email);
@@ -244,7 +244,7 @@ export class FreelancerService {
     }
 
 
-    async profiledataService(id: string):Promise<FreelancerDetails | null> {
+    async profiledataService(id: string): Promise<FreelancerDetails | null> {
         try {
             // const decodedToken = await this.validateJWT(token);
             const userData = await this.freelancerRepository.findDetailsById(id);
@@ -293,11 +293,11 @@ export class FreelancerService {
             if (!process.env.JWT_SECRET) {
                 throw new Error("JWT secret is not defined in environment variables.");
             }
-    
+
             const token = jwt.sign({ id: freelancer.id, email: freelancer.email }, process.env.JWT_SECRET, {
                 expiresIn: "10h", // Change expiration to 10 hours
             });
-    
+
             freelancer.token = token;
             freelancer.password = "";
             const options = {
@@ -309,7 +309,7 @@ export class FreelancerService {
             throw new Error("Email not found");
         }
     }
-    
+
 
     async securityCode(freelancer: Freelancer): Promise<any> {
         if (freelancer !== null) {
@@ -400,11 +400,11 @@ export class FreelancerService {
         }
     }
 
-    async WorkSubmitService(workData:IWork): Promise<any> {
+    async WorkSubmitService(workData: IWork): Promise<any> {
         try {
             const response = await this.freelancerRepository.createWorkPost(workData)
             console.log(response);
-            if(response){
+            if (response) {
                 return true
             }
         } catch (error: any) {
@@ -413,11 +413,11 @@ export class FreelancerService {
     }
 
 
-    async uploadMultiFiles(filePaths: string[], folderName: string):Promise<any> {
+    async uploadMultiFiles(filePaths: string[], folderName: string): Promise<any> {
         try {
 
             const cloudinaryResponse = await uploadMultipleToCloudinary(filePaths, folderName);
-            if(!cloudinaryResponse){
+            if (!cloudinaryResponse) {
                 throw new Error("Cloud Image Upload Failed, please try again")
             }
             const image1Url: string = cloudinaryResponse[0] ? cloudinaryResponse[0].url : '';
@@ -425,7 +425,7 @@ export class FreelancerService {
             const image3Url: string = cloudinaryResponse[2] ? cloudinaryResponse[2].url : '';
 
             console.log(image1Url, image2Url, image3Url);
-            filePaths.forEach((path)=>{
+            filePaths.forEach((path) => {
                 fs.unlinkSync(path);
             })
             return { image1Url, image2Url, image3Url }
@@ -440,7 +440,7 @@ export class FreelancerService {
         try {
             const categoryPromise = this.freelancerRepository.findCategoriesById(categoryId);
             const subcategoryPromise = this.freelancerRepository.findSubCategoriesById(subCategoryId);
-    
+
             return Promise.all([categoryPromise, subcategoryPromise])
                 .then(([category, subcategory]) => {
                     let categoryTitle = category?.title
@@ -455,14 +455,14 @@ export class FreelancerService {
             throw new Error(error.message);
         }
     }
-    
 
-    async getallWorksOfUserServ(id:string): Promise<IWork[] | null> {
+
+    async getallWorksOfUserServ(id: string): Promise<IWork[] | null> {
         try {
             const allWorks = await this.freelancerRepository.getAllWorkOfUser(id)
-            if(!allWorks) throw new Error("Could not get all works of user")            
+            if (!allWorks) throw new Error("Could not get all works of user")
             return allWorks
-            
+
         } catch (error: any) {
             throw new Error(error.message)
         }
@@ -481,7 +481,7 @@ export class FreelancerService {
         }
     }
 
-    async deleteWorkPost(id:string): Promise<any> {
+    async deleteWorkPost(id: string): Promise<any> {
         try {
             const deleteResponse = await this.freelancerRepository.deleteWork(id)
 
@@ -493,11 +493,11 @@ export class FreelancerService {
         }
     }
 
-    async getSingleWorkDetails(id:string): Promise<any> {
+    async getSingleWorkDetails(id: string): Promise<any> {
         try {
             // const singleDetails = await this.freelancerRepository.singlePostDetails(id)
             const singleDetails = await this.freelancerRepository.getWorkDetails(id)
-            if(singleDetails){
+            if (singleDetails) {
                 return singleDetails
             }
 
@@ -506,47 +506,82 @@ export class FreelancerService {
         }
     }
 
-    async getRecivedWorkDetails(id:string): Promise<IOrder[] | null >{
+    async getSingleOrderDetails(id: string): Promise<any> {
+        try {
+            const singleDetails = await this.freelancerRepository.getOrderDetails(id)
+            if (singleDetails) {
+                return singleDetails
+            }
+
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getRecivedWorkDetails(id: string): Promise<IOrder[] | null> {
         try {
             const OrderDetails = await this.freelancerRepository.getRecivedWork(id)
             return OrderDetails
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async getActivePosts(freelancerId:string): Promise<IWork[] | null>{
+    async getActivePosts(freelancerId: string): Promise<IWork[] | null> {
         try {
-           const response = await this.freelancerRepository.getAllActivepost(freelancerId)
-           return response
-        } catch (error:any) {
+            const response = await this.freelancerRepository.getAllActivepost(freelancerId)
+            return response
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async getSuspendedPosts(freelancerId:string): Promise<IWork[] | null>{
+    async getSuspendedPosts(freelancerId: string): Promise<IWork[] | null> {
         try {
             const response = await this.freelancerRepository.getAllSuspendedpost(freelancerId)
-           return response
-        } catch (error:any) {
+            return response
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async getSingleWork(workId:string):Promise<IWork | null>{
+    async getSingleWork(workId: string): Promise<IWork | null> {
         try {
             const response = await this.freelancerRepository.getSingleWork(workId)
-           return response
-        } catch (error:any) {
+            return response
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async updateWorkDetails(data:any,workId:string):Promise<any>{
+    async updateWorkDetails(data: any, workId: string): Promise<any> {
         try {
-            const response = await this.freelancerRepository.updateWork(data,workId)
-           return response
-        } catch (error:any) {
+            const response = await this.freelancerRepository.updateWork(data, workId)
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async submitWorkServ(data: any, filePath: string): Promise<ISubmissions | null> {
+        try {
+
+            const fileCloudURL = await  uploadToCloudinary(filePath, "SubmissionFile");
+            const formData = {
+                workId: data.workId,
+                freelancerId: data.freelancerId,
+                clientId: data.clientId,
+                description: data.description,
+                file: fileCloudURL.secure_url,
+                status: "pending",
+                revise: 1,
+                orderId: data.orderId,
+            }
+            const response = await this.freelancerRepository.createSubmission(formData)
+            console.log(response);
+            
+            return response
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }

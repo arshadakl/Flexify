@@ -163,6 +163,13 @@ export class ClientService {
         }
     }
 
+
+    addDaysToDate(date: Date, days: number): number {
+        const newDate = new Date(date.getTime());
+        newDate.setDate(newDate.getDate() + days);
+        return newDate.getTime();
+    }
+
     //order creation 
     async createNewOrder(session: string, payment_intent: string): Promise<IOrder | undefined> {
         try {
@@ -171,8 +178,10 @@ export class ClientService {
             if (!transactionData) {
                 throw new Error("Could not find transaction")
             }
+           
             const workDetails = await this.clientRepository.FindWorkById(transactionData?.work_id as string)
             if (!workDetails) throw new Error("Could not find work")
+                const deadlineDate =  this.addDaysToDate(new Date(), workDetails.deliveryPeriod || 0)
             const orderDetails: IOrder = {
                 workId: transactionData?.work_id,
                 // transactionId: transactionData._id
@@ -184,7 +193,8 @@ export class ClientService {
                 WorkDetails: workDetails,
                 date: Date.now(),
                 status: "pending",
-                requirementStatus:false
+                requirementStatus:false,
+                deadline: deadlineDate
             }
 
             const order = await this.clientRepository.createOrder(orderDetails);
@@ -292,4 +302,6 @@ export class ClientService {
             throw new Error(error.message)
         }
     }
+
+     
 }

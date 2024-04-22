@@ -33,8 +33,9 @@ const OrderSchema = new Schema<IOrder>({
     amount: { type: Number, required: true },
     WorkDetails: { type: WorkSchema, required: true },
     date: { type: Number, required: true, default: Date.now },
+    deadline: { type: Number },
     status:{ type: String, required: true},
-    requirementStatus : { type: Boolean, required: true}
+    requirementStatus : { type: Boolean, required: true},
 })
 
 const answerSchema = new Schema({

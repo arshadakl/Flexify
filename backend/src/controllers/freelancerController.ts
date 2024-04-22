@@ -69,7 +69,7 @@ export class FreelancerController {
         try {
             const userId = await this._freelancerService.signup(freelancer);
             res.status(201).json({ message: "Freelancer signed up successfully", status: true });
-        } catch (error:any) {
+        } catch (error: any) {
             res.json({ error: error.message, status: false });
         }
     }
@@ -197,21 +197,21 @@ export class FreelancerController {
         }
     }
 
-        // resend OTP 
+    // resend OTP 
     //================================
 
     async rolespecify(req: Request, res: Response): Promise<void> {
         try {
-            const {id,role} = req.body
-            console.log(id,role);
-            
-            const response = await this._freelancerService.doRoleSpecify(id,role)
-           if(response){
-               res.status(200).json({ status: true,message:"user role specified"})
-           }
+            const { id, role } = req.body
+            console.log(id, role);
 
-        } catch (error:any) {
-            res.json({ status: false,error:error.message})
+            const response = await this._freelancerService.doRoleSpecify(id, role)
+            if (response) {
+                res.status(200).json({ status: true, message: "user role specified" })
+            }
+
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
 
         }
     }
@@ -220,25 +220,25 @@ export class FreelancerController {
     async changeRole(req: Request, res: Response): Promise<void> {
         try {
             console.log(req.body, "role change called");
-            
-            const {role} = req.body
+
+            const { role } = req.body
             console.log(role);
-            
+
             if (role !== 'freelancer' && role !== 'client') {
                 throw new Error("Invalid role");
             }
-            
-            
+
+
             console.log(req.user, "user data");
-            
-            const {_id} = req.user
-            console.log(_id,role,"tet");
-            
-            const userData = await this._freelancerService.doRoleChange(_id,role)
-            res.status(200).json({ status: true,message:"Role change success",userData:userData})
-           
-        } catch (error:any) {
-            res.json({ status: false,error:error.message})
+
+            const { _id } = req.user
+            console.log(_id, role, "tet");
+
+            const userData = await this._freelancerService.doRoleChange(_id, role)
+            res.status(200).json({ status: true, message: "Role change success", userData: userData })
+
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
 
         }
     }
@@ -277,11 +277,8 @@ export class FreelancerController {
     // ===========================
     async profileUpdate(req: Request, res: Response): Promise<void> {
         try {
-            console.log(req.body, "new profile");
             const response = await this._freelancerService.profileUpdateServ(req.body);
-            console.log(response, "2nd response");
             if (response) {
-                // console.log("control response: ", response);
                 res.status(200).json({ status: true, response })
             } else {
                 throw new Error("Token or options are undefined");
@@ -295,11 +292,7 @@ export class FreelancerController {
 
 
     async profiledata(req: Request, res: Response): Promise<void> {
-        // res.status(401).json({message : "You are blocked by admin"})
         try {
-            // console.log(req.headers);
-            // const token = req.headers.authorization
-            // console.log(token, "controller token");
             const userId = req.user._id
             if (userId) {
                 const userDetails = await this._freelancerService.profiledataService(userId)
@@ -331,7 +324,7 @@ export class FreelancerController {
                 throw new Error('Invalid token')
             }
             console.log(req.file);
-            
+
             const result = await uploadToCloudinary(req.file.path, "profile");
             // console.log(result);
             const userData = await this._freelancerService.updatePrfileImage(token, result.url)
@@ -406,7 +399,7 @@ export class FreelancerController {
     async WorkSubmit(req: Request, res: Response): Promise<any> {
         const workData = req.body
         try {
- 
+
             const files = req.files as { [fieldname: string]: File[]; };
 
             if (!files || !files['image1'] || files['image1'].length === 0) {
@@ -418,8 +411,8 @@ export class FreelancerController {
             if (files['image2'] && files['image2'].length > 0) filePaths.push(files['image2'][0].path);
             if (files['image3'] && files['image3'].length > 0) filePaths.push(files['image3'][0].path);
 
-            const responseImages = await this._freelancerService.uploadMultiFiles(filePaths,"workImages")
-            if(responseImages){
+            const responseImages = await this._freelancerService.uploadMultiFiles(filePaths, "workImages")
+            if (responseImages) {
                 workData.image1 = responseImages.image1Url
                 workData.image2 = responseImages.image2Url
                 workData.image3 = responseImages.image3Url
@@ -427,13 +420,13 @@ export class FreelancerController {
             console.log(workData);
             workData.user = req.user._id
             workData.questionnaire = JSON.parse(workData.questionnaire)
-            const categoryDetails = await this._freelancerService.CategoryDataFetch(workData.category,workData.subcategory)
-            workData.categoryNames=[categoryDetails.categoryTitle,categoryDetails.subcategoryTitle]
+            const categoryDetails = await this._freelancerService.CategoryDataFetch(workData.category, workData.subcategory)
+            workData.categoryNames = [categoryDetails.categoryTitle, categoryDetails.subcategoryTitle]
             const submitResponse = await this._freelancerService.WorkSubmitService(workData)
-            if(submitResponse){
+            if (submitResponse) {
                 res.status(200).json({ status: true })
             }
-            
+
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }
@@ -443,13 +436,13 @@ export class FreelancerController {
     //update WorkData
     async updateWorkData(req: Request, res: Response): Promise<any> {
         try {
-            const {id,data} = req.body
-            console.log(id,data,"updating data called");
-            
-            const works = await this._freelancerService.updateWorkDetails(data,id)
-            if(works){
-                res.status(200).json({ status: 'success'})
-            }else{
+            const { id, data } = req.body
+            console.log(id, data, "updating data called");
+
+            const works = await this._freelancerService.updateWorkDetails(data, id)
+            if (works) {
+                res.status(200).json({ status: 'success' })
+            } else {
                 throw new Error
             }
         } catch (error: any) {
@@ -459,19 +452,19 @@ export class FreelancerController {
 
     async getallWorksOfUser(req: Request, res: Response): Promise<any> {
         try {
-            
+
             const userID = req.user._id
-            
-            if(!userID){
+
+            if (!userID) {
                 throw new Error("Unauthorized access")
             }
             console.log("called##s ### ## ###");
-            console.log(userID ,"user ID");
-            
+            console.log(userID, "user ID");
+
             const works = await this._freelancerService.getallWorksOfUserServ(userID)
             // console.log(categories)
             // console.log(works)
-            
+
 
             res.status(200).json({ status: 'success', data: works })
         } catch (error: any) {
@@ -482,7 +475,7 @@ export class FreelancerController {
     async getallWorksToDiscover(req: Request, res: Response): Promise<any> {
         try {
             console.log("called");
-            
+
             const works = await this._freelancerService.getallWorksToDiscoverService()
             // console.log(categories)
             console.log(works)
@@ -494,13 +487,41 @@ export class FreelancerController {
     //get Single work Post details
     async getallSingleWorkDetails(req: Request, res: Response): Promise<any> {
         try {
-            const {id} = req.params
-            if(!id){
+            const { id } = req.params
+            if (!id) {
+                throw new Error("Invalid request")
+            }
+            const worksData = await this._freelancerService.getSingleWorkDetails(id)
+            res.status(200).json({ status: 'success', data: worksData })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    //get Single work Post details
+    async getallSingleOrderDetails(req: Request, res: Response): Promise<any> {
+        try {
+            const { id } = req.params
+            if (!id) {
+                throw new Error("Invalid request")
+            }
+            const orderData = await this._freelancerService.getSingleOrderDetails(id)
+
+            res.status(200).json({ status: 'success', data: orderData })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+    //get Single work Post details
+    async getallSingleWOrderDetails(req: Request, res: Response): Promise<any> {
+        try {
+            const { id } = req.params
+            if (!id) {
                 throw new Error("Invalid request")
             }
             const worksData = await this._freelancerService.getSingleWorkDetails(id)
             console.log(worksData);
-            
+
             // // console.log(categories)
             // console.log(works)
             res.status(200).json({ status: 'success', data: worksData })
@@ -512,19 +533,19 @@ export class FreelancerController {
     async deleteworkWork(req: Request, res: Response): Promise<any> {
         try {
             const userID = req.user._id
-            if(!userID){
+            if (!userID) {
                 throw new Error("Unauthorized access")
             }
             const id: string = req.query.id as string;
 
-        //    const deleteRequest = await this._freelancerService()
+            //    const deleteRequest = await this._freelancerService()
             const deleteResponse = await this._freelancerService.deleteWorkPost(id)
-            if(deleteResponse){
+            if (deleteResponse) {
                 const works = await this._freelancerService.getallWorksOfUserServ(userID)
                 res.status(200).json({ status: 'success', data: works })
 
             }
-            
+
 
         } catch (error: any) {
             res.json({ status: false, error: error.message })
@@ -532,39 +553,60 @@ export class FreelancerController {
     }
 
 
-    async getRecivedWork(req: Request, res: Response):Promise<void>{
+    async getRecivedWork(req: Request, res: Response): Promise<void> {
         try {
             const FreelancerID = req.user._id
             const OrdersDetails = await this._freelancerService.getRecivedWorkDetails(FreelancerID)
-            res.status(200).json({ status: 'success', orders: OrdersDetails})
-        } catch (error:any) {
-            res.json({status: false, error: error.message})
+            res.status(200).json({ status: 'success', orders: OrdersDetails })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
         }
     }
 
-    async getPosts(req: Request, res: Response):Promise<void>{
+    async getPosts(req: Request, res: Response): Promise<void> {
         try {
             const FreelancerID = req.user._id
             const ActiveOrders = await this._freelancerService.getActivePosts(FreelancerID)
             const SuspendedOrders = await this._freelancerService.getSuspendedPosts(FreelancerID)
 
-            res.status(200).json({ status: 'success', active: ActiveOrders,suspended:SuspendedOrders})
-        } catch (error:any) {
-            res.json({status: false, error: error.message})
+            res.status(200).json({ status: 'success', active: ActiveOrders, suspended: SuspendedOrders })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
         }
     }
 
 
-    async getSingleWork(req: Request, res: Response):Promise<void>{
+    async getSingleWork(req: Request, res: Response): Promise<void> {
         try {
             const workId = req.query.id
             console.log(workId);
-            
-            if(!workId) throw new Error("workId not specified")
+
+            if (!workId) throw new Error("workId not specified")
             const workDetails = await this._freelancerService.getSingleWork(workId as string)
-            res.status(200).json({ status: 'success', post: workDetails})
-        } catch (error:any) {
-            res.json({status: false, error: error.message})
+            res.status(200).json({ status: 'success', post: workDetails })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+
+
+    //submit recived orders
+    async submitWork(req: Request, res: Response): Promise<any> {
+        try {
+            console.log("called");
+
+            console.log(req.file);
+            if (!req.file) {
+                throw new Error("file not specified")
+            }
+            console.log(req.file.path);
+            const response = await this._freelancerService.submitWorkServ(req.body, req.file.path)
+            if (response) {
+                res.status(200).json({ status: 'success' })
+            }
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
         }
     }
 

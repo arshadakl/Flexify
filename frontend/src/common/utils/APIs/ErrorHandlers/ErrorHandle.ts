@@ -17,7 +17,9 @@ export const handleError = (
     if (axios.isAxiosError<ResponseData>(err)) {
         const axiosError = err as AxiosError<ResponseData>;
         // Handle specific error codes
+        console.log(axiosError.response?.data.message,"error mesages");
         switch (axiosError.response?.status) {
+            
             case 401:
                 if (axiosError.response.data.message === 'your account is blocked') {
                     // Call the logout function
@@ -31,7 +33,10 @@ export const handleError = (
 
 
                     return new Error('You are blocked by the admin.');
-                } else if(axiosError.response.data.message === 'Login expired') {
+                } 
+                 if(axiosError.response.data.message === 'Login expired') {
+                    console.log(axiosError.response.data.message);
+                    
                     store.dispatch(logout());
                     persistor.purge();
                     window.location.href="/login"

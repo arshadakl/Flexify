@@ -1,6 +1,7 @@
 
 
 import { Schema, Document, model } from 'mongoose';
+import { ISubmissions } from '../interfaces/clientInterface';
 
 export interface Freelancer {
     id?: string;
@@ -51,6 +52,21 @@ const FreelancerDetailsSchema = new Schema<FreelancerDetails>({
     user:  { type: Schema.Types.ObjectId, required: true }
 })
 
+
+const SubmissionsSchema  = new Schema<ISubmissions>({
+    workId: { type: Schema.Types.ObjectId, required: true, ref: 'Work' }, 
+    freelancerId: { type: Schema.Types.ObjectId, required: true, ref: 'Freelancer' }, 
+    clientId: { type: Schema.Types.ObjectId, required: true, ref: 'Client' }, 
+    orderId: { type: Schema.Types.ObjectId, required: true, ref: 'orders' }, 
+    description: { type: String, required: true },
+    file: { type: String, required: true },
+    date: { type: Number, required: true, default: Date.now },
+    status:{ type: String, required: true},
+    revise: { type: Number, required: true},
+    
+})
+
+export const Submissions  = model('Submissions ', SubmissionsSchema);
 export const Freelancer = model('Freelancer', FreelancerSchema);
 export const FreelancerDetails = model('FreelancerDetails', FreelancerDetailsSchema);
 // export default model<FreelancerDetails>('FreelancerDetails', FreelancerDetailsSchema);

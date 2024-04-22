@@ -3,16 +3,16 @@ import NavBar from "../../common/components/Navbar/NavBar";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
-import RecivedWord from "../../freelancers/components/RecivedWord";
+import RecivedWork from "../../freelancers/components/RecivedWork";
 
 
 function DashboardFreelancer() {
-  const [tab,setTab] = useState<string>("Dashboard")
+  const [tab,setTab] = useState<string>("Open Work Orders")
   initFlowbite()
   return (
     <>
       <NavBar fixed="top" bg={"dark"} />
-      <div className="w-full h-screen  bg-slate-200">
+      <div className="w-full h-full min-h-screen py-5  bg-slate-100">
       <div className="pt-32 px-32">
         <motion.h1
          variants={fadeIn("down",0.5)} initial="hidden" whileInView={"show"} viewport={{once:true}}
@@ -34,11 +34,11 @@ function DashboardFreelancer() {
           id="profile-styled-tab"
           data-tabs-target="#styled-profile"
           type="button"
-          role="tab" onClick={()=>setTab("Dashboard")}
+          role="tab" onClick={()=>setTab("Open Work Orders")}
           aria-controls="profile"
           aria-selected="false"
         >
-          Dashboard
+          Work Orders
         </motion.button>
       </li>
       <li className="me-2" role="presentation">
@@ -84,14 +84,13 @@ function DashboardFreelancer() {
   </div>
   <div id="default-styled-tab-content">
     <div
-      className="hidden py-5  bg-gray-50 dark:bg-gray-800"
+      className="hidden  bg-gray-50 dark:bg-gray-800"
       id="styled-profile"
       role="tabpanel"
       aria-labelledby="profile-tab"
     >
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        Dashboad
-      </p>
+      <RecivedWork/>
+      
     </div>
     <div
       className="hidden py-5  bg-gray-50 dark:bg-gray-800"
@@ -109,10 +108,10 @@ function DashboardFreelancer() {
       role="tabpanel"
       aria-labelledby="settings-tab"
     >
-      {/* <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="text-sm text-gray-500 dark:text-gray-400">
       Works
-      </p> */}
-      <RecivedWord/>
+      </p>
+      
     </div>
     <div
       className="hidden   bg-gray-50 dark:bg-gray-800"

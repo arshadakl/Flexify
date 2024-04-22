@@ -1,6 +1,6 @@
 // freelancerRepositoryImpl.ts
 import { error } from "console";
-import { Freelancer, FreelancerDetails } from "../models/Freelancer";
+import { Freelancer, FreelancerDetails, Submissions } from "../models/Freelancer";
 import { FreelancerRepository } from "./freelancerRepository";
 // import {FreelancerModel} from "../models/Freelancer";
 const FreelancerModel = require('../models/Freelancer').Freelancer
@@ -13,7 +13,7 @@ import { IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import mongoose from 'mongoose';
 import { Order } from "../models/Clients";
-import { IOrder } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions } from "../interfaces/clientInterface";
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -206,7 +206,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             const response = await WorkModel.aggregate([
                 {
                     $match: {
-                        isActive: true 
+                        isActive: true
                     }
                 },
                 {
@@ -254,22 +254,23 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                     }
                 }
             ]);
-    
+
             console.log(response, "Response"); // Log the response to see if there's any data returned
-    
-            return response; 
-    
+
+            return response;
+
         } catch (error) {
             console.log(error);
-    
+
             throw new Error(`Error getting all active work details: ${error}`);
         }
     }
 
 
-    getWorkDetails = async (id: string) => {
+   async getWorkDetails(id: string):Promise<any>{
         try {
-
+            console.log(id);
+            
             const response = await WorkModel.aggregate([
                 { $match: { _id: new mongoose.Types.ObjectId(id) } },
                 {
@@ -280,7 +281,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         as: "user"
                     }
                 },
-                
+
                 { $unwind: "$user" },
                 {
                     $lookup: {
@@ -298,7 +299,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                             username: 1,
                             email: 1,
                             profile: 1,
-                            role: 1 
+                            role: 1
                         },
                         title: 1,
                         category: 1,
@@ -318,7 +319,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         freelancerdetails: 1
                     }
                 }
-                
+
             ]);
 
             console.log(response, "first reposnse");
@@ -332,26 +333,86 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     };
 
 
-    async getRecivedWork(id:string):Promise<IOrder[] | null>{
+
+   async getOrderDetails(id: string):Promise<any> {
         try {
-            // const works = await Order.find({freelancerId: id});
-            const works = await Order.aggregate([
-                {$match:{freelancerId: new mongoose.Types.ObjectId(id)}},
-                {$lookup:{
-                    from: "freelancers",
+            const response = await Order.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: "freelancers",
                         localField: "clientId",
                         foreignField: "_id",
                         as: "client"
-                }},
-                {$project: {
-                    client:{
-                        username:1,
-                        profile:1,
-                        email:1
                     }
-                }}
+                },
+                {
+                    $project: {
+                        client: {
+                            _id: 1,
+                            username: 1,
+                            email: 1,
+                            profile: 1,
+                        },
+                        workId:1,
+                        freelancerId:1,
+                        clientId:1,
+                        category:1,
+                        amount:1,
+                        WorkDetails: 1,
+                        date:1,
+                        status: 1,
+                        requirementStatus:1,
+                        deadline:1
+                    }
+                }
+
+            ]);
+
+            return response[0]
+        } catch (error) {
+            console.log(error);
+
+            throw new Error(`Error getting work details: ${error}`);
+        }
+    };
+
+
+    async getRecivedWork(id: string): Promise<IOrder[] | null> {
+        try {
+            // const works = await Order.find({freelancerId: id});
+            const works = await Order.aggregate([
+                { $match: { freelancerId: new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "clientId",
+                        foreignField: "_id",
+                        as: "client"
+                    }
+                },
+                {
+                    $project: {
+                        client: {
+                            username: 1,
+                            profile: 1,
+                            email: 1
+                        },
+                        workId: 1,
+                        freelancerId: 1,
+                        clientId: 1,
+                        category: 1,
+                        amount: 1,
+                        WorkDetails: 1,
+                        date: 1,
+                        status: 1,
+                        requirementStatus: 1,
+                        deadline:1
+
+                    }
+                }
             ])
-            if(!works) throw new Error("Work not found");
+            if (!works) throw new Error("Work not found");
             return works
         } catch (error: any) {
             throw new Error(error.message);
@@ -360,44 +421,44 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
 
     // get all active post
-    async getAllActivepost(freelancerId:string):Promise<IWork[] | null>{
+    async getAllActivepost(freelancerId: string): Promise<IWork[] | null> {
         try {
             const works = await WorkModel.aggregate([
-                {$match:{user:freelancerId,isActive: true}},
+                { $match: { user: freelancerId, isActive: true } },
             ])
-            if(!works) throw new Error("Work not found");
+            if (!works) throw new Error("Work not found");
             return works
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
     // get all suspended post
-    async getAllSuspendedpost(freelancerId:string):Promise<IWork[] | null>{
+    async getAllSuspendedpost(freelancerId: string): Promise<IWork[] | null> {
         try {
             const works = await WorkModel.aggregate([
-                {$match:{user:freelancerId,isActive: false}},
+                { $match: { user: freelancerId, isActive: false } },
             ])
             return works
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
 
-    async getSingleWork(workId:string):Promise<IWork | null>{
+    async getSingleWork(workId: string): Promise<IWork | null> {
         try {
             const response = await WorkModel.findById(workId)
             return response
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async updateWork(data:any,workId:string):Promise<UpdateWriteOpResult>{
+    async updateWork(data: any, workId: string): Promise<UpdateWriteOpResult> {
         try {
             console.log(data);
-            
+
             const response = await WorkModel.updateOne(
                 { _id: workId },
                 {
@@ -405,9 +466,18 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                 }
             )
             console.log(response);
-            
+
             return response
-        } catch (error:any) {
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async createSubmission(data:any): Promise<ISubmissions | null> {
+        try {
+            const response = await Submissions.create(data)
+            return response
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }

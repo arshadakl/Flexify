@@ -19,7 +19,6 @@ type statusType = "pending" | "completed" | "cancelled"
 export interface IOrder {
     _id?:Schema.Types.ObjectId | string,
     workId:Schema.Types.ObjectId | string,
-    // transactionId:Schema.Types.ObjectId | string,
     freelancerId:Schema.Types.ObjectId | string,
     clientId:Schema.Types.ObjectId | string,
     payment_intent:string,
@@ -29,6 +28,7 @@ export interface IOrder {
     date?:number,
     status: statusType,
     requirementStatus?:Boolean,
+    deadline?:number
 }   
 
 export interface IRequirement {
@@ -42,5 +42,18 @@ export interface IRequirement {
     answers:string[],
     date?:number,
     status: statusType,
+    orderId:Schema.Types.ObjectId | string,
+}   
+
+export interface ISubmissions  {
+    _id?:Schema.Types.ObjectId | string,
+    workId:Schema.Types.ObjectId | string,
+    freelancerId:Schema.Types.ObjectId | string,
+    clientId:Schema.Types.ObjectId | string,
+    description:string,
+    date?:number,
+    file:string,
+    status: statusType,
+    revise: number,
     orderId:Schema.Types.ObjectId | string,
 }   
