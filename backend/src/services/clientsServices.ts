@@ -1,4 +1,4 @@
-import { IOrder, ITransaction } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 // import { ClientDetails } from "../models/Clients";
 import { Freelancer } from "../models/Freelancer";
 import { ClientRepositoryImpl } from '../repositories/clientsRepository';
@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 import Stripe from 'stripe';
 import { uploadMultipleToCloudinary } from "../utils/Cloudinary";
 import fs from 'fs'
+import mongoose from "mongoose";
 
 
 export class ClientService {
@@ -194,7 +195,8 @@ export class ClientService {
                 date: Date.now(),
                 status: "pending",
                 requirementStatus:false,
-                deadline: deadlineDate
+                deadline: deadlineDate,
+                approval:"pending",
             }
 
             const order = await this.clientRepository.createOrder(orderDetails);
@@ -269,7 +271,8 @@ export class ClientService {
             }
             const logo: string = cloudinaryResponse[0] ? cloudinaryResponse[0].url : '';
             const referenceMaterial: string = cloudinaryResponse[1] ? cloudinaryResponse[1].url : '';
-
+            console.log(logo);
+            
             filePaths.forEach((path)=>{
                 fs.unlinkSync(path);
             })
@@ -297,6 +300,41 @@ export class ClientService {
     async updateOrderIdTotransaction(sessionId:string,orderId: string): Promise<any>{
         try {
             const response = await this.clientRepository.addOrderIdToTransaction(sessionId,orderId)
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getDeliverdWorkServ(orderId:string): Promise<ISubmissions | null>{
+        try {
+            console.log(orderId);
+            
+            const response = await this.clientRepository.getDeliverdWork(orderId)
+            console.log(response);
+            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    
+    async getDeliverdWorkFile(submitionId:string): Promise<any | null>{
+        try {
+            const response = await this.clientRepository.getDeliverdWorkFile(submitionId)
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async manageWorkApproval(submisionId:string,status:string,orderId:string): Promise<any | null>{
+        try {
+            const response = await this.clientRepository.changeSubmissionStatus(submisionId,status)
+            if(status=="approved"){
+                const statusChange = await this.clientRepository.changeOrderStatus(orderId,"submited")
+            }
             return response
         } catch (error:any) {
             throw new Error(error.message)

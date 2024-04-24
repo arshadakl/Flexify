@@ -2,7 +2,7 @@ import { Freelancer } from "../models/Freelancer";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
-import { IOrder, ITransaction } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
@@ -34,5 +34,7 @@ export interface AdminRepository {
     suspendWork(id: string, action:any): Promise<UpdateWriteOpResult>
     getAllOrders(): Promise<IOrder[] | null>
     getAllTransaction(): Promise<ITransaction[] | null>
+
+    getAllSubmissions(): Promise<ISubmissions[] | null>
 }
 

@@ -241,6 +241,16 @@ export class AdminController {
         }
     }
 
+     //get all transactions
+    async getAllSubmissions(req: Request, res: Response): Promise<any> {
+        try {
+           const submissions = await this._adminService.getAllSubmissions()
+            res.status(200).json({status:true,data:submissions})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

@@ -103,6 +103,15 @@ function Sidebar() {
 
         <span className="ml-2 text-sm font-medium">Transactions</span>
       </p>
+      <p onClick={()=>navigate('/admin/submissions')}
+        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        
+      >
+       <i className="fa-regular fa-credit-card" />
+
+
+        <span className="ml-2 text-sm font-medium">Submissions</span>
+      </p>
     </div>
     <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">
       

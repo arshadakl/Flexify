@@ -16,6 +16,8 @@ import DashboardFreelancer from "../Pages/freelancer/Dashboard";
 import MyPosts from "../Pages/freelancer/MyPosts";
 import EditPost from "../Pages/freelancer/EditPost";
 import OrderManagment from "../Pages/freelancer/OrderManagment";
+import RequirementsShow from "../Pages/freelancer/RequirementsShow";
+import DualProtect from "../freelancers/components/DualProtect";
 
 function FreelancerRoute() {
   return (
@@ -31,14 +33,17 @@ function FreelancerRoute() {
         <Route path="profilecompletion" element={<ProfileCompletion />} />
         <Route path="forgotpassword" element={<ForgotPasswordPage />} />
       </Route>
-      
-      <Route element={<FreelancerProtect />}>
+
+      <Route element={<DualProtect />}>
         <Route path="profile" element={<FreelancerProfile />} />
+      </Route>
+      <Route element={<FreelancerProtect />}>
         <Route path="post" element={<CreatePost />} />
         <Route path="edit-post" element={<EditPost />} />
         <Route path="my-post" element={<MyPosts />} />
         <Route path="dashboard" element={<DashboardFreelancer />} />
         <Route path="dashboard/order-management" element={<OrderManagment />} />
+        <Route path="dashboard/requirements" element={<RequirementsShow />} />
       </Route>
     </Routes>
   );

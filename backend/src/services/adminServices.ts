@@ -1,5 +1,5 @@
 import { ICategory, ISubcategory } from "../interfaces/adminInterface"
-import { IOrder, ITransaction } from "../interfaces/clientInterface"
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface"
 import { IWork } from "../interfaces/freelancerInterface"
 
 export interface AdminServices{
@@ -20,4 +20,6 @@ export interface AdminServices{
     suspendWork(work:IWork):Promise<Boolean | undefined>
     getAllOrders():Promise<IOrder[] | null>
     getAllTransactions():Promise<ITransaction[] | null>
+
+    getAllSubmissions():Promise<ISubmissions[] | null>
 }

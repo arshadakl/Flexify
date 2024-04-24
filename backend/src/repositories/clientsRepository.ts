@@ -6,9 +6,12 @@ import { WorkModel } from "../models/Works";
 import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork, MyError, SingleWorkDetails } from "../interfaces/freelancerInterface";
 import { TransactionModel } from "../models/Transaction";
-import { IOrder, ITransaction } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import { Order, Requirement } from "../models/Clients";
+import { Submissions } from "../models/Freelancer";
+import mongoose from 'mongoose';
+const ObjectId = mongoose.Types.ObjectId;
 
 export class ClientRepositoryImpl implements ClientRepository {
 
@@ -25,7 +28,7 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async createTransaction(data:ITransaction): Promise<any> {
+    async createTransaction(data: ITransaction): Promise<any> {
         try {
             return await TransactionModel.create(data)
         } catch (error: any) {
@@ -33,19 +36,19 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async FindTransactionBySession(id:string): Promise<ITransaction | null> {
+    async FindTransactionBySession(id: string): Promise<ITransaction | null> {
         try {
-            return await TransactionModel.findOne({session_id:id})
+            return await TransactionModel.findOne({ session_id: id })
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async updateTransaction(session:string,status:string): Promise<UpdateWriteOpResult> {
+    async updateTransaction(session: string, status: string): Promise<UpdateWriteOpResult> {
         try {
-            return await TransactionModel.updateOne({session_id:session},
+            return await TransactionModel.updateOne({ session_id: session },
                 {
-                    $set:{payment_status:status}
+                    $set: { payment_status: status }
                 }
             )
         } catch (error: any) {
@@ -53,7 +56,7 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async createOrder(order:IOrder): Promise<IOrder> {
+    async createOrder(order: IOrder): Promise<IOrder> {
         try {
             return await Order.create(order)
         } catch (error: any) {
@@ -61,30 +64,30 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async getAllordersOfClient(client:string): Promise<IOrder[] | null> {
+    async getAllordersOfClient(client: string): Promise<IOrder[] | null> {
         try {
-            return await Order.find({clientId:client})
+            return await Order.find({ clientId: client }).sort({ date: -1 });
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async getSingleOrder(id:string): Promise<IOrder | null> {
+    async getSingleOrder(id: string): Promise<IOrder | null> {
         try {
-            return await Order.findOne({_id:id})
+            return await Order.findOne({ _id: id })
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
-    async addOrderIdToTransaction(sessionId:string,orderId:string):Promise<UpdateWriteOpResult> {
+    async addOrderIdToTransaction(sessionId: string, orderId: string): Promise<UpdateWriteOpResult> {
         try {
-            return await TransactionModel.updateOne({session_id:sessionId},{$addToSet:{orderId:orderId}})
+            return await TransactionModel.updateOne({ session_id: sessionId }, { $addToSet: { orderId: orderId } })
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async addRequirements(data:any):Promise<any> {
+    async addRequirements(data: any): Promise<any> {
         try {
             const response = await Requirement.create(data)
             return response
@@ -93,12 +96,164 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async changeRequirementStatus(orderId:string,status:Boolean):Promise<any>{
+    async changeRequirementStatus(orderId: string, status: Boolean): Promise<any> {
         try {
-            console.log(orderId,status," this is the arguments");
+            console.log(orderId, status, " this is the arguments");
+
+            const response = await Order.updateOne({ _id: orderId }, {
+                $set: { requirementStatus: status }
+            })
+            console.log(response);
+
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getLatestTransaction(clientId: string): Promise<ITransaction[] | null> {
+        try {
+            const latestTransaction = await TransactionModel.find({ user: clientId }).sort({ date: -1 }).limit(1)
+            if (!latestTransaction) throw new Error("Couldn't find latest transaction")
+            return latestTransaction
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    //get submitted details
+
+    async getDeliverdWork(orderId: string): Promise<ISubmissions | null> {
+        try {
+            const response = await Submissions.aggregate([
+                { $match: { orderId: new mongoose.Types.ObjectId(orderId) } },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "freelancerId",
+                        foreignField: "_id",
+                        as: "freelancer"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "orders",
+                        localField: "orderId",
+                        foreignField: "_id",
+                        as: "orderDetails"
+                    }
+                },
+                {
+                    $project: {
+                        freelancer: {
+                            username: 1,
+                            profile: 1,
+                            email: 1
+                        },
+                        orderDetails: {
+                            workId: 1,
+                            amount: 1,
+                            WorkDetails: 1,
+                            date: 1,
+                            category:1,
+                            status: 1,
+                            requirementStatus: 1,
+                            deadline: 1,
+                            approval: 1
+                        },
+                        workId: 1,
+                        freelancerId: 1,
+                        clientId: 1,
+                        description: 1,
+                        date: 1,
+                        file: 1,
+                        status: 1,
+                        revise: 1,
+                        orderId: 1,
+
+                    }
+                }
+            ])
+            if (!response) throw new Error("Couldn't find latest transaction")
+            return response[0]
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+    async getDeliverdWorkBySubmission(orderId: string): Promise<ISubmissions | null> {
+        try {
+            const response = await Submissions.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(orderId) } },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "freelancerId",
+                        foreignField: "_id",
+                        as: "freelancer"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "orders",
+                        localField: "orderId",
+                        foreignField: "_id",
+                        as: "orderDetails"
+                    }
+                },
+                {
+                    $project: {
+                        freelancer: {
+                            username: 1,
+                            profile: 1,
+                            email: 1
+                        },
+                        orderDetails: {
+                            workId: 1,
+                            amount: 1,
+                            WorkDetails: 1,
+                            date: 1,
+                            category:1,
+                            status: 1,
+                            requirementStatus: 1,
+                            deadline: 1,
+                            approval: 1
+                        },
+                        workId: 1,
+                        freelancerId: 1,
+                        clientId: 1,
+                        description: 1,
+                        date: 1,
+                        file: 1,
+                        status: 1,
+                        revise: 1,
+                        orderId: 1,
+
+                    }
+                }
+            ])
+            if (!response) throw new Error("Couldn't find latest transaction")
+            return response[0]
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getDeliverdWorkFile(submitId: string): Promise<any | null> {
+        try {
+            const Fileurl = await Submissions.findOne({ _id: submitId },{file:1})
+            if (!Fileurl) throw new Error("Couldn't find latest transaction")
+            return Fileurl
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async changeOrderStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
+        try {
             
             const response = await Order.updateOne({_id:orderId}, {
-                $set:{requirementStatus:status}
+                $set:{status:status}
             })
             console.log(response);
             
@@ -108,14 +263,19 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async getLatestTransaction(clientId:string):Promise<ITransaction[] | null>{
+    async changeSubmissionStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
         try {
-            const latestTransaction = await TransactionModel.find({user:clientId}).sort({date: -1}).limit(1)
-            if(!latestTransaction) throw new Error("Couldn't find latest transaction")
-            return latestTransaction
+            const response = await Submissions.updateOne({_id:orderId}, {
+                $set:{status:status}
+            })
+            return response
         } catch (error:any) {
             throw new Error(error.message)
         }
     }
+
+
+
+
 
 }

@@ -43,7 +43,6 @@ interface resetPasswordData{
 
 const AxiosInterceptor: React.FC = () => {
   const user = useSelector((state: any) => state.freelancer);
-  console.log(user.freelancer,"interapsent");
   
   useEffect(() => {
     const requestInterceptor = freelancersAPI.interceptors.request.use(
@@ -368,6 +367,19 @@ export const getAllPost = async ()=>{
   }
 }
 
+
+export const getTransactionsAPI = async ()=>{
+  try {
+      const response = await freelancersAPI.get('/alltransactions');
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
 export const getSingleWork = async (id:string)=>{
   try {
     console.log(id,"work id");
@@ -381,6 +393,7 @@ export const getSingleWork = async (id:string)=>{
     throw errorMessage;
   }
 }
+
 
 export const updateWorkAPI = async (form:any,id:string)=>{
   try {
@@ -407,6 +420,51 @@ export const submitOrderWork = async (form:any)=>{
   }
 }
 
+
+export const getrequirementsAPI = async (id:string)=>{
+  try {
+    console.log(id,"work id");
+    
+      const response = await freelancersAPI.get(`/getrequirements?id=${id}`);
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+
+
+export const downloadFileAPI = async (pathurl:string) => {
+  try {
+    console.log(pathurl,"path usesdasd ");
+    
+    const response: any = await freelancersAPI.get(`/downloadFile?url=${pathurl}`, {
+      responseType: "blob",
+    });
+    const contentDispositionHeader = response.headers.get(
+      "Content-Disposition"
+    );
+    console.log("Content-Disposition:", contentDispositionHeader);
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", contentDispositionHeader);
+
+    document.body.appendChild(link);
+    link.click();
+
+    // Clean up
+    link.parentNode?.removeChild(link);
+    window.URL.revokeObjectURL(url);
+    return "downloaded";
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
 
 
 export default AxiosInterceptor;

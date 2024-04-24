@@ -3,14 +3,14 @@ import { AdminRepository } from "./adminRepository";
 const AdminModel = require('../models/Admin').Admin
 const FreelancerModel = require('../models/Freelancer').Freelancer
 
-import { Freelancer, FreelancerDetails } from "../models/Freelancer";
+import { Freelancer, FreelancerDetails, Submissions } from "../models/Freelancer";
 import { Category, Subcategory } from "../models/Category";
 import { promises } from "dns";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { WorkModel } from "../models/Works";
 import { IWork } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
-import { IOrder, ITransaction } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Order } from "../models/Clients";
 import { TransactionModel } from "../models/Transaction";
 // import { AdminInter } from "../interfaces/adminInterface";
@@ -158,7 +158,62 @@ export class AdminRepositoryImpl implements AdminRepository {
 
     async getAllTransaction(): Promise<ITransaction[] | null> {
         try {
-            const response = await TransactionModel.find();
+            // const response = await TransactionModel.find();
+            const response = await TransactionModel.aggregate([
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "user"
+                    }
+                },{
+                    $sort: {
+                        date: -1 // Sort by date in descending order (reverse order)
+                    }
+                }
+            ]);
+            if(!response) throw new Error("No transaction found")
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async getAllSubmissions(): Promise<ISubmissions[] | null> {
+        try {
+            // const response = await TransactionModel.find();
+            const response = await Submissions.aggregate([
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "freelancerId",
+                        foreignField: "_id",
+                        as: "freelancer"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "freelancers",
+                        localField: "clientId",
+                        foreignField: "_id",
+                        as: "client"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "workmodels",
+                        localField: "workId",
+                        foreignField: "_id",
+                        as: "workDetails"
+                    }
+                },{
+                    $sort: {
+                        date: -1 
+                    }
+                }
+            ]);
             if(!response) throw new Error("No transaction found")
             return response
         } catch (error: any) {

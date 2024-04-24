@@ -1,5 +1,5 @@
 import { UpdateWriteOpResult } from "mongoose"
-import { IOrder, ITransaction } from "../interfaces/clientInterface"
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface"
 import { IWork } from "../interfaces/freelancerInterface"
 
 export interface ClientRepository {
@@ -15,4 +15,9 @@ export interface ClientRepository {
     changeRequirementStatus(orderId:string,status:Boolean):Promise<any>
     getLatestTransaction(clientId:string):Promise<ITransaction[] | null>
     addOrderIdToTransaction(sessionId:string,orderId:string):Promise<UpdateWriteOpResult>
+
+    getDeliverdWork(clientId:string):Promise<ISubmissions | null>
+    getDeliverdWorkFile(submitId: string): Promise<any | null>
+    changeOrderStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
+    changeSubmissionStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
 }

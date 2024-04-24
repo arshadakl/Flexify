@@ -6,7 +6,7 @@ import bcrypt from "bcrypt"
 import { AdminJwtCreation } from "../utils/jwtCreation";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { IWork } from "../interfaces/freelancerInterface";
-import { IOrder, ITransaction } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Freelancer } from "../models/Freelancer";
 import { AdminServices } from "./adminServices";
 
@@ -270,6 +270,18 @@ export class AdminServicesimple implements AdminServices {
             const transactions = await this.adminRepository.getAllTransaction()
             if(!transactions) throw new Error("No found")
             return transactions    
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    //get all Submissions
+    // ---------------
+    async getAllSubmissions():Promise<ISubmissions[] | null> {
+        try {
+            const submissions = await this.adminRepository.getAllSubmissions()
+            if(!submissions) throw new Error("No found")
+            return submissions    
         } catch (error:any) {
             throw new Error(error.message)
         }

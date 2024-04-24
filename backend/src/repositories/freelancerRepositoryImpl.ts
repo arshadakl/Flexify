@@ -12,8 +12,9 @@ import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterf
 import { IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import mongoose from 'mongoose';
-import { Order } from "../models/Clients";
-import { IOrder, ISubmissions } from "../interfaces/clientInterface";
+import { Order, Requirement } from "../models/Clients";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
+import { TransactionModel } from "../models/Transaction";
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -189,7 +190,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     }
 
     async getAllWorkOfUser(id: string): Promise<IWork[] | null> {
-        return await WorkModel.find({ user: id })
+        return await WorkModel.find({ user: id });
     }
 
     // async getAllActiveWorksToDiscover(): Promise<IWork[]> {
@@ -369,7 +370,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
             ]);
 
-            return response[0]
+            return response
         } catch (error) {
             console.log(error);
 
@@ -409,6 +410,10 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         requirementStatus: 1,
                         deadline:1
 
+                    }
+                },{
+                    $sort: {
+                        date: -1 // Sort by date in descending order (reverse order)
                     }
                 }
             ])
@@ -476,6 +481,77 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     async createSubmission(data:any): Promise<ISubmissions | null> {
         try {
             const response = await Submissions.create(data)
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+        
+    async changeWorkStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
+        try {
+            
+            const response = await Order.updateOne({_id:orderId}, {
+                $set:{status:status}
+            })
+            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async getRequirements(id: string):Promise<any> {
+        try {
+            const response = await Requirement.aggregate([
+                { $match: { orderId: new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: "workmodels",
+                        localField: "workId",
+                        foreignField: "_id",
+                        as: "workData"
+                    }
+                },
+                // {
+                //     $project: {
+                //         client: {
+                //             _id: 1,
+                //             username: 1,
+                //             email: 1,
+                //             profile: 1,
+                //         },
+                //         workId:1,
+                //         freelancerId:1,
+                //         clientId:1,
+                //         category:1,
+                //         amount:1,
+                //         WorkDetails: 1,
+                //         date:1,
+                //         status: 1,
+                //         requirementStatus:1,
+                //         deadline:1
+                //     }
+                // }
+
+            ]);
+
+            return response
+        } catch (error) {
+            console.log(error);
+
+            throw new Error(`Error getting work details: ${error}`);
+        }
+    };
+
+
+
+    async getUserAllTransaction(userId:string): Promise<ITransaction[] | null> {
+        try {
+            const response = await TransactionModel.aggregate([
+                {$match:{user:userId}}
+            ])
             return response
         } catch (error: any) {
             throw new Error(error.message)

@@ -23,6 +23,7 @@ export interface ITransaction{
     amount:number,
     purpose:string,
     payment_status:string
-    user:string
+    user:string,
+    date?:Number
     
 }

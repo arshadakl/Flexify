@@ -11,7 +11,9 @@ import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
 import { IWork } from '../interfaces/freelancerInterface';
 import fs from 'fs'
-import { IOrder, ISubmissions } from '../interfaces/clientInterface';
+import { IOrder, ISubmissions, ITransaction } from '../interfaces/clientInterface';
+import path from 'path';
+import axios from 'axios';
 
 // import { uploadFile } from '../utils/Cloudinary';
 
@@ -578,13 +580,39 @@ export class FreelancerService {
                 orderId: data.orderId,
             }
             const response = await this.freelancerRepository.createSubmission(formData)
-            console.log(response);
+            if(response){
+                const statusChange = await this.freelancerRepository.changeWorkStatus(data.orderId,"Awaiting Approval")
+            }
             
             return response
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
+
+
+    
+    async getRequirementsServ(orderId: string): Promise<any> {
+        try {
+            const response = await this.freelancerRepository.getRequirements(orderId)
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+    
+    async getTransaction(userId: string): Promise<ITransaction[] | null> {
+        try {
+            
+            const response = await this.freelancerRepository.getUserAllTransaction(userId)
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+   
+
 
 
 }

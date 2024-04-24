@@ -5,7 +5,7 @@ import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterf
 import { IWork } from "../interfaces/freelancerInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { UpdateWriteOpResult } from "mongoose";
-import { IOrder, ISubmissions } from "../interfaces/clientInterface";
+import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 
 export interface FreelancerRepository {
     findByUsername(username: string): Promise<Freelancer | null>;
@@ -46,4 +46,8 @@ export interface FreelancerRepository {
     getOrderDetails(id: string):Promise<any>
     createSubmission(data:any): Promise<ISubmissions | null>
 
+    changeWorkStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
+    getRequirements(id: string):Promise<any>
+
+    getUserAllTransaction(userId:string): Promise<ITransaction[] | null>
 }

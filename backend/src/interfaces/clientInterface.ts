@@ -1,5 +1,6 @@
 import { Schema } from "mongoose";
 import { IWork } from "./freelancerInterface";
+import { Freelancer } from "../models/Freelancer";
 
 export interface ITransaction{
     _id?:string ,
@@ -8,7 +9,7 @@ export interface ITransaction{
     amount:number,
     purpose:string,
     payment_status:string,
-    user:string,
+    user:Schema.Types.ObjectId | string,
     date?:number,
     orderId?:Schema.Types.ObjectId | string
     
@@ -28,7 +29,8 @@ export interface IOrder {
     date?:number,
     status: statusType,
     requirementStatus?:Boolean,
-    deadline?:number
+    deadline?:number,
+    approval:string 
 }   
 
 export interface IRequirement {
@@ -56,4 +58,7 @@ export interface ISubmissions  {
     status: statusType,
     revise: number,
     orderId:Schema.Types.ObjectId | string,
+    freelancer?:Freelancer,
+    client?:Freelancer,
+    workDetails?:IWork
 }   

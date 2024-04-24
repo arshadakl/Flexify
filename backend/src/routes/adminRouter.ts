@@ -32,6 +32,7 @@ router.patch('/suspendworks',protector,adminController.suspendWork.bind(adminCon
 
 router.get('/getallorders',adminController.getallOrders.bind(adminController));
 router.get('/getalltransaction',adminController.getallTransaction.bind(adminController));
+router.get('/getallSubmissions',adminController.getAllSubmissions.bind(adminController));
 
 
 export default router;

@@ -50,7 +50,8 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
     next();
   } catch (error) {
     console.error("Error in protector middleware:", error);
-    return res.status(401).json({ message: "Login expired" });
+    return res.status(500).json({ message: error });
+    // return res.status(401).json({ message: "Login expired" });
   }
 };
 

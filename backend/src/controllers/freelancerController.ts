@@ -7,6 +7,8 @@ import { Readable } from 'stream';
 import { uploadToCloudinary } from "../utils/Cloudinary";
 import fs from 'fs'
 import { File } from "../interfaces/multerInterface";
+import axios from "axios";
+import path from "path";
 // import { MulterFile } from "../interfaces/multerInterface";
 
 
@@ -610,6 +612,52 @@ export class FreelancerController {
         }
     }
 
+
+    async getRequirements(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.query.id
+
+            if (!orderId) throw new Error("order id not specified")
+            const workDetails = await this._freelancerService.getRequirementsServ(orderId as string)
+            res.status(200).json({ status: 'success', details: workDetails })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async downloadSubmissionFile(req: Request, res: Response): Promise<void> {
+        try {
+            console.log("data reached");
+            
+            const url = req.query.url
+            console.log(url);
+            
+            const filename = path.basename(new URL(url as string).pathname);
+            console.log(filename);
+            const response = await axios.get(url as string, { responseType: 'stream' });
+            res.setHeader('Content-Disposition', `Requirement-File-${filename}`);
+            res.setHeader('Content-Type', response.headers['content-type'] || 'application/octet-stream');
+            res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+            response.data.pipe(res);
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
+
+    
+    async getTransactions(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.user._id
+            const transactions = await this._freelancerService.getTransaction(userId)
+            console.log(transactions);
+            
+            res.status(200).json({ status: 'success', details: transactions })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
 
 
 

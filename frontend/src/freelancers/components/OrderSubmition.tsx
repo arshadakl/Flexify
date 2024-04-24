@@ -1,71 +1,83 @@
 import { useEffect, useState } from "react";
-import {  singleOrderDetails, submitOrderWork } from "../../common/utils/APIs/FreelancerApi";
-import { useLocation, useNavigate } from "react-router-dom";
-import { FormatDateString } from "../../common/utils/Services/dateFormater";
-import { toast } from "sonner";
+import { singleOrderDetails } from "../../common/utils/APIs/FreelancerApi";
+import { useLocation } from "react-router-dom";
+import SubmitionComponet from "./SubmitionComponet";
+// import { FormatDateString } from "../../common/utils/Services/dateFormater";
+// import { toast } from "sonner";
 
 function OrderSubmition() {
-    const navigate = useNavigate()
-    const [work,setWork] = useState<any>()
-    const location = useLocation();
-    const queryParams = new URLSearchParams(location.search);
-    const workId = queryParams.get("id");
-    const [file,setFile] = useState<File | string>("")
-    const [description,setDescription] = useState<string>("")
-    useEffect(() => {
-      const fetchData = async ()=>{
-        const response = await singleOrderDetails(workId as string)
-        console.log(response,"response");
-        setWork(response.data)
-        
-      }
-      fetchData()
-    }, [workId])  
-    const handleFileChange = (
-        event: React.ChangeEvent<HTMLInputElement>
-      ) => {
-        if (event.target.files) {
-            setFile(event.target.files[0]);
-        }
-      };
+  // const navigate = useNavigate()
+  const [works, setWorks] = useState<any>();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const workId = queryParams.get("id");
+  // const [file,setFile] = useState<File | string>("")
+  // const [description,setDescription] = useState<string>("")
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await singleOrderDetails(workId as string);
+      console.log(response, "response");
+      setWorks(response.data);
+    };
+    fetchData();
+  }, [workId]);
+  // const handleFileChange = (
+  //     event: React.ChangeEvent<HTMLInputElement>
+  //   ) => {
+  //     if (event.target.files) {
+  //         setFile(event.target.files[0]);
+  //     }
+  //   };
 
-      const validation = (file:File | string,description:string)=>{
-        if(!file){
-            return "please upload file"
-        }
-        if(!description.trim()){
-            return "Enter the description"
-        }
-        return "success"
-      }
+  //   const validation = (file:File | string,description:string)=>{
+  //     if(!file){
+  //         return "please upload file"
+  //     }
+  //     if(!description.trim()){
+  //         return "Enter the description"
+  //     }
+  //     return "success"
+  //   }
 
-      const handleSubmit = async ()=>{
-        const isValid = validation(file,description)
-        if(isValid!=="success"){
-            toast.warning(isValid)
-            return
-        }
-        const formData = new FormData();
-        formData.append("file",file as File)
-        formData.append("description",description as string)
-        formData.append("clientId",work.clientId)
-        formData.append("orderId",work._id)
-        formData.append("freelancerId",work.freelancerId)
-        formData.append("workId",work.workId)
-        const response =  await submitOrderWork(formData)
-        if(response.status){
-            navigate('/dashboard')
-        }else{
-            toast.warning(response.error)
-        }
-      }
+  //   const handleSubmit = async ()=>{
+  //     const isValid = validation(file,description)
+  //     if(isValid!=="success"){
+  //         toast.warning(isValid)
+  //         return
+  //     }
+  //     const formData = new FormData();
+  //     formData.append("file",file as File)
+  //     formData.append("description",description as string)
+  //     formData.append("clientId",work.clientId)
+  //     formData.append("orderId",work._id)
+  //     formData.append("freelancerId",work.freelancerId)
+  //     formData.append("workId",work.workId)
+  //     const response =  await submitOrderWork(formData)
+  //     if(response.status){
+  //         navigate('/dashboard')
+  //     }else{
+  //         toast.warning(response.error)
+  //     }
+  //   }
   return (
     <>
-      {work && <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
-        <div className=" md:w-4/6 w-11/12  mx-auto">
-          <h1 className="text-2xl font-poppins font-medium">Manage Orders</h1>
-          <hr className="my-2" />
-          <div className="bg-white border px-5 py-5 ">
+      {works && (
+        <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
+          <div className="   mx-auto">
+            <h1 className="text-2xl font-poppins font-medium">Manage Orders</h1>
+            <hr className="my-2" />
+
+            <div className="md:w-6/6 w-11/12">
+              <div>
+                {works.map((work: any, index: number) => {
+                  return <SubmitionComponet key={index} work={work} />;
+                })}
+              </div>
+              <div>
+                
+              </div>
+            </div>
+            {/* <div className="bg-white border px-5 py-5 ">
             <h1 className="text-md text-2xl mx-5">
               ID :{" "}
               <span className="font-medium text-gray-500">#W123151455212</span>
@@ -98,7 +110,7 @@ function OrderSubmition() {
                      {work?.category[1]}
                     </th>
                     <td className="px-6 py-4 ">{FormatDateString(work.deadline)}</td>
-                    <td className={`px-6 py-4 capitalize ${work.status ? "text-yellow-600" : "text-green-600"}`}>{work.status}</td>
+                    <td className={`px-6 py-4 font-semibold capitalize ${work.status!=="submited" ? "text-yellow-600" : "text-green-600"}`}><i className="fa-regular fa-circle-dot fa-fade" /> {work.status}</td>
                   </tr>
                 </tbody>
               </table>
@@ -154,9 +166,10 @@ function OrderSubmition() {
               Deliver Order
               </button>
             </div>
+          </div> */}
           </div>
         </div>
-      </div>}
+      )}
     </>
   );
 }

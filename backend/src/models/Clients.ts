@@ -35,6 +35,7 @@ const OrderSchema = new Schema<IOrder>({
     date: { type: Number, required: true, default: Date.now },
     deadline: { type: Number },
     status:{ type: String, required: true},
+    approval:{ type: String, required: true},
     requirementStatus : { type: Boolean, required: true},
 })
 

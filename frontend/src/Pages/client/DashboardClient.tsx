@@ -4,17 +4,16 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
 import RecivedWork from "../../freelancers/components/RecivedWork";
-import TransactionsTable from "../../freelancers/components/Transactions";
 
 
-function DashboardFreelancer() {
-  const [tab,setTab] = useState<string>("Open Work Orders")
+function DashboardClient() {
+  const [tab,setTab] = useState<string>("Work Submissions")
   initFlowbite()
   return (
     <>
       <NavBar fixed="top" bg={"dark"} />
       <div className="w-full h-full min-h-screen py-5  bg-slate-100">
-      <div className="pt-24 px-32">
+      <div className="pt-32 px-32">
         <motion.h1
          variants={fadeIn("down",0.5)} initial="hidden" whileInView={"show"} viewport={{once:true}}
          className="text-4xl font-normal my-2 font-poppins">{tab}</motion.h1>
@@ -55,7 +54,7 @@ function DashboardFreelancer() {
           Analytics
         </motion.button>
       </li>
-      {/* <li className="me-2" role="presentation">
+      <li className="me-2" role="presentation">
         <motion.button   variants={fadeIn("down",0.3)} initial="hidden" whileInView={"show"} viewport={{once:true}}
           className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
           id="settings-styled-tab"
@@ -67,7 +66,7 @@ function DashboardFreelancer() {
         >
           Works
         </motion.button>
-      </li> */}
+      </li>
       <li role="presentation">
         <motion.button  variants={fadeIn("down",0.4)} initial="hidden" whileInView={"show"} viewport={{once:true}}
           className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
@@ -103,7 +102,7 @@ function DashboardFreelancer() {
       Analytics
       </p>
     </div>
-    {/* <div
+    <div
       className="hidden   bg-gray-50 dark:bg-gray-800"
       id="styled-settings"
       role="tabpanel"
@@ -113,14 +112,16 @@ function DashboardFreelancer() {
       Works
       </p>
       
-    </div> */}
+    </div>
     <div
       className="hidden   bg-gray-50 dark:bg-gray-800"
       id="styled-contacts"
       role="tabpanel"
       aria-labelledby="contacts-tab"
     >
-      <TransactionsTable/>
+      <p className="text-sm py-5 text-gray-500 dark:text-gray-400">
+      Transactions
+      </p>
     </div>
   </div>
 </>
@@ -132,4 +133,4 @@ function DashboardFreelancer() {
   );
 }
 
-export default DashboardFreelancer;
+export default DashboardClient;

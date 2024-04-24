@@ -271,14 +271,33 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                               Profile
                             </p>
                           </motion.li>
-                          {role == "client" && <motion.li>
+                          {role == "client" && <>
+                          <motion.li>
                             <p
                               onClick={() => navigate("/client/orders")}
                               className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
+                              >
                               Orders
                             </p>
+                          </motion.li>
+                          <motion.li>
+                            <p
+                              onClick={() => navigate("/client/transactions")}
+                              className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                              Transactions
+                            </p>
+                          </motion.li>
+                              </>}
+                          {role !== "client" && <motion.li>
+                            <p
+                              onClick={() => navigate("/dashboard")}
+                              className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                              Dashboard
+                            </p>
                           </motion.li>}
+                          {/* {role == "client" && } */}
                           <hr />
                           <motion.li>
                             <p

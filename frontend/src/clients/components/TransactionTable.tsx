@@ -5,7 +5,7 @@ import { FormatDateString } from "../../common/utils/Services/dateFormater";
 // import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
 import { useNavigate } from "react-router-dom";
 
-function Orders() {
+function TransactionTable() {
   const [orders, setOrders] = useState<IOrder[]>();
   const navigate = useNavigate()
   useEffect(() => {
@@ -107,4 +107,4 @@ function Orders() {
   );
 }
 
-export default Orders;
+export default TransactionTable;

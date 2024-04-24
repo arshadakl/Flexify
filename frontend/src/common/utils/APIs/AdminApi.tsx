@@ -198,3 +198,12 @@ export const getalltransactionAPI = async()=>{
         console.log(error);
     }
 }
+
+export const getallSubmissionsAPI = async()=>{
+    try {
+        const response = await adminAPI.get('/getallSubmissions')
+        return response.data        
+    } catch (error) {
+        console.log(error);
+    }
+}

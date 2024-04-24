@@ -14,7 +14,7 @@ function ProfileWorksList() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getUsrAllWork();
-      setWordData(response.data);
+      setWordData(response.data.reverse());
     };
     fetchData();
   }, []);

@@ -23,6 +23,10 @@ router.post('/requirementsubmit',multerMid.fields([
     { name: 'logo', maxCount: 1 },
 ]),clientController.submitWorkRequirements.bind(clientController));
 router.get('/latestorderid',protector,clientController.getLastOrder.bind(clientController));
+router.get('/deliverdwork',protector,clientController.getDeliverdWork.bind(clientController));
+router.get('/downloadsubmission',protector,clientController.downloadSubmissionFile.bind(clientController));
+router.patch('/manageapproval',protector,clientController.manageWorkApproval.bind(clientController));
+
 
 
 

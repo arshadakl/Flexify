@@ -53,5 +53,9 @@ router.get('/getSingleWork',protector,freelancerController.getSingleWork.bind(fr
 router.patch('/updatework',protector,freelancerController.updateWorkData.bind(freelancerController))
 
 router.post('/submitorderwork',protector,multerMid.single('file'),freelancerController.submitWork.bind(freelancerController))
+router.get('/getrequirements',protector,freelancerController.getRequirements.bind(freelancerController))
+
+router.get('/downloadFile',protector,freelancerController.downloadSubmissionFile.bind(freelancerController))
+router.get('/alltransactions',protector,freelancerController.getTransactions.bind(freelancerController))
 
 export default router;

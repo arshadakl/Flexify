@@ -9,6 +9,7 @@ import CategoryManagement from '../Pages/admin/CategoryManagement'
 import PostManagement from "../Pages/admin/PostManagement";
 import Orders from "../Pages/admin/Orders";
 import Payments from "../Pages/admin/Payments";
+import Submissions from "../Pages/admin/Submissions";
 function AdminRouter() {
   const { admin } = useSelector((state: any) => state.admin);
 
@@ -26,6 +27,7 @@ function AdminRouter() {
           <Route path="/post" element={<PostManagement />} />
           <Route path="/orders" element={<Orders />} />
           <Route path="/payments" element={<Payments />} />
+          <Route path="/submissions" element={<Submissions />} />
         </Route>
 
       </Route>

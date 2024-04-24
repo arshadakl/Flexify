@@ -7,6 +7,8 @@ import bodyParser from "body-parser";
 require("dotenv").config();
 import { connectDB } from "./config/mongoConfig";
 import configCloudinary from "./src/utils/Cloudinary";
+import helmet from "helmet";
+
 const app = express();
 const PORT = 3000; 
 
@@ -24,6 +26,8 @@ app.use(
       credentials: true,
     })
 );
+
+app.use(helmet());
 
 
 // Routes

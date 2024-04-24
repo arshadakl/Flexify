@@ -12,5 +12,6 @@ export interface IOrder {
     WorkDetails: IWork,
     date?:number,
     status:string,
-    requirementStatus?:Boolean
+    requirementStatus?:Boolean,
+    approval?:string
 }   

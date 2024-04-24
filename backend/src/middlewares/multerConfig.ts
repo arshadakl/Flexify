@@ -35,35 +35,3 @@ export const  multerMid = multer({
         fileSize: 1000 * 1024 * 1024 // 10MB
     }
 });
-
-// // Custom middleware to handle base64 image string
-// export const handleBase64Image = (req: Request, res: Response, next: NextFunction) => {
-//     if (req.body.croppedImageUrl) {
-//         // Remove the data URL prefix
-//         const base64Data = req.body.croppedImageUrl.replace(/^data:image\/\w+;base64,/, '');
-
-//         // Convert base64 to buffer
-//         const buffer = Buffer.from(base64Data, 'base64');
-
-//         // Create a temporary file path
-//         const tempFilePath = path.join(__dirname, 'tempImage.png');
-
-//         // Write the buffer to a temporary file
-//         fs.writeFileSync(tempFilePath, buffer);
-
-//         // Use Multer's diskStorage to save the file
-//         multerMid.single('image')(req, res, (err) => {
-//             if (err) {
-//                 // Handle error
-//                 console.error(err);
-//                 res.status(500).send('Error processing image');
-//             } else {
-//                 // The file has been saved by Multer, proceed to the next middleware
-//                 next();
-//             }
-//         });
-//     } else {
-//         // If there's no base64 image string, pass control to the next middleware
-//         next();
-//     }
-// };

@@ -1,6 +1,9 @@
 import { Request, Response } from "express";
 import { ClientService } from '../services/clientsServices'
+import axios from "axios";
+import path from "path";
 // const stripe = require('stripe')
+const cloudinary = require('cloudinary').v2;
 export class ClientController {
     constructor(private readonly ClientService: ClientService) { }
 
@@ -70,7 +73,7 @@ export class ClientController {
                 console.log(session.payment_intent);
                 const response = await this.ClientService.TransactionUpdate(session.id, "success")
                 const order = await this.ClientService.createNewOrder(session.id, session.payment_intent)
-                const orderIDResponse = await this.ClientService.updateOrderIdTotransaction(session.id,order?._id as string)
+                const orderIDResponse = await this.ClientService.updateOrderIdTotransaction(session.id, order?._id as string)
                 //now i want to create order
                 console.log("Payment successful");
                 break;
@@ -119,9 +122,9 @@ export class ClientController {
         try {
             const data = req.body
             data.answers = JSON.parse(data.answers)
-            const response  =  await this.ClientService.submitRequirements(data,req.files)
-            if(response){
-                res.json({status: true})
+            const response = await this.ClientService.submitRequirements(data, req.files)
+            if (response) {
+                res.json({ status: true })
             }
         } catch (error: any) {
             console.error("Error:", error);
@@ -134,17 +137,78 @@ export class ClientController {
     async getLastOrder(req: Request, res: Response): Promise<void> {
         try {
             const client = req.user._id
-            console.log(client,"cli###############");
-            
-            const response  =  await this.ClientService.getLatestTransaction(client)
-            
-            if(response){
-                res.status(200).json({status: true,orderId:response.orderId})
+
+            const response = await this.ClientService.getLatestTransaction(client)
+
+            if (response) {
+                res.status(200).json({ status: true, orderId: response.orderId })
             }
         } catch (error: any) {
             console.error("Error:", error);
             res.json({ status: false, error: error.message });
         }
     }
+    //get Latest translations
+    // ------------------------------
+    async getDeliverdWork(req: Request, res: Response): Promise<void> {
+        try {
+            const orderId = req.query.id;
+            console.log(orderId, "data called");
+
+            const response = await this.ClientService.getDeliverdWorkServ(orderId as string)
+            if (response) {
+                res.status(200).json({ status: true, details: response })
+            }
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
+
+
+
+    async downloadSubmissionFile(req: Request, res: Response): Promise<void> {
+        try {
+            const id = req.query.id
+            const details = await this.ClientService.getDeliverdWorkFile(id as string)
+
+            const url = details.file
+            const filename = path.basename(new URL(url).pathname);
+            console.log(filename);
+            const response = await axios.get(url, { responseType: 'stream' });
+            res.setHeader('Content-Disposition', `Deliverd-WorkFile-${filename}`);
+            res.setHeader('Content-Type', response.headers['content-type'] || 'application/octet-stream');
+            res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
+            response.data.pipe(res);
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
+
+    //work Manage Aproval
+    // ------------------------------
+    async manageWorkApproval(req: Request, res: Response): Promise<void> {
+        try {
+
+            const { submitId, status,orderId } = req.body
+
+            const responseAprval = await this.ClientService.manageWorkApproval(submitId, status,orderId)
+            // console.log(responseAprval);
+            
+            const response = await this.ClientService.getDeliverdWorkServ(orderId as string)
+            if (response) {
+                console.log(response, "new data");
+
+                res.status(200).json({ status: true, details: response })
+            }
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
 
 }
