@@ -21,7 +21,7 @@ nav{
 }
 
 ::-webkit-scrollbar {
-    width: 7px;
+    width: 2px;
   }
   
   /* Track */
@@ -43,3 +43,39 @@ nav{
 
 
 
+  .gradient-background-black {
+    background: linear-gradient(313deg,transparent,#000000,#404040,#2c2d2d);
+    background-size: 240% 240%;
+    animation: gradient-animation 20s ease infinite;
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+
+  .gradient-background-gray {
+    background: linear-gradient(313deg,transparent,#e6e7e7);
+    background-size: 120% 120%;
+    animation: gradient-animation 10s ease infinite;
+  }
+  
+  @keyframes gradient-animation {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }

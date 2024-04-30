@@ -329,12 +329,23 @@ export class ClientService {
         }
     }
 
+
     async manageWorkApproval(submisionId:string,status:string,orderId:string): Promise<any | null>{
         try {
             const response = await this.clientRepository.changeSubmissionStatus(submisionId,status)
             if(status=="approved"){
                 const statusChange = await this.clientRepository.changeOrderStatus(orderId,"submited")
             }
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+        
+    async getfreelancerData(id:string): Promise<any | null>{
+        try {
+            const response = await this.clientRepository.getFreelancerData(id)
             return response
         } catch (error:any) {
             throw new Error(error.message)
