@@ -2,13 +2,13 @@ import { useParams } from "react-router-dom";
 import ChatBox from "../../freelancers/components/ChatBox";
 import { useEffect, useState } from "react";
 import { getFreelancerDataAPI } from "../../common/utils/APIs/ClientApi";
-import { Freelancer } from "../../interfaces/Freelancer";
-import animationData from "../../common/animations/gradient-animation2.json";
-import Lottie from "react-lottie";
+// import { Freelancer } from "../../interfaces/Freelancer";
+// import animationData from "../../common/animations/gradient-animation2.json";
+// import Lottie from "react-lottie";
 
 function ChatingComponent() {
   const { id } = useParams();
-  const [data, setData] = useState<Freelancer>();
+  const [data, setData] = useState<any>();
   useEffect(() => {
     const fetchData = async () => {
       const response = await getFreelancerDataAPI(id as string);
@@ -20,14 +20,14 @@ function ChatingComponent() {
     fetchData();
   }, [id]);
 
-  const defaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: animationData,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
+  // const defaultOptions = {
+  //   loop: true,
+  //   autoplay: true,
+  //   animationData: animationData,
+  //   rendererSettings: {
+  //     preserveAspectRatio: "xMidYMid slice",
+  //   },
+  // };
 
   return (
     <>
@@ -38,13 +38,13 @@ function ChatingComponent() {
             {/* <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"> */}
             <div className="relative  flex h-40 w-full justify-center rounded-xl ">
              
-              <div className="rounded-xl absolute h-40 bg-cover w-full">
-                <Lottie
+              <div  className="rounded-xl gradient-background-black absolute h-40 bg-cover w-full">
+                {/* <Lottie
                   options={defaultOptions}
                   style={{ borderRadius: "1rem" }}
                   height={"100%"}
                   width={"100%"}
-                />
+                /> */}
               </div>
 
               <div className="absolute -bottom-12 flex h-[87px] w-[87px] items-center justify-center rounded-full border-[4px] border-white bg-pink-400 dark:!border-navy-700">
@@ -110,7 +110,7 @@ function ChatingComponent() {
                   <div>
                     <>
                       {data?.userDetails &&
-                        data?.userDetails[0].skillsList.map((skill) => {
+                        data?.userDetails[0].skillsList.map((skill:any) => {
                           return (
                             <span
                               id="badge-dismiss-dark"

@@ -9,7 +9,7 @@ import { TransactionModel } from "../models/Transaction";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import { Order, Requirement } from "../models/Clients";
-import { Submissions } from "../models/Freelancer";
+import { Freelancer, Submissions } from "../models/Freelancer";
 import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -232,6 +232,28 @@ export class ClientRepositoryImpl implements ClientRepository {
                 }
             ])
             if (!response) throw new Error("Couldn't find latest transaction")
+            return response[0]
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    
+    async getFreelancerData(id:string):Promise<any> {
+        try {
+            const response = await Freelancer.aggregate([
+                { $match: { _id: new mongoose.Types.ObjectId(id) } },
+                {
+                    $lookup: {
+                        from: "freelancerdetails",
+                        localField: "_id",
+                        foreignField: "user",
+                        as: "userDetails"
+                    }
+                },
+                
+            ])
             return response[0]
         } catch (error: any) {
             throw new Error(error.message)

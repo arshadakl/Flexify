@@ -90,7 +90,7 @@ function Orders() {
                         
                       </td>
                       <td className="px-1 py-4">
-                        <button className=" py-2 px-4 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 ">
+                        <button onClick={()=>navigate(`/client/orders/chat/${order.freelancerId}`)} className=" py-2 px-4 me-2 mb-2 text-md font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-gray-700 ">
                         <i className="fa-solid fa-messages mx-3" />Connect Freelancer
                         </button>
                       </td>

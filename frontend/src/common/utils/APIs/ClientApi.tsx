@@ -155,3 +155,23 @@ export const manageApprovalAPI = async (id: string,status:string,orderId:string)
     throw errorMessage;
   }
 };
+
+export const getFreelancerDataAPI = async (id: string) => {
+  try {
+    const response = await clientAPI.get(`/getfreelancerdata?id=${id}`,);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getMessagesAPI = async (sender: string,receiver:string) => {
+  try {
+    const response = await clientAPI.get(`/getConversations?sender=${sender}&receiver=${receiver}`,);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};

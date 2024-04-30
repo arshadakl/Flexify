@@ -78,37 +78,44 @@ console.log(client , "client data");
   };
   return (
     <div className="">
-      <div className=" border border-gray-400/50  rounded-t-lg ">
-        <div className="flex bg-gray-50 px-5 rounded-t-lg py-5">
-          <img className="h-10 w-10 rounded-full" src={client.profile} alt="" />{" "}
+      <div className=" border border-gray-400/50  rounded-t-lg  ">
+        <div className="flex bg-gray-0 px-5 rounded-t-lg py-5 shadow-xl">
+          <div className="border-2 rounded-full border-blue-600 ">
+          <img className="h-10 w-10 rounded-full border-2 border-white" src={client.profile} alt="" />{" "}
+          </div>
           <p className="mx-4 font-semibold my-auto">{client.username}</p>
         </div>
         <hr />
 
-        <div ref={chatBoxRef} className="bg-white py-1 chatBox min-h-96 max-h-96 mt-auto overflow-scroll">
+        <div ref={chatBoxRef} className="bg-[#f5f7fb] py-1 chatBox min-h-96 max-h-96 mt-auto overflow-scroll overflow-x-hidden">
          
           {messages.map((message) => {
             return (
               <>
-                {message.from==userId ? <motion.div variants={fadeIn("left",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="flex items-start justify-end gap-2.5 my-1">
-                  <div className="flex flex-col getMessagesInConversation ml-12 min-w-32 max-w-full leading-1.5 p-4 border-gray-200 bg-gray-100 rounded-xl rounded-tr-none  dark:bg-gray-700">
-                    <p className="text-sm break-words font-medium  text-gray-900 dark:text-white">
+                {message.from==userId ? <motion.div variants={fadeIn("left",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="flex  items-start justify-end gap-2.5 my-1">
+
+                  <div>
+                  <div className="flex bg-[#0087fd] flex-col ml-12 min-w-32 max-w-96 leading-1.5 p-4 border-gray-200  rounded-xl rounded-tr-none  dark:bg-gray-700">
+                    <p className="text-sm break-words font-medium  text-white dark:text-white">
                       {message.body}
                     </p>
-                  <p className="text-[10px] text-end text-slate-400">{FormatDateTimeString(message.date as any)}</p>
 
+                  </div>
+                  <p className="text-[10px] text-end text-slate-400">{FormatDateTimeString(message.date as any)}</p>
                   </div>
                   <img
                     className="w-8 h-8 mx-1 rounded-full"
                     src={userProfile}
                   />
                 </motion.div> : 
-                <motion.div variants={fadeIn("right",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="flex items-start gap-2.5 my-1">
+                <motion.div variants={fadeIn("right",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="flex items-start gap-2.5 my-1 ">
                 <img className="w-8 h-8 mx-1 rounded-full" src={client.profile} />
-                <div className="flex flex-col min-w-32 max-w-full leading-1.5 mr-12 py-2 px-3 border-gray-200 bg-gray-100 rounded-xl rounded-tl-none dark:bg-gray-700">
+                <div>
+                <div className="flex flex-col break-words min-w-32  max-w-96 leading-1.5 mr-12  p-4 border-gray-300 bg-[#e1e5ec] rounded-xl rounded-tl-none dark:bg-gray-700">
                   <p className="text-sm break-words font-medium text-gray-900 dark:text-white">
                   {message.body}
                   </p>
+                </div>
                   <p className="text-[10px] text-slate-400">{FormatDateTimeString(message.date as any)}</p>
                 </div>
               </motion.div>
@@ -131,9 +138,10 @@ console.log(client , "client data");
             <i className="fa-regular fa-circle-plus text-2xl" />
           </button>
 
-          <textarea
+          <input
             id="chat"
-            rows={1}
+            // rows={1}
+            type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
