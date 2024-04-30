@@ -1,5 +1,5 @@
 import mongoose, { Document, Types } from 'mongoose';
-
+import { Schema} from 'mongoose';
 export interface IConversation extends Document {
     recipients: mongoose.Types.ObjectId[];
     lastMessage?: string;
@@ -15,3 +15,12 @@ export interface IMessage extends Document {
     body: string;
     date: number;
 }
+
+export interface IReport extends Document {
+    reported_post_id: Schema.Types.ObjectId | string;
+    reporter_id: Schema.Types.ObjectId | string;
+    reason: string;
+    admin_review: boolean;
+    admin_action?: string | null;
+    report_date?: Date;
+  }

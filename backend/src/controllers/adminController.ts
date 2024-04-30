@@ -251,6 +251,16 @@ export class AdminController {
         }
     }
 
+     //get all Flagged Postes
+    async GetRepotedPost(req: Request, res: Response): Promise<any> {
+        try {
+           const postes = await this._adminService.GetRepotedPost()
+            res.status(200).json({status:true,post:postes})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

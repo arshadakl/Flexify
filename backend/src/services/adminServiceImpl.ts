@@ -9,6 +9,7 @@ import { IWork } from "../interfaces/freelancerInterface";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Freelancer } from "../models/Freelancer";
 import { AdminServices } from "./adminServices";
+import { IReport } from "../interfaces/chatInterface";
 
 
 
@@ -282,6 +283,16 @@ export class AdminServicesimple implements AdminServices {
             const submissions = await this.adminRepository.getAllSubmissions()
             if(!submissions) throw new Error("No found")
             return submissions    
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    //get all flagged Post (Repoted posts)
+    // ---------------
+    async GetRepotedPost():Promise<IReport[]> {
+        try {
+            const flaggedContents = await this.adminRepository.GetRepotedPost()
+            return flaggedContents    
         } catch (error:any) {
             throw new Error(error.message)
         }

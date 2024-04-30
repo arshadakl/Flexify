@@ -10,6 +10,7 @@ import PostManagement from "../Pages/admin/PostManagement";
 import Orders from "../Pages/admin/Orders";
 import Payments from "../Pages/admin/Payments";
 import Submissions from "../Pages/admin/Submissions";
+import FlaggedContent from "../Pages/admin/FlaggedContent";
 function AdminRouter() {
   const { admin } = useSelector((state: any) => state.admin);
 
@@ -28,6 +29,7 @@ function AdminRouter() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/payments" element={<Payments />} />
           <Route path="/submissions" element={<Submissions />} />
+          <Route path="/flagged-content" element={<FlaggedContent />} />
         </Route>
 
       </Route>

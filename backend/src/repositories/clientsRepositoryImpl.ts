@@ -2,6 +2,7 @@ import { UpdateWriteOpResult } from "mongoose"
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface"
 import { IWork } from "../interfaces/freelancerInterface"
 import { Freelancer } from "../models/Freelancer"
+import { IReport } from "../interfaces/chatInterface"
 
 export interface ClientRepository {
     ClientDetailsAdd(fromData:any):void
@@ -22,4 +23,5 @@ export interface ClientRepository {
     changeOrderStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
     changeSubmissionStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
     getFreelancerData(id:string):Promise<any>
+    submitPostReport(formData:IReport):Promise<IReport | null>
 }

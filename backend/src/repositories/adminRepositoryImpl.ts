@@ -13,6 +13,8 @@ import { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Order } from "../models/Clients";
 import { TransactionModel } from "../models/Transaction";
+import { IReport } from "../interfaces/chatInterface";
+import { ReportModel } from "../models/Actions";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 
@@ -215,6 +217,81 @@ export class AdminRepositoryImpl implements AdminRepository {
                 }
             ]);
             if(!response) throw new Error("No transaction found")
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+
+    async GetRepotedPost(): Promise<IReport[]> {
+        try {
+            const response = await ReportModel.aggregate([
+                {
+                    $lookup: {
+                        from: "workmodels",
+                        localField: "reported_post_id",
+                        foreignField: "_id",
+                        as: "postDetails"
+                    }
+                },
+                { $unwind: "$postDetails" },
+                {
+                    $lookup: {
+                        from: "Freelancer",
+                        localField: "user",
+                        foreignField: "_id",
+                        as: "FreelancerDetails"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "Freelancer",
+                        localField: "reporter_id",
+                        foreignField: "_id",
+                        as: "reporter"
+                    }
+                },
+                {
+                    $project: {
+                        FreelancerDetails: {
+                            username: 1,
+                            profile: 1,
+                            email: 1
+                        },
+                        reporter: {
+                            username: 1,
+                            profile: 1,
+                            email: 1
+                        },
+                        postDetails: {
+                            title: 1,
+                            category: 1,
+                            subcategory: 1,
+                            categoryNames: 1,
+                            tags: 1,
+                            image1: 1,
+                            deliveryPeriod: 1,
+                            referenceMaterial: 1,
+                            logo: 1,
+                            description: 1,
+                            questionnaire: 1,
+                            amount: 1,
+                            isActive: 1,
+                        },
+                        reported_post_id: 1,
+                        reporter_id: 1,
+                        reason: 1,
+                        admin_review: 1,
+                        admin_action: 1,
+                        report_date: 1
+
+                    }
+                }
+
+            ])
+            
             return response
         } catch (error: any) {
             throw new Error(error.message)

@@ -3,6 +3,7 @@ import { BASE_API_URL } from "../config/constants";
 import { profileCompletionFormClient } from "../../components/ProfileCompletionParts/CompletionForm";
 import store from "../../../Redux/store";
 import { handleError } from "./ErrorHandlers/ErrorHandle";
+import { IReport } from "../../../interfaces/Client";
 
 const clientAPI = axios.create({
   baseURL: `${BASE_API_URL}/client`,
@@ -169,6 +170,16 @@ export const getFreelancerDataAPI = async (id: string) => {
 export const getMessagesAPI = async (sender: string,receiver:string) => {
   try {
     const response = await clientAPI.get(`/getConversations?sender=${sender}&receiver=${receiver}`,);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const reportPost = async (formData:IReport) => {
+  try {
+    const response = await clientAPI.post(`/reportpost`,formData);
     return response.data;
   } catch (error) {
     const errorMessage = handleError(error);

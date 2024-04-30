@@ -15,3 +15,14 @@ export interface IOrder {
     requirementStatus?:Boolean,
     approval?:string
 }   
+
+
+export interface IReport extends Document {
+    _id?:string,
+    reported_post_id: string;
+    reporter_id?: string;
+    reason: string;
+    admin_review?: boolean;
+    admin_action?: string ;
+    report_date?: Date;
+  }
