@@ -210,5 +210,24 @@ export class ClientController {
         }
     }
 
+    //work Manage Aproval
+    // ------------------------------
+    async getFreelancerData(req: Request, res: Response): Promise<void> {
+        try {
+
+            const { id } = req.query
+            if(!id) throw new Error("Invalid id")
+                
+            const response = await this.ClientService.getfreelancerData(id as string)
+            // console.log(responseAprval);
+            if (response) {
+                res.status(200).json({ status: true, details: response })
+            }
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
 
 }

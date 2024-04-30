@@ -7,6 +7,7 @@ import DashboardClient from "../Pages/client/DashboardClient";
 import ClientProtect from "../clients/components/ClientProtect";
 import Submissions from "../Pages/client/Submissions";
 import TransactionsClient from "../Pages/client/TransactionsClient";
+import ChatPage from "../Pages/client/ChatPage";
 
 function ClientRouter() {
   return (
@@ -19,6 +20,7 @@ function ClientRouter() {
         <Route path="/transactions" element={<TransactionsClient />} />
         <Route path="/orders/requirements" element={<OrderRequirements />} />
         <Route path="/orders/submission" element={<Submissions />} />
+        <Route path="/orders/chat/:id" element={<ChatPage />} />
       </Route>
     </Routes>
   );

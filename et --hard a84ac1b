@@ -1,0 +1,37 @@
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{0}: checkout: moving from new-branch-name to feature/realtime-chatting
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{1}: checkout: moving from a84ac1b082d227aac5d67d160c8135d3b2af4b6f to new-branch-name
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{2}: checkout: moving from feature/realtime-chatting to a84ac1b
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{3}: reset: moving to HEAD@{1}
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{4}: checkout: moving from a84ac1b082d227aac5d67d160c8135d3b2af4b6f to feature/realtime-chatting
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{5}: checkout: moving from feature/realtime-chatting to a84ac1b082d227aac5d67d160c8135d3b2af4b6f
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{6}: checkout: moving from feature/realtime-chatting to feature/realtime-chatting
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{7}: checkout: moving from feature/report-action to feature/realtime-chatting
+[33ma4ccf73[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m, [m[1;32mfeature/report-action[m[33m)[m HEAD@{8}: checkout: moving from main to feature/report-action
+[33ma4ccf73[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m, [m[1;32mfeature/report-action[m[33m)[m HEAD@{9}: pull origin main: Fast-forward
+[33m407eb7f[m HEAD@{10}: checkout: moving from feature/realtime-chatting to main
+[33ma84ac1b[m[33m ([m[1;36mHEAD -> [m[1;32mfeature/realtime-chatting[m[33m, [m[1;31morigin/feature/realtime-chatting[m[33m, [m[1;32mnew-branch-name[m[33m)[m HEAD@{11}: commit: feat: Completed chat feature with text message sending and receiving
+[33m407eb7f[m HEAD@{12}: reset: moving to HEAD
+[33m407eb7f[m HEAD@{13}: checkout: moving from main to feature/realtime-chatting
+[33m407eb7f[m HEAD@{14}: commit: transaction showed in admin side
+[33m962e7e0[m HEAD@{15}: commit: work submission added
+[33m90243a1[m HEAD@{16}: commit: work updated added
+[33m25247b8[m HEAD@{17}: commit: client requirements added
+[33m1194691[m HEAD@{18}: commit: created intreface for service layer
+[33m6328954[m HEAD@{19}: commit: stipe payment added
+[33me6337f8[m HEAD@{20}: commit: work posting completed
+[33mfa230da[m HEAD@{21}: commit: post image overview section completed
+[33mf087d6c[m HEAD@{22}: commit: image cropping component added
+[33m19cbc30[m HEAD@{23}: commit: subcategory organized well
+[33m72724c6[m HEAD@{24}: commit: When a category is deleted, automatically delete its subcategories function added
+[33md05680e[m HEAD@{25}: commit: work subcategory added delete and list functions added on admin side
+[33me9d1f71[m HEAD@{26}: commit: category added list delete implemented
+[33mcac6036[m HEAD@{27}: commit: folder structure changed
+[33m7380dbd[m HEAD@{28}: commit: frontend folder structure changes
+[33mfacd50d[m HEAD@{29}: commit: nav bar manage dynamicly
+[33mb3b1dad[m HEAD@{30}: commit: Add user block/unblock functionality
+[33m7480641[m HEAD@{31}: commit: Freelancer Profile completed
+[33m843620e[m HEAD@{32}: commit: Google auth and 2 side signup process and profile completion done
+[33m0239512[m HEAD@{33}: commit: signup process completed
+[33mf7cfbd5[m HEAD@{34}: commit: data flow created
+[33mfdc916e[m HEAD@{35}: Branch: renamed refs/heads/master to refs/heads/main
+[33mfdc916e[m HEAD@{37}: commit (initial): repository-pattern folder structure builded
