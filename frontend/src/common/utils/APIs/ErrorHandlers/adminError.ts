@@ -16,7 +16,7 @@ export const handleError = (
         switch (axiosError.response?.status) {
             case 401:
               
-                if (axiosError.response.data.message === 'session expired please login again') {
+                if (axiosError.response.data.message === 'session expired please login again' || axiosError.response.data.message === 'Unauthorized') {
                  
                     store.dispatch(logout());
                     toast.warning("session expired please login again")

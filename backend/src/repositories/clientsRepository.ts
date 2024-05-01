@@ -318,8 +318,100 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
+    // async addRating(workId: string, userId: string, ratingValue: number): Promise<void> {
+    //     try {
+    //         const work = await WorkModel.findById(workId);
+    //         if (!work) {
+    //             throw new Error('Work not found');
+    //         }
 
+    //         // Check if the user has already rated the work
+    //         const existingRatingIndex = work.ratings?.findIndex(rating => rating.user === userId);
+
+    //         if (work.ratings && existingRatingIndex !== undefined && existingRatingIndex !== -1) {
+    //             // If the user has already rated the work, update their existing rating
+    //             work.ratings[existingRatingIndex]?.value = ratingValue;
+    //         } else {
+    //             // If the user has not yet rated the work, add a new rating for them
+    //             work.ratings?.push({ user: userId, value: ratingValue });
+    //         }
+
+    //         // Calculate the average rating only if ratings is defined and not empty
+    //         if (work.ratings && work.ratings.length > 0) {
+    //             const totalRating = work.ratings.reduce((sum, rating) => sum + rating.value, 0);
+    //             const averageRating = totalRating / work.ratings.length;
+    //             work.averageRating = averageRating;
+    //         } else {
+    //             // If ratings array is empty or undefined, set averageRating to undefined
+    //             work.averageRating = undefined;
+    //         }
+
+    //         // Save the updated document
+    //         await work.save();
+
+
+    //     } catch (error: any) {
+    //         throw new Error(error.message)
+    //     }
+    // }
+
+    async addRating(workId: string, userId: string, ratingValue: number): Promise<boolean> {
+        try {
+            const work = await WorkModel.findById(workId).exec();
+            if (!work) {
+                throw new Error('Work not found');
+            }
     
+            const existingRatingIndex = work.ratings?.findIndex(rating => rating.user.toString() === userId.toString());
+    
+            if (work.ratings !== undefined && existingRatingIndex !== undefined && existingRatingIndex !== -1) {
+                work.ratings[existingRatingIndex].value = ratingValue;
+            } else {
+                const newRating = { user: userId, value: ratingValue };
+                work.ratings = [...(work.ratings || []), newRating];
+            }
+    
+            if (work.ratings && work.ratings.length > 0) {
+                const totalRating = work.ratings.reduce((sum, rating) => sum + rating.value, 0);
+                work.averageRating = totalRating / work.ratings.length;
+            } else {
+                work.averageRating = undefined;
+            }
+    
+             await work.save();
+            return true
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async  getRatingByUserAndWork(userId: string, workId: string): Promise<number> {
+        try {
+            console.log(userId ,"user id");
+            
+            const work = await WorkModel.findById(workId);
+            console.log(work, " this is work");
+                        
+            if (!work) {
+                throw new Error('Work not found');
+            }    
+            const existingRating = work.ratings?.find(rating => rating.user.toString() === userId.toString());
+            console.log(existingRating," - Rating");
+            
+            if (existingRating) {
+                return existingRating.value;
+            } else {
+                return 0;
+            }
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+    
+    
+
+
 
 
 

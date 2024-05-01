@@ -51,7 +51,23 @@ export const WorkSchema: Schema = new Schema({
         type: Boolean,
         required: true,
         default: true
-    }
+    },
+    ratings: [
+      {
+          user: {
+              type: Schema.Types.ObjectId,
+              ref: 'User'
+          },
+          value: {
+              type: Number,
+              required: true
+          }
+      }
+  ],
+  averageRating: {
+      type: Number,
+      default: 0
+  }
   });
   
 

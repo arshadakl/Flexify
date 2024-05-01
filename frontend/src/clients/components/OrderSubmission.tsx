@@ -1,15 +1,32 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { deliverdworkAPI, downloadsubmissionFileAPI, manageApprovalAPI } from "../../common/utils/APIs/ClientApi";
+import {
+  addRatingAPI,
+  deliverdworkAPI,
+  downloadsubmissionFileAPI,
+  getRatingAPI,
+  manageApprovalAPI,
+} from "../../common/utils/APIs/ClientApi";
 import { toast } from "sonner";
 import Loading from "../../common/components/ExtraComponents/Loading";
+import { Star } from "../../common/components/ExtraComponents/Star";
 
 function OrderSubmission() {
-    const [isLoad,setIsLoad] = useState<Boolean>(false)
+  const [isLoad, setIsLoad] = useState<Boolean>(false);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("id");
   const [work, setWork] = useState<any>();
+  const [rating, setRating] = useState(0);
+
+  const handleSelect = async(index: number) => {
+    setRating(index * 2);
+    const response = await addRatingAPI(work.workId,(index * 2))
+    if(response.status){
+      toast.success("Thank you for your rating")
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await deliverdworkAPI(orderId as string);
@@ -19,37 +36,44 @@ function OrderSubmission() {
     fetchData();
   }, [orderId]);
 
-  const handileDownload = async()=>{
-    try {
-        const response = await downloadsubmissionFileAPI(work._id)
-        if(response=="downloaded"){
-            console.log("streem data get");
-        }    
-      } catch (error) {
-        console.error('Error downloading file:', error);
-      }
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await getRatingAPI(work.workId);
+      setRating(response.rate);
+    };
+    fetchData();
+  }, [work]);
 
-  const HandileApproval = async(status:string) => {
+  const handileDownload = async () => {
     try {
-        setIsLoad(true)
-        const response = await manageApprovalAPI(work._id, status,work.orderId);
-        if(response.status){        
-            setIsLoad(false)
-            console.log(response.details);
-            
-            setWork(response.details);
-            toast.success(`work ${response.details.status}`)
-        }
+      const response = await downloadsubmissionFileAPI(work._id);
+      if (response == "downloaded") {
+        console.log("streem data get");
+      }
     } catch (error) {
-        
+      console.error("Error downloading file:", error);
     }
-  }
+  };
+
+  const HandileApproval = async (status: string) => {
+    try {
+      setIsLoad(true);
+      const response = await manageApprovalAPI(work._id, status, work.orderId);
+      if (response.status) {
+        setIsLoad(false);
+        console.log(response.details);
+
+        setWork(response.details);
+        toast.success(`work ${response.details.status}`);
+      }
+    } catch (error) {}
+  };
 
   
+
   return (
     <>
-        {isLoad ? <Loading/> : null}
+      {isLoad ? <Loading /> : null}
 
       {work && (
         <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
@@ -66,26 +90,32 @@ function OrderSubmission() {
                     <span className="font-medium text-gray-500">
                       #W123151455212
                     </span>
+                    {/* <Rating style={{ maxWidth: 250 }} value={rating} onChange={setRating} /> */}
                   </h1>
+
                   <p className="mx-5 ">
                     <i className="fa-duotone fa-briefcase " /> Freelancer :{" "}
                     {work.freelancer[0].username}
                   </p>
                 </div>
+
+                
+
                 <div className="w-2/4 flex justify-end px-5 ">
                   <div className="border border-gray-400 rounded-full min-w-2/4 h-8 flex items-center px-2">
-                    {work.status=="approved" ? <>
-                    <span className="w-5 h-5 rounded-full bg-green-600 p-1 mr-3"></span>
-                    <p className="text-sm">
-                      Approved{" "}
-                    </p>
-                    </>:
-                    <>
-                    <span className="w-5 h-5 rounded-full bg-[#FFB62A] p-1 mr-3"></span>
-                    <p className="text-sm">
-                      freelancer waiting for your approval{" "}
-                    </p>
-                    </>}
+                    {work.status == "approved" ? (
+                      <>
+                        <span className="w-5 h-5 rounded-full bg-green-600 p-1 mr-3"></span>
+                        <p className="text-sm">Approved </p>
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-5 h-5 rounded-full bg-[#FFB62A] p-1 mr-3"></span>
+                        <p className="text-sm">
+                          freelancer waiting for your approval{" "}
+                        </p>
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -129,18 +159,37 @@ function OrderSubmission() {
               </p>
               <div className="mx-5 flex">
                 <div>
-                 
-                    <label onClick={handileDownload} className="text-gray-900 border cursor-pointer border-gray-500 border-dashed bg-gray-200 hover:bg-gray-200 font-medium rounded text-sm px-8 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 me-2 mb-2">
-                      <i className="fa-light fa-file-arrow-down mx-2" />{" "}
-                      Download here
-                    </label>
+                  <label
+                    onClick={handileDownload}
+                    className="text-gray-900 border cursor-pointer border-gray-500 border-dashed bg-gray-200 hover:bg-gray-200 font-medium rounded text-sm px-8 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 me-2 mb-2"
+                  >
+                    <i className="fa-light fa-file-arrow-down mx-2" /> Download
+                    here
+                  </label>
                 </div>
+                
               </div>
+              <div className="mx-5 my-3">
+                <hr />
+                  {[...Array(5)].map((_, index) => (
+                    <Star
+                      key={index}
+                      selected={index < rating / 2}
+                      onSelect={() => handleSelect(index + 1)}
+                    />
+                  ))}
+                  <p className="text-sm">Rate your Work : {rating}/10</p>
+                </div>
               <div className="mx-5 flex justify-end">
-            {/* i want to manage buttons based on the aproval status */}
-               { work.status!=="approved" && <button onClick={()=>HandileApproval("approved")} className="text-white hover:text-gray-200  my-4 bg-logo-green   font-medium rounded text-sm px-8 py-2.5 text-center inline-flex items-center  me-2 mb-2">
-                  Approve this work
-                </button>}
+                {/* i want to manage buttons based on the aproval status */}
+                {work.status !== "approved" && (
+                  <button
+                    onClick={() => HandileApproval("approved")}
+                    className="text-white hover:text-gray-200  my-4 bg-logo-green   font-medium rounded text-sm px-8 py-2.5 text-center inline-flex items-center  me-2 mb-2"
+                  >
+                    Approve this work
+                  </button>
+                )}
               </div>
               {/* <hr className=" m-5" /> */}
               {/* <div className="mx-5">

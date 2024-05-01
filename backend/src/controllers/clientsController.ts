@@ -257,4 +257,37 @@ export class ClientController {
     }
 
 
+    addRatingController = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const {workId,ratingValue} = req.body
+          console.log(workId, ratingValue);
+          
+            const userId = req.user._id
+          const ratingsRespones = await this.ClientService.addRatingServ(workId,userId,ratingValue)
+          if(ratingsRespones){
+              res.status(200).json({status:true});
+          }
+        } catch (error:any) {
+          res.status(500).json({ error: error.message });
+        }
+      };
+    
+
+
+      getRatingByUserAndWork = async (req: Request, res: Response): Promise<void> => {
+        try {
+          
+            const {workId} = req.query
+            const userId = req.user._id
+          const ratingsRespones = await this.ClientService.getRatingByUserAndWorkServ(userId,workId as string)
+        
+          
+          res.status(200).json({ status: true,rate:ratingsRespones});
+        } catch (error:any) {
+          res.status(500).json({ error: error.message });
+        }
+      };
+    
+
+
 }

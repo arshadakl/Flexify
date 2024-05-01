@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { IWork } from "../../interfaces/Freelancer";
+// import { IWork } from "../../interfaces/Freelancer";
 import { GetRepotedPostAPi, suspendWorkAPI } from "../../common/utils/APIs/AdminApi";
-import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
+// import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
 import { toast } from "sonner";
 import { IReport } from "../../interfaces/Client";
 
@@ -13,6 +13,8 @@ function RepotedPostTable() {
       if (response.status) {
         console.log(response.post,"flagged");
         setPosts(response.post);
+        console.log(response.post);
+        
         
       }
     };
@@ -63,9 +65,9 @@ function RepotedPostTable() {
                 </div>
               </div>
                <div className="table-row-group divide-y divide-gray-200 bg-white dark:divide-gray-700 dark:bg-slate-800">
-                {posts?.map((post:IReport) => {
+                { posts?.map((post:IReport,index:number) => {
                   return (
-                    <div className="table-row">
+                    <div className="table-row" key={index}>
                       <div className="table-cell px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800 dark:text-gray-200">
                         <img className="h-10 rounded" src={post.postDetails && post.postDetails.image1} alt="" />
                       </div>

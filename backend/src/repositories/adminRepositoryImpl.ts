@@ -147,7 +147,19 @@ export class AdminRepositoryImpl implements AdminRepository {
     }
 
     async suspendWork(id: string, action: any): Promise<UpdateWriteOpResult> {
-        return await WorkModel.updateOne({ _id: id }, { isActive: action });
+        try {
+            const response = await WorkModel.updateOne({ _id: id }, { 
+                $set:{isActive: action}
+             });
+            if(!action){
+                const repotedPost = await ReportModel.updateOne({reported_post_id: id }, { 
+                    $set:{admin_review: true}
+                 })
+            }
+            return response
+        } catch (error:any) {
+            throw new Error(error)
+        }
     }
 
     async getAllOrders(): Promise<IOrder[] | null> {
