@@ -230,29 +230,31 @@ export class AdminRepositoryImpl implements AdminRepository {
             const response = await ReportModel.aggregate([
                 {
                     $lookup: {
+                        from: "freelancers",
+                        localField: "reporter_id",
+                        foreignField: "_id",
+                        as: "reporter"
+                    }
+                },
+                {
+                    $lookup: {
                         from: "workmodels",
                         localField: "reported_post_id",
                         foreignField: "_id",
                         as: "postDetails"
                     }
                 },
+                
                 { $unwind: "$postDetails" },
                 {
                     $lookup: {
-                        from: "Freelancer",
-                        localField: "user",
+                        from: "freelancers",
+                        localField: "postDetails.user",
                         foreignField: "_id",
                         as: "FreelancerDetails"
                     }
                 },
-                {
-                    $lookup: {
-                        from: "Freelancer",
-                        localField: "reporter_id",
-                        foreignField: "_id",
-                        as: "reporter"
-                    }
-                },
+               
                 {
                     $project: {
                         FreelancerDetails: {
@@ -279,6 +281,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                             questionnaire: 1,
                             amount: 1,
                             isActive: 1,
+                            _id:1
                         },
                         reported_post_id: 1,
                         reporter_id: 1,

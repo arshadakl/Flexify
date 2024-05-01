@@ -1,4 +1,4 @@
-import { IWork } from "./Freelancer";
+import { Freelancer, IWork } from "./Freelancer";
 
 export interface IOrder {
     _id?: string,
@@ -25,4 +25,9 @@ export interface IReport extends Document {
     admin_review?: boolean;
     admin_action?: string ;
     report_date?: Date;
+    postDetails?:IWork;
+    FreelancerDetails:Freelancer[];
+    reporter:Freelancer[];
+
+
   }
