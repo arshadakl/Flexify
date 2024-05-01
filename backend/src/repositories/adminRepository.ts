@@ -3,6 +3,7 @@ import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces
 import { IWork } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
+import { IReport } from "../interfaces/chatInterface";
 // import { AdminInter } from "../interfaces/adminInterface";
 
 export interface AdminRepository {
@@ -36,5 +37,6 @@ export interface AdminRepository {
     getAllTransaction(): Promise<ITransaction[] | null>
 
     getAllSubmissions(): Promise<ISubmissions[] | null>
+    GetRepotedPost(): Promise<IReport[]>
 }
 

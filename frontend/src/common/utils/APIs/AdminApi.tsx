@@ -207,3 +207,12 @@ export const getallSubmissionsAPI = async()=>{
         console.log(error);
     }
 }
+
+export const GetRepotedPostAPi = async()=>{
+    try {
+        const response = await adminAPI.get('/repotedpost')
+        return response.data        
+    } catch (error) {
+        console.log(error);
+    }
+}
