@@ -11,6 +11,8 @@ import { UpdateWriteOpResult } from "mongoose";
 import { Order, Requirement } from "../models/Clients";
 import { Freelancer, Submissions } from "../models/Freelancer";
 import mongoose from 'mongoose';
+import { IReport } from "../interfaces/chatInterface";
+import { ReportModel } from "../models/Actions";
 const ObjectId = mongoose.Types.ObjectId;
 
 export class ClientRepositoryImpl implements ClientRepository {
@@ -155,7 +157,7 @@ export class ClientRepositoryImpl implements ClientRepository {
                             amount: 1,
                             WorkDetails: 1,
                             date: 1,
-                            category:1,
+                            category: 1,
                             status: 1,
                             requirementStatus: 1,
                             deadline: 1,
@@ -212,7 +214,7 @@ export class ClientRepositoryImpl implements ClientRepository {
                             amount: 1,
                             WorkDetails: 1,
                             date: 1,
-                            category:1,
+                            category: 1,
                             status: 1,
                             requirementStatus: 1,
                             deadline: 1,
@@ -239,8 +241,8 @@ export class ClientRepositoryImpl implements ClientRepository {
     }
 
 
-    
-    async getFreelancerData(id:string):Promise<any> {
+
+    async getFreelancerData(id: string): Promise<any> {
         try {
             const response = await Freelancer.aggregate([
                 { $match: { _id: new mongoose.Types.ObjectId(id) } },
@@ -252,7 +254,7 @@ export class ClientRepositoryImpl implements ClientRepository {
                         as: "userDetails"
                     }
                 },
-                
+
             ])
             return response[0]
         } catch (error: any) {
@@ -262,7 +264,7 @@ export class ClientRepositoryImpl implements ClientRepository {
 
     async getDeliverdWorkFile(submitId: string): Promise<any | null> {
         try {
-            const Fileurl = await Submissions.findOne({ _id: submitId },{file:1})
+            const Fileurl = await Submissions.findOne({ _id: submitId }, { file: 1 })
             if (!Fileurl) throw new Error("Couldn't find latest transaction")
             return Fileurl
         } catch (error: any) {
@@ -271,31 +273,53 @@ export class ClientRepositoryImpl implements ClientRepository {
     }
 
 
-    async changeOrderStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
+    async changeOrderStatus(orderId: string, status: string): Promise<UpdateWriteOpResult> {
         try {
-            
-            const response = await Order.updateOne({_id:orderId}, {
-                $set:{status:status}
+
+            const response = await Order.updateOne({ _id: orderId }, {
+                $set: { status: status }
             })
             console.log(response);
-            
+
             return response
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
-    async changeSubmissionStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
+    async changeSubmissionStatus(orderId: string, status: string): Promise<UpdateWriteOpResult> {
         try {
-            const response = await Submissions.updateOne({_id:orderId}, {
-                $set:{status:status}
+            const response = await Submissions.updateOne({ _id: orderId }, {
+                $set: { status: status }
             })
             return response
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
+    async submitPostReport(formData: IReport): Promise<IReport | null> {
+        try {
+
+            const response = await ReportModel.create(formData);
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async findReportByIDs(reported_post_id: string, reporter_id: string): Promise<IReport | null> {
+        try {
+
+            const response = await ReportModel.findOne({ reported_post_id: reported_post_id, reporter_id: reporter_id })
+            return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    
 
 
 

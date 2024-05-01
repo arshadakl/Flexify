@@ -35,6 +35,7 @@ router.get('/downloadsubmission',protector,clientController.downloadSubmissionFi
 router.patch('/manageapproval',protector,clientController.manageWorkApproval.bind(clientController));
 router.get('/getfreelancerdata',protector,clientController.getFreelancerData.bind(clientController));
 router.get('/getConversations',protector,chatController.getConversationsByUser.bind(chatController));
+router.post('/reportpost',protector,clientController.reportPost.bind(clientController));
 
 
 

@@ -8,6 +8,7 @@ import Stripe from 'stripe';
 import { uploadMultipleToCloudinary } from "../utils/Cloudinary";
 import fs from 'fs'
 import mongoose from "mongoose";
+import { IReport } from "../interfaces/chatInterface";
 
 
 export class ClientService {
@@ -346,6 +347,18 @@ export class ClientService {
     async getfreelancerData(id:string): Promise<any | null>{
         try {
             const response = await this.clientRepository.getFreelancerData(id)
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+        
+    async submitPostReportServ(formData:IReport): Promise<IReport | null>{
+        try {
+            const isAlreadyRepoted = await this.clientRepository.findReportByIDs(formData.reported_post_id as string ,formData.reporter_id as string)
+            if(isAlreadyRepoted) throw new Error("you already Repoted this Post")
+            const response = await this.clientRepository.submitPostReport(formData)
             return response
         } catch (error:any) {
             throw new Error(error.message)

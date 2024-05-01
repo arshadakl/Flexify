@@ -19,7 +19,7 @@ function Sidebar() {
   <div className="w-full px-2 ">
     <div className="flex flex-col items-center w-full mt-3  border-gray-700">
       <p
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         onClick={()=>navigate('/admin')}
       >
         <svg
@@ -39,7 +39,7 @@ function Sidebar() {
         <span  className="ml-2 text-sm font-medium">Dasboard</span>
       </p>
       <p
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         onClick={()=>navigate('/admin/users')}
       >
         <i className="fa-light fa-users"></i>
@@ -47,7 +47,7 @@ function Sidebar() {
       </p>
       <p
       onClick={()=>navigate('/admin/category')}
-        className="flex items-center w-full h-12 px-3 mt-2 hover:text-gray-200 hover:bg-gray-700 rounded"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 hover:text-gray-200 hover:bg-gray-700 rounded"
         
       >
         <svg
@@ -67,7 +67,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Category</span>
       </p>
       <p onClick={()=>navigate('/admin/post')}
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         
       >
         <svg
@@ -87,7 +87,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Posts</span>
       </p>
       <p onClick={()=>navigate('/admin/orders')}
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         
       >
        <i className="fa-sharp fa-regular fa-house-laptop" />
@@ -95,7 +95,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Orders</span>
       </p>
       <p onClick={()=>navigate('/admin/payments')}
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         
       >
        <i className="fa-regular fa-credit-card" />
@@ -104,13 +104,21 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Transactions</span>
       </p>
       <p onClick={()=>navigate('/admin/submissions')}
-        className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
         
       >
-       <i className="fa-regular fa-credit-card" />
-
+       <i className="fa-duotone fa-cloud-word" />
 
         <span className="ml-2 text-sm font-medium">Submissions</span>
+      </p>
+      <p onClick={()=>navigate('/admin/flagged-content')}
+        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        
+      >
+       <i className="fa-duotone fa-flag" />
+
+
+        <span className="ml-2 text-sm font-medium">Flagged Content</span>
       </p>
     </div>
     <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">

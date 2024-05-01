@@ -205,7 +205,6 @@ export class AdminController {
      //suspend request to over work 
     async suspendWork(req: Request, res: Response): Promise<any> {
         try {
-            console.log("Called");
             
             const isWork = await this._adminService.findWorkById(req.body.id)
             if(!isWork) {
@@ -213,8 +212,10 @@ export class AdminController {
             }
             const Works = await this._adminService.suspendWork(isWork)
             if(Works){
+               const postes = await this._adminService.GetRepotedPost()
+               
                 const Works = await this._adminService.getAllWorkService()
-                res.status(200).json({ status: true, data: Works })
+                res.status(200).json({ status: true, data: Works,flagged: postes})
             }
             
         } catch (error: any) {
@@ -246,6 +247,16 @@ export class AdminController {
         try {
            const submissions = await this._adminService.getAllSubmissions()
             res.status(200).json({status:true,data:submissions})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+     //get all Flagged Postes
+    async GetRepotedPost(req: Request, res: Response): Promise<any> {
+        try {
+           const postes = await this._adminService.GetRepotedPost()
+            res.status(200).json({status:true,post:postes})
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }

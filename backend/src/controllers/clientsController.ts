@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { ClientService } from '../services/clientsServices'
 import axios from "axios";
 import path from "path";
+import { IReport } from "../interfaces/chatInterface";
+import { Document, Schema } from 'mongoose';
 // const stripe = require('stripe')
 const cloudinary = require('cloudinary').v2;
 export class ClientController {
@@ -220,6 +222,31 @@ export class ClientController {
                 
             const response = await this.ClientService.getfreelancerData(id as string)
             // console.log(responseAprval);
+            if (response) {
+                res.status(200).json({ status: true, details: response })
+            }
+        } catch (error: any) {
+            console.error("Error:", error);
+            res.json({ status: false, error: error.message });
+        }
+    }
+
+    //work post repot
+    // ------------------------------
+    async reportPost(req: Request, res: Response): Promise<void> {
+        try {
+
+            const {reported_post_id,reason} = req.body
+                
+            const formData = {
+                reported_post_id: reported_post_id, 
+                reporter_id: req.user.id ,
+                reason: reason ,
+                admin_review: false
+            }
+            console.log(formData);
+            
+            const response = await this.ClientService.submitPostReportServ(formData as IReport)
             if (response) {
                 res.status(200).json({ status: true, details: response })
             }

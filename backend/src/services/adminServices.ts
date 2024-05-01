@@ -1,4 +1,5 @@
 import { ICategory, ISubcategory } from "../interfaces/adminInterface"
+import { IReport } from "../interfaces/chatInterface"
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface"
 import { IWork } from "../interfaces/freelancerInterface"
 
@@ -22,4 +23,5 @@ export interface AdminServices{
     getAllTransactions():Promise<ITransaction[] | null>
 
     getAllSubmissions():Promise<ISubmissions[] | null>
+    GetRepotedPost():Promise<IReport[]> 
 }
