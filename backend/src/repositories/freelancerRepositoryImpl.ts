@@ -201,15 +201,18 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         return await WorkModel.deleteOne({ _id: id });
     }
 
+    
 
     async getAllActiveWorksToDiscover(): Promise<any> {
         try {
-            const response = await WorkModel.aggregate([
+            // Retrieve all active works along with their user details and freelancer details
+            const works = await WorkModel.aggregate([
                 {
                     $match: {
                         isActive: true
                     }
                 },
+                // Lookup user details
                 {
                     $lookup: {
                         from: "freelancers",
@@ -219,6 +222,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                     }
                 },
                 { $unwind: "$user" },
+                // Lookup freelancer details
                 {
                     $lookup: {
                         from: "freelancerdetails",
@@ -227,6 +231,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         as: "freelancerdetails"
                     }
                 },
+                // Project only the required fields
                 {
                     $project: {
                         user: {
@@ -234,7 +239,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                             username: 1,
                             email: 1,
                             profile: 1,
-                            role: 1 // Include fields you want to keep
+                            role: 1
                         },
                         title: 1,
                         category: 1,
@@ -251,21 +256,26 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         questionnaire: 1,
                         amount: 1,
                         isActive: 1,
-                        freelancerdetails: 1
+                        freelancerdetails: 1,
+                        // Include averageRating field for sorting
+                        averageRating: { $ifNull: ["$averageRating", 0] } // Use 0 if averageRating is null
                     }
-                }
+                },
+                // Sort works based on averageRating in descending order
+                { $sort: { averageRating: -1 } }
             ]);
-
-            console.log(response, "Response"); // Log the response to see if there's any data returned
-
-            return response;
-
+    
+            console.log(works, "Sorted works"); // Log the sorted works to verify
+    
+            return works;
+    
         } catch (error) {
             console.log(error);
-
+    
             throw new Error(`Error getting all active work details: ${error}`);
         }
     }
+    
 
 
    async getWorkDetails(id: string):Promise<any>{

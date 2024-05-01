@@ -171,14 +171,18 @@ function OrderSubmission() {
               </div>
               <div className="mx-5 my-3">
                 <hr />
+                {work.status == "approved" &&
+                <>
                   {[...Array(5)].map((_, index) => (
                     <Star
-                      key={index}
-                      selected={index < rating / 2}
-                      onSelect={() => handleSelect(index + 1)}
+                    key={index}
+                    selected={index < rating / 2}
+                    onSelect={() => handleSelect(index + 1)}
                     />
                   ))}
                   <p className="text-sm">Rate your Work : {rating}/10</p>
+                  </>
+                }
                 </div>
               <div className="mx-5 flex justify-end">
                 {/* i want to manage buttons based on the aproval status */}
