@@ -30,10 +30,10 @@ router.post('/editsubcategory',protector,adminController.editSubCategory.bind(ad
 router.get('/allworks',adminController.getAllWorks.bind(adminController));
 router.patch('/suspendworks',protector,adminController.suspendWork.bind(adminController));
 
-router.get('/getallorders',adminController.getallOrders.bind(adminController));
-router.get('/getalltransaction',adminController.getallTransaction.bind(adminController));
-router.get('/getallSubmissions',adminController.getAllSubmissions.bind(adminController));
-router.get('/repotedpost',adminController.GetRepotedPost.bind(adminController));
+router.get('/getallorders',protector,adminController.getallOrders.bind(adminController));
+router.get('/getalltransaction',protector,adminController.getallTransaction.bind(adminController));
+router.get('/getallSubmissions',protector,adminController.getAllSubmissions.bind(adminController));
+router.get('/repotedpost',protector,adminController.GetRepotedPost.bind(adminController));
 
 
 export default router;

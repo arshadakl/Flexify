@@ -32,8 +32,7 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     try {
-      console.log("befor next called");
-
+    
       const decodedToken = jwt.verify(token, jwtSecret) as JwtPayload;
       if (!decodedToken) {
         return res.status(401).json({ message: "Unauthorized" });

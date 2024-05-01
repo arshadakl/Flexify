@@ -355,14 +355,14 @@ export class ClientRepositoryImpl implements ClientRepository {
     //     }
     // }
 
-    async addRating(workId: string, userId: string, ratingValue: number): Promise<void> {
+    async addRating(workId: string, userId: string, ratingValue: number): Promise<boolean> {
         try {
             const work = await WorkModel.findById(workId).exec();
             if (!work) {
                 throw new Error('Work not found');
             }
     
-            const existingRatingIndex = work.ratings?.findIndex(rating => rating.user.toString() === userId);
+            const existingRatingIndex = work.ratings?.findIndex(rating => rating.user.toString() === userId.toString());
     
             if (work.ratings !== undefined && existingRatingIndex !== undefined && existingRatingIndex !== -1) {
                 work.ratings[existingRatingIndex].value = ratingValue;
@@ -378,12 +378,37 @@ export class ClientRepositoryImpl implements ClientRepository {
                 work.averageRating = undefined;
             }
     
-            await work.save();
-    
+             await work.save();
+            return true
         } catch (error:any) {
             throw new Error(error.message)
         }
     }
+
+
+    async  getRatingByUserAndWork(userId: string, workId: string): Promise<number> {
+        try {
+            console.log(userId ,"user id");
+            
+            const work = await WorkModel.findById(workId);
+            console.log(work, " this is work");
+                        
+            if (!work) {
+                throw new Error('Work not found');
+            }    
+            const existingRating = work.ratings?.find(rating => rating.user.toString() === userId.toString());
+            console.log(existingRating," - Rating");
+            
+            if (existingRating) {
+                return existingRating.value;
+            } else {
+                return 0;
+            }
+        } catch (error: any) {
+            throw new Error(error.message);
+        }
+    }
+    
     
 
 

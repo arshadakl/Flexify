@@ -34,7 +34,8 @@ export const doLogin =async (FormData:Admin)=>{
         // console.log(response);
         return response.data       
     } catch (error) {
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -56,8 +57,8 @@ export const blockUser = async (id:string)=>{
         const response = await adminAPI.patch('/blockuser',{id});
         return response.data
     } catch (error) {
-        console.log(error);
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -68,8 +69,8 @@ export const AddCategoryAPI = async(data:CategoryInter)=>{
         return response.data
         
     } catch (error) {
-        console.log(error);
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -81,7 +82,8 @@ export const getAllCategories = async ()=>{
         const response = await adminAPI.get("/allcategories");
         return response.data
     } catch (error) {
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -91,7 +93,8 @@ export const getAllCategoriesPage = async (page:number)=>{
         const response = await adminAPI.get(`/allcategoriespagenation?page=${page}`);
         return response.data
     } catch (error) {
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -101,6 +104,8 @@ export const deleteCategoryAPI = async (id:string)=>{
         console.log(response);
         return response.data
     } catch (error) {
+        const errorMessage = handleError(error);
+        throw errorMessage;
         
     }
 }
@@ -112,7 +117,8 @@ export const EditCategoryAPI = async(data:CategoryInter)=>{
         return response.data
         
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
         
     }
 }
@@ -127,7 +133,8 @@ export const AddSubcategoryAPI = async(data:SubategoryInter)=>{
         return response.data
         
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
         
     }
 }
@@ -139,7 +146,8 @@ export const getAllSubCategories = async ()=>{
         console.log(response);
         return response.data
     } catch (error) {
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -149,7 +157,8 @@ export const deleteSubCategoryAPI = async (id:string)=>{
         console.log(response);
         return response.data
     } catch (error) {
-        
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -159,7 +168,8 @@ export const EditSubcategoryAPI = async(data:SubategoryInter)=>{
         return response.data
         
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -168,7 +178,8 @@ export const getAllWorkAPI = async()=>{
         const response = await adminAPI.get('/allworks')
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -177,7 +188,8 @@ export const suspendWorkAPI = async(id:string)=>{
         const response = await adminAPI.patch('/suspendworks',{id})
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -186,7 +198,8 @@ export const getAllOrdersAPI = async()=>{
         const response = await adminAPI.get('/getallorders')
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -195,7 +208,8 @@ export const getalltransactionAPI = async()=>{
         const response = await adminAPI.get('/getalltransaction')
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -204,7 +218,8 @@ export const getallSubmissionsAPI = async()=>{
         const response = await adminAPI.get('/getallSubmissions')
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }
 
@@ -213,6 +228,7 @@ export const GetRepotedPostAPi = async()=>{
         const response = await adminAPI.get('/repotedpost')
         return response.data        
     } catch (error) {
-        console.log(error);
+        const errorMessage = handleError(error);
+        throw errorMessage;
     }
 }

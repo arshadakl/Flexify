@@ -196,3 +196,14 @@ export const addRatingAPI = async (workId: string, ratingValue: number) => {
     throw errorMessage;
   }
 };
+
+
+export const getRatingAPI = async (workId: string) => {
+  try {
+    const response = await clientAPI.get(`/getrating?workId=${workId}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
