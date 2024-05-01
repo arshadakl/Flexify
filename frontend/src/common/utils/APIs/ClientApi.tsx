@@ -186,3 +186,13 @@ export const reportPost = async (formData:IReport) => {
     throw errorMessage;
   }
 };
+
+export const addRatingAPI = async (workId: string, ratingValue: number) => {
+  try {
+    const response = await clientAPI.post(`/addRating`,{workId,ratingValue});
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};

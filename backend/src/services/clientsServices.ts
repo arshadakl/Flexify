@@ -364,6 +364,16 @@ export class ClientService {
             throw new Error(error.message)
         }
     }
+        
+    //addRating service
+    async addRatingServ(workId: string, userId: string, ratingValue: number): Promise<void>{
+        try {
+            const response = await this.clientRepository.addRating(workId,userId,ratingValue)            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 
      
 }

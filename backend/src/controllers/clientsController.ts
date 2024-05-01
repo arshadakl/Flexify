@@ -257,4 +257,17 @@ export class ClientController {
     }
 
 
+    addRatingController = async (req: Request, res: Response): Promise<void> => {
+        try {
+          const {workId,ratingValue} = req.body
+            const userId = req.user._id
+          const ratingsRespones = await this.ClientService.addRatingServ(workId,userId,ratingValue)
+        //   res.status(200).json(messages);
+        } catch (error:any) {
+          res.status(500).json({ error: error.message });
+        }
+      };
+    
+
+
 }

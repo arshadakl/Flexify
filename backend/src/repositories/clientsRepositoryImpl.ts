@@ -24,4 +24,5 @@ export interface ClientRepository {
     changeSubmissionStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>
     getFreelancerData(id:string):Promise<any>
     submitPostReport(formData:IReport):Promise<IReport | null>
+    addRating(workId: string, userId: string, ratingValue: number): Promise<void>
 }

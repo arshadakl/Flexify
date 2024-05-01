@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { deliverdworkAPI, downloadsubmissionFileAPI, manageApprovalAPI } from "../../common/utils/APIs/ClientApi";
+import { addRatingAPI, deliverdworkAPI, downloadsubmissionFileAPI, manageApprovalAPI } from "../../common/utils/APIs/ClientApi";
 import { toast } from "sonner";
 import Loading from "../../common/components/ExtraComponents/Loading";
 
@@ -44,6 +44,10 @@ function OrderSubmission() {
     } catch (error) {
         
     }
+  }
+
+  const manageRating = async()=>{
+    const response = await addRatingAPI()
   }
 
   

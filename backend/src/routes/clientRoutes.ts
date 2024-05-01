@@ -36,6 +36,8 @@ router.patch('/manageapproval',protector,clientController.manageWorkApproval.bin
 router.get('/getfreelancerdata',protector,clientController.getFreelancerData.bind(clientController));
 router.get('/getConversations',protector,chatController.getConversationsByUser.bind(chatController));
 router.post('/reportpost',protector,clientController.reportPost.bind(clientController));
+router.post ('/addRating',protector,clientController.addRatingController.bind(chatController));
+
 
 
 
