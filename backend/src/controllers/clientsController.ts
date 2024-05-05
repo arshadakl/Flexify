@@ -289,5 +289,19 @@ export class ClientController {
       };
     
 
+      //getAverageRatingForFreelancer
+      getAverageRatingForFreelancer = async (req: Request, res: Response): Promise<void> => {
+        try {
+          
+            const {id} = req.query
+          const ratingsRespones = await this.ClientService.getAverageRatingForFreelancer(id as string)
+        
+          res.status(200).json({ status: true,rate:ratingsRespones});
+        } catch (error:any) {
+          res.status(500).json({ error: error.message });
+        }
+      };
+    
+
 
 }

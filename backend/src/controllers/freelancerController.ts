@@ -9,6 +9,7 @@ import fs from 'fs'
 import { File } from "../interfaces/multerInterface";
 import axios from "axios";
 import path from "path";
+import jwt from 'jsonwebtoken';
 // import { MulterFile } from "../interfaces/multerInterface";
 
 
@@ -654,6 +655,23 @@ export class FreelancerController {
             console.log(transactions);
             
             res.status(200).json({ status: 'success', details: transactions })
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    
+    async genarateVideoCallToken(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.query.id
+            
+            const  api_secret = process.env.STREEM_SECRET
+            console.log(api_secret, userId,"called");
+            if(api_secret){
+                const token = jwt.sign({ "user_id": userId }, api_secret);
+                res.status(200).json({ status: 'success', token: token,id:userId })
+            }
+            
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }

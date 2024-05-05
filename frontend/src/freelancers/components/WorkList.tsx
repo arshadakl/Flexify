@@ -37,53 +37,24 @@ function WorkList() {
         <div className="flex flex-wrap justify-center">
           {wordData?.map((work:any,index:number) => {
             return (
-              // <motion.div  variants={fadeIn("up",0.01)} initial="hidden" whileInView={"show"} viewport={{once:false}} onClick={() => handileSinglePage(work)}
-              // className="w-1/5 pb-2  m-1 border border-l-stone-300 cursor-pointer rounded   shadow duration-150  hover:shadow">
               
-              //   <motion.img initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-              //     className="w-full  object-cover object-center"
-              //     src={work.image1}
-              //     alt="product"
-              //   />
-              //   <motion.p variants={fadeIn("left",0.01)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="my-4 pl-4 text-md font-bold text-gray-500">
-              //     {ShortenDescription(work.title, 30)}
-              //   </motion.p>
-              //   <motion.p variants={fadeIn("left",0.01)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="my-4 pl-4 text-md font-bold text-gray-900">
-              //     <i className="fa-sharp fa-regular fa-indian-rupee-sign" />{" "}
-              //     {work.amount}
-              //   </motion.p>
-
-              //   <span className="gap-1 mx-2 flex flex-wrap">
-              //     {work.tags[0]
-              //       .split(",")
-              //       .slice(0, 2)
-              //       .map((tag) => {
-              //         return (
-              //           <motion.span variants={fadeIn("up",0.01)} initial="hidden" whileInView={"show"} viewport={{once:true}} className=" bg-gray-100 text-gray-800 text-sm font-medium me-2 px-1.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-              //             {tag}
-              //           </motion.span>
-              //         );
-              //       })}
-              //   </span>
-              //   <p className="ml-4 text-xl font-semibold text-gray-800"></p>
-              // </motion.div>
               <>
-              <motion.div   variants={fadeIn("down",(index - 1) / 9 * 0.5 + 0.1)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="lg:w-1/5 sm:w-2/5 w-1/1 m-3 " onClick={() => handileSinglePage(work)}>
+              <motion.div   variants={fadeIn("down",(index - 1) / 9 * 0.5 + 0.1)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="lg:w-1/5 sm:w-2/5 w-1/1 m-3 " >
   <div className=" m-auto ">
     <div className=" grid grid-cols-3 grid-rows-1 grid-flow-row overflow-hidden rounded border shadow-md bg-white hover:shadow-xl transition-shadow duration-300 ease-in-out">
       <div className="col-span-3 row-span-4 p-1 m-1">
         <p >
-          <img
+          <img onClick={() => handileSinglePage(work)}
             src={work.image1}
             alt="Placeholder"
-            className="rounded-t-lg object-cover  w-full"
+            className="rounded-t-lg object-cover cursor-pointer  w-full"
           />
         </p>
       </div>
       <div className="col-span-3 row-span-1">
         <div className="flex align-bottom flex-col leading-none p-2 md:px-4">
           <div className="flex flex-row justify-between items-center">
-            <p
+            <p onClick={()=>navigate(`/freelancer/${work.user._id}`)}
               className="cursor-pointer flex items-center no-underline  hover:underline text-black" 
             >
               <div className=" w-17 h-7 ">
@@ -93,7 +64,7 @@ function WorkList() {
                 src={work.user.profile ? work.user.profile :"https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg"}
               />
               </div>
-              <motion.span variants={fadeIn("down",(index - 1) / 4 * 0.5 + 0.1)} className="ml-2 font-bold text-sm">{work.user.username}</motion.span>
+              <motion.span  variants={fadeIn("down",(index - 1) / 4 * 0.5 + 0.1)} className="ml-2 font-bold text-sm">{work.user.username}</motion.span>
             </p>
           </div>
         </div>

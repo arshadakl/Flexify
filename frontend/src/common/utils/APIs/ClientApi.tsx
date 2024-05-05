@@ -207,3 +207,14 @@ export const getRatingAPI = async (workId: string) => {
     throw errorMessage;
   }
 };
+
+
+export const getfreelancerratingAPI = async (id: string) => {
+  try {
+    const response = await clientAPI.get(`/getfreelancerrating?id=${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};

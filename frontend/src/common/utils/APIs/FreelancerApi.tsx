@@ -47,8 +47,10 @@ const AxiosInterceptor: React.FC = () => {
   useEffect(() => {
     const requestInterceptor = freelancersAPI.interceptors.request.use(
       (config) => {
-        if (user) {
+        if (user.freelancer) {
           config.headers['Authorization'] = user.freelancer.token ;
+        }else{
+          config.headers['Authorization'] = "noToken" ;
         }
 
         return config;
@@ -243,10 +245,10 @@ export const uploadProfileImage = async (formData: FormData) => {
 export const forgotPassword = async (email: string) => {
   try {
     const response = await freelancersAPI.post('/forgotpassword', { email });
-    console.log(response);
-
     return response.data;
-  } catch (error: unknown) {
+  } catch (error: any) {
+    console.log(error);
+    
     const errorMessage = handleError(error);
     throw errorMessage;
   }
@@ -465,6 +467,21 @@ export const downloadFileAPI = async (pathurl:string) => {
     throw errorMessage;
   }
 };
+
+
+
+export const videocallAuthAPI = async (id:any)=>{
+  try {
+      const response = await freelancersAPI.get(`/videocall-auth?id=${id}`);
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
 
 
 export default AxiosInterceptor;

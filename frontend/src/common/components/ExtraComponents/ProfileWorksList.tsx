@@ -5,7 +5,7 @@ import { ShortenDescription } from "../../utils/Services/shortenDescription";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { initFlowbite } from "flowbite";
-import {motion} from 'framer-motion'
+import { motion } from "framer-motion";
 import { fadeIn } from "../../animations/Frame_Motion/variants";
 
 function ProfileWorksList() {
@@ -34,10 +34,9 @@ function ProfileWorksList() {
 
   return (
     <>
-        <div className="font-poppins w-full flex min-h-full">
+      <div className="font-poppins w-full flex min-h-full">
         <h1 className="underline py-3 font-semibold">Latest Post</h1>
-
-        </div>
+      </div>
 
       <div className="w-full flex  min-h-full  flex-wrap gap-5 ">
         {/* cards */}
@@ -47,12 +46,17 @@ function ProfileWorksList() {
             <p className="text-[11px] font-normal">Create a new Work Post</p>
           </div>
         </div> */}
-        {wordData?.slice(0,2)?.map((work,index) => {
-    initFlowbite();
+        {wordData?.slice(0, 2)?.map((work, index) => {
+          initFlowbite();
 
           return (
-            <motion.div variants={fadeIn("up",index*0.1)} initial="hidden" whileInView={"show"} viewport={{once:false}}
-            className="w-2/6 pb-5 relative  bg-white  border border-l-stone-300 cursor-pointer rounded   shadow duration-150  hover:shadow">
+            <motion.div
+              variants={fadeIn("up", index * 0.1)}
+              initial="hidden"
+              whileInView={"show"}
+              viewport={{ once: false }}
+              className="w-2/6 pb-5 relative  bg-white  border border-l-stone-300 cursor-pointer rounded   shadow duration-150  hover:shadow"
+            >
               <img
                 className="w-full  object-cover object-center"
                 src={work.image1}
@@ -82,7 +86,11 @@ function ProfileWorksList() {
               />
 
               {/* modal */}
-              <motion.div variants={fadeIn("down",0.01)} initial="hidden" whileInView={"show"} viewport={{once:false}}
+              <motion.div
+                variants={fadeIn("down", 0.01)}
+                initial="hidden"
+                whileInView={"show"}
+                viewport={{ once: false }}
                 id={work?._id}
                 tabIndex={-1}
                 className="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full"
@@ -154,7 +162,11 @@ function ProfileWorksList() {
         })}
 
         {/* cards */}
-        <motion.div variants={fadeIn("up",0.4)} initial="hidden" whileInView={"show"} viewport={{once:false}}
+        <motion.div
+          variants={fadeIn("up", 0.4)}
+          initial="hidden"
+          whileInView={"show"}
+          viewport={{ once: false }}
           onClick={() => navigate("/post")}
           className="w-3/12 py-5  flex flex-col bg-white hover:bg-slate-50 m-1 border border-l-stone-300 cursor-pointer rounded   shadow duration-150  hover:shadow"
         >

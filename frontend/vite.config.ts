@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import * as tailwindcss from 'tailwindcss'; // Import as namespace
 import autoprefixer from 'autoprefixer';
 
+
 export default defineConfig({
   plugins: [react()],
   css: {
@@ -12,4 +13,8 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'global': {},
+  },
+
 });

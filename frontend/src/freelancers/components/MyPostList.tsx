@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { getAllPost } from "../../common/utils/APIs/FreelancerApi";
+import { deleteWork, getAllPost } from "../../common/utils/APIs/FreelancerApi";
 import { IWork } from "../../interfaces/Freelancer";
 import PostCards from "./PostCards";
 import { motion } from "framer-motion";
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
+import { toast } from "sonner";
 
 function MyPostList() {
   const [activePost, setActivePost] = useState<IWork[]>();
@@ -19,6 +20,21 @@ function MyPostList() {
     };
     fetchActivePost();
   }, []);
+
+  const handdileDelete = async (id: any) => {
+    const response = await deleteWork(id);
+    if (response.status) {
+      const response = await getAllPost();
+      if (response.status) {
+        setActivePost(response.active);
+        setSuspendedPost(response.suspended);
+      }
+      toast.success("Work deleted successfully");
+    } else {
+      toast.warning(response.error);
+    }
+  };
+
   useEffect(() => {
     console.log(activePost);
   }, [activePost]);
@@ -53,7 +69,7 @@ function MyPostList() {
                         Active
                       </span>
                       <span className="inline-flex items-center justify-center px-2 ml-3 text-sm font-medium text-gray-800 bg-gray-200 rounded-full dark:bg-gray-700 dark:text-gray-300">
-                        Pro
+                        {activePost?.length}
                       </span>
                     </div>
                   </li>
@@ -68,7 +84,7 @@ function MyPostList() {
                         Suspended
                       </span>
                       <span className="inline-flex items-center justify-center w-3 h-3 p-3 ml-3 text-sm font-medium text-blue-600 bg-blue-200 rounded-full dark:bg-blue-900 dark:text-blue-200">
-                        3
+                        {suspendedPost?.length}
                       </span>
                     </div>
                   </li>
@@ -87,7 +103,7 @@ function MyPostList() {
               className=" border flex flex-col gap-5  "
             >
               {activePost && suspendedPost && (
-                <PostCards tab={tab}
+                <PostCards handdileDelete={handdileDelete} tab={tab}
                   posts={tab == "active" ? activePost : suspendedPost}
                 />
               )}
