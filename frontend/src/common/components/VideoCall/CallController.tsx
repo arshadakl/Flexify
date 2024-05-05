@@ -19,6 +19,7 @@ import {
 import '@stream-io/video-react-sdk/dist/css/styles.css';
 import store from '../../../Redux/store';
 import { videocallAuthAPI } from '../../utils/APIs/FreelancerApi';
+import VideoLoading from '../ExtraComponents/VideoLoading';
 
 
 type ExtendedUser = User & {
@@ -45,7 +46,7 @@ const VideoCallComponent: React.FC = () => {
           const user: ExtendedUser = {
             id: userId,
             name: freelancer?.username as string,
-            image: 'https://getstream.io/random_svg/?id=oliver&name=Oliver',
+            image: freelancer?.profile as string,
           };
           const token = response.token as string;
           
@@ -68,7 +69,7 @@ const VideoCallComponent: React.FC = () => {
   console.log(call,client ,"this is the client and caller");
   
   if (!call || !client) {
-    return <div>Loading...</div>;
+    return <div><VideoLoading type="start"/></div>;
   }
 
   return (
@@ -95,7 +96,7 @@ const MyUILayout: React.FC = () => {
   // const remoteParticipants = useRemoteParticipants();
 
   if (callingState !== CallingState.JOINED) {
-    return <div>Loading...</div>;
+    return <div><VideoLoading type="end"/></div>;
   }
 
   return (
