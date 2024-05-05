@@ -409,6 +409,39 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
     
+
+
+    async getAverageRatingForFreelancer(freelancerId: string): Promise<number | null> {
+        try {
+            const works = await WorkModel.find({ user: freelancerId });
+    
+            if (works.length === 0) {
+                return null;
+            }
+    
+            let totalRating = 0;
+            let totalCount = 0;
+    
+            works.forEach(work => {
+                if (work.ratings && work.ratings.length > 0) {
+                    work.ratings.forEach(rating => {
+                        totalRating += rating.value / 10; 
+                        totalCount++;
+                    });
+                }
+            });
+    
+            const averageRating = (totalRating / totalCount) * 10;
+    
+            return averageRating;
+    
+        } catch (error) {
+            console.log(error);
+    
+            throw new Error(`Error getting average rating for freelancer: ${error}`);
+        }
+    }
+    
     
 
 

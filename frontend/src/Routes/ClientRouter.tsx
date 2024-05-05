@@ -16,11 +16,13 @@ function ClientRouter() {
         <Route path="/success" element={<PaymentSuccces />} />
         <Route path="/fail" element={<PaymentSuccces />} />
         <Route path="/dashboard" element={<DashboardClient />} />
+
         <Route path="/orders" element={<OrdersPage />} />
         <Route path="/transactions" element={<TransactionsClient />} />
         <Route path="/orders/requirements" element={<OrderRequirements />} />
         <Route path="/orders/submission" element={<Submissions />} />
         <Route path="/orders/chat/:id" element={<ChatPage />} />
+
       </Route>
     </Routes>
   );

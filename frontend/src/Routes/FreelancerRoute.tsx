@@ -18,6 +18,8 @@ import EditPost from "../Pages/freelancer/EditPost";
 import OrderManagment from "../Pages/freelancer/OrderManagment";
 import RequirementsShow from "../Pages/freelancer/RequirementsShow";
 import DualProtect from "../freelancers/components/DualProtect";
+import PublicProfile from "../Pages/freelancer/PublicProfile";
+import VideoCallPage from "../Pages/client/VideoCall";
 
 function FreelancerRoute() {
   return (
@@ -26,6 +28,7 @@ function FreelancerRoute() {
       <Route path="/test" element={<RoleLoading />} />
       <Route path="works" element={<Works />} />
       <Route path="works/single/:id" element={<SinglePage />} />
+      <Route path="freelancer/:id" element={<PublicProfile />} />
 
       <Route element={<FreelancerLogoutProtect />}>
         <Route path="login" element={<Login />} />
@@ -36,6 +39,8 @@ function FreelancerRoute() {
 
       <Route element={<DualProtect />}>
         <Route path="profile" element={<FreelancerProfile />} />
+        <Route path="/videocall" element={<VideoCallPage />} />
+
       </Route>
       <Route element={<FreelancerProtect />}>
         <Route path="post" element={<CreatePost />} />

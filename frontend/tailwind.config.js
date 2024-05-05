@@ -13,6 +13,7 @@ module.exports = {
       },
       fontFamily: {
         poppins: ['Poppins', 'sans-serif'],
+        Outfit: ['Outfit', 'sans-serif'],
       },
       height: (theme) => ({
         '50vh': '50vh',

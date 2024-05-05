@@ -384,6 +384,15 @@ export class ClientService {
             throw new Error(error.message)
         }
     }
+    //addRating service
+    async getAverageRatingForFreelancer(freelancerId: string): Promise<number | null>{
+        try {
+            const response = await this.clientRepository.getAverageRatingForFreelancer(freelancerId)            
+            return response
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 
      
 }

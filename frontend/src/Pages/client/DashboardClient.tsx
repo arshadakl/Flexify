@@ -4,10 +4,11 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
 import RecivedWork from "../../freelancers/components/RecivedWork";
+import TransactionsTable from "../../freelancers/components/Transactions";
 
 
 function DashboardClient() {
-  const [tab,setTab] = useState<string>("Work Submissions")
+  const [tab,setTab] = useState<string>("Transactions")
   initFlowbite()
   return (
     <>
@@ -28,7 +29,7 @@ function DashboardClient() {
       data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
       role="tablist"
     >
-      <li className="me-2" role="presentation">
+      {/* <li className="me-2" role="presentation">
         <motion.button   variants={fadeIn("down",0.1)}  initial="hidden" whileInView={"show"} viewport={{once:true}}
           className="inline-block p-4 border-b-2 rounded-t-lg"
           id="profile-styled-tab"
@@ -66,7 +67,7 @@ function DashboardClient() {
         >
           Works
         </motion.button>
-      </li>
+      </li> */}
       <li role="presentation">
         <motion.button  variants={fadeIn("down",0.4)} initial="hidden" whileInView={"show"} viewport={{once:true}}
           className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
@@ -102,7 +103,7 @@ function DashboardClient() {
       Analytics
       </p>
     </div>
-    <div
+    {/* <div
       className="hidden   bg-gray-50 dark:bg-gray-800"
       id="styled-settings"
       role="tabpanel"
@@ -112,16 +113,14 @@ function DashboardClient() {
       Works
       </p>
       
-    </div>
+    </div> */}
     <div
       className="hidden   bg-gray-50 dark:bg-gray-800"
       id="styled-contacts"
       role="tabpanel"
       aria-labelledby="contacts-tab"
     >
-      <p className="text-sm py-5 text-gray-500 dark:text-gray-400">
-      Transactions
-      </p>
+      <TransactionsTable/>
     </div>
   </div>
 </>

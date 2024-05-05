@@ -1,31 +1,43 @@
-import { useParams } from "react-router-dom";
-import ChatBox from "../../freelancers/components/ChatBox";
 import { useEffect, useState } from "react";
-import { getFreelancerDataAPI } from "../../common/utils/APIs/ClientApi";
-// import { Freelancer } from "../../interfaces/Freelancer";
-// import animationData from "../../common/animations/gradient-animation2.json";
-// import Lottie from "react-lottie";
+import { useParams } from "react-router-dom";
+import { getFreelancerDataAPI, getfreelancerratingAPI } from "../../common/utils/APIs/ClientApi";
+import NavBar from "../../common/components/Navbar/NavBar";
+import { Star } from "../../common/components/ExtraComponents/Star";
+// import { toast } from "sonner";
 
-function ChatingComponent() {
-  const { id } = useParams();
-  const [data, setData] = useState<any>();
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await getFreelancerDataAPI(id as string);
-      if (response.status) {
-        setData(response.details);
-        console.log(response.details);
-      }
+function PublicProfile() {
+
+    const { id } = useParams();
+    const [data, setData] = useState<any>();
+    const [rating, setRating] = useState(0);
+
+    const handleSelect = async() => {
+    //   setRating(index * 2);
+    //   const response = await addRatingAPI(work.workId,(index * 2))
+    //   if(response.status){
+    //     toast.success("Thank you for your rating")
+    //   }
     };
-    fetchData();
-  }, [id]);
-
-  
-
+    useEffect(() => {
+      const fetchData = async () => {
+        const response = await getFreelancerDataAPI(id as string);
+        if (response.status) {
+          setData(response.details);
+          console.log(response.details);
+        }
+        const ratingResponse = await getfreelancerratingAPI(id as string)
+        if(ratingResponse.status){
+            setRating(ratingResponse.rate)
+        }
+      };
+      fetchData();
+    }, [id]);
   return (
     <>
-      <div className="flex md:flex-row flex-col  text-gray-900 w-screen md:max-h-screen md:overflow-hidden  gap-1 px-10 pt-32">
-        <div className="md:w-2/5 w-1/1 ">
+    <NavBar bg="white" fixed="none" />
+
+    <div>
+    <div className="md:w-6/5 w-1/1 my-5">
           <div className="w-full  md:max-h-screen md:overflow-y-scroll md:pb-10 ">
           <div className=" w-11/12 font-poppins md:1/2  items-center  mx-auto bg-slate-50/80 pb-7   rounded  dark:bg-gray-800 dark:border-gray-700 ">
             {/* <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"> */}
@@ -64,6 +76,18 @@ function ChatingComponent() {
                 <i className="fa-solid fa-badge-check text-blue-500" />{" "}
                 Freelancer
               </p>
+              <div className="flex">
+              <>
+                  {[...Array(5)].map((_, index) => (
+                    <Star
+                    key={index}
+                    selected={index < rating / 2}
+                    onSelect={() => handleSelect()}
+                    />
+                  ))}
+                  {/* <p className="text-sm">Rate your Work : {rating}/10</p> */}
+                  </>
+              </div>
               <p className="text-base font-medium text-blue-900 ">
                 <i className="fa-solid fa-at " /> {data?.email}
               </p>
@@ -121,13 +145,9 @@ function ChatingComponent() {
           </div>
           </div>
         </div>
-
-        <div className="md:w-3/5 w-1/1">
-          {data && <ChatBox client={data} />}
-        </div>
-      </div>
+    </div>
     </>
-  );
+  )
 }
 
-export default ChatingComponent;
+export default PublicProfile

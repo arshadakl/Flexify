@@ -38,6 +38,7 @@ router.get('/getConversations',protector,chatController.getConversationsByUser.b
 router.post('/reportpost',protector,clientController.reportPost.bind(clientController));
 router.post ('/addRating',protector,clientController.addRatingController.bind(chatController));
 router.get('/getrating',protector,clientController.getRatingByUserAndWork.bind(chatController));
+router.get('/getfreelancerrating',clientController.getAverageRatingForFreelancer.bind(chatController));
 
 
 

@@ -26,4 +26,5 @@ export interface ClientRepository {
     submitPostReport(formData:IReport):Promise<IReport | null>
     addRating(workId: string, userId: string, ratingValue: number): Promise<boolean>
     getRatingByUserAndWork(userId: string, workId: string): Promise<number>
+    getAverageRatingForFreelancer(freelancerId: string): Promise<number | null>
 }

@@ -15,6 +15,7 @@ import AxiosInterceptor, {
 } from "../../utils/APIs/FreelancerApi";
 import { toast } from "sonner";
 import RoleLoading from "../../animations/RoleLoading";
+import CallNotification from "../ExtraComponents/CallNotification";
 
 function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
   const [role, setRole] = useState(null);
@@ -112,7 +113,7 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
               />
             </svg>
           </button>
-
+<CallNotification/>
           <div
             className={`${
               isDropdown ? "" : "hidden"
@@ -282,10 +283,10 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                           </motion.li>
                           <motion.li>
                             <p
-                              onClick={() => navigate("/client/transactions")}
+                              onClick={() => navigate("/client/dashboard")}
                               className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                             >
-                              Transactions
+                              Dashboard
                             </p>
                           </motion.li>
                               </>}
