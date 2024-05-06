@@ -307,73 +307,7 @@ function ChatBox({ client }: { client: any }) {
         </form>
       </div>
 
-      {/* <div
-        style={{ zIndex: 100 }}
-        className="p-5 bg-gray-700 absolute w-96  top-20 left-10"
-      > */}
-      {/* {ring && (
-        <motion.div
-          variants={fadeIn("down", 0.2)}
-          initial="hidden"
-          whileInView={"show"}
-          viewport={{ once: true }}
-          id="toast-notification"
-          style={{ zIndex: 100 }}
-          className="  bg-green-600 backdrop-filter backdrop-blur-lg bg-opacity-5 border  fixed top-10 left-10 right-0 w-96 p-4 text-gray-900  rounded-lg shadow dark:bg-gray-800 dark:text-gray-300"
-          role="alert"
-        >
-          <div className="flex items-center mb-3">
-            <span className="mb-1 text-sm font-semibold text-gray-900 dark:text-white">
-              <i className="fa-thin fa-circle-video fa-shake font-medium" />{" "}
-              Video Conference Request
-            </span>
-          </div>
-          <div className="flex items-center">
-            <div className="relative inline-block shrink-0 fa-shake">
-              <img
-                className="w-12 h-12 rounded-full"
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKOvkjAOTboz-CFuaaD75o0DGnuDoQHV9mzENNm_uxbg&s"
-                alt="Jese Leos image"
-              />
-              <span className="absolute bottom-0 right-0 inline-flex items-center justify-center w-6 h-6 text-blue-600 rounded-full">
-                <i className="fa-solid fa-circle-video" />
-
-                <span className="sr-only">Message icon</span>
-              </span>
-            </div>
-            <div className="ms-3 text-sm font-normal">
-              <div className="text-sm font-semibold text-gray-900 dark:text-white">
-                Arshad
-              </div>
-              <div className="text-sm font-normal">Incoming call</div>
-              <span className="text-xs font-medium text-blue-600 dark:text-blue-500">
-                Answer if available.
-              </span>
-            </div>
-          </div>
-          <>
-            <div className="grid grid-cols-2 gap-2 my-3">
-              <div>
-                <a
-                  href="#"
-                  className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800"
-                >
-                  Accept
-                </a>
-              </div>
-              <div>
-                <p
-                  onClick={rejectCall}
-                  className="inline-flex justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-600 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
-                >
-                  Reject
-                </p>
-              </div>
-            </div>
-          </>
-        </motion.div>
-      )} */}
-      {/* </div> */}
+      
       <>
         <div
           id="default-modal"

@@ -20,12 +20,13 @@ import RequirementsShow from "../Pages/freelancer/RequirementsShow";
 import DualProtect from "../freelancers/components/DualProtect";
 import PublicProfile from "../Pages/freelancer/PublicProfile";
 import VideoCallPage from "../Pages/client/VideoCall";
+import VideoLoading from "../common/components/ExtraComponents/VideoLoading";
 
 function FreelancerRoute() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/test" element={<RoleLoading />} />
+      <Route path="/test" element={<VideoLoading type="start" />} />
       <Route path="works" element={<Works />} />
       <Route path="works/single/:id" element={<SinglePage />} />
       <Route path="freelancer/:id" element={<PublicProfile />} />
