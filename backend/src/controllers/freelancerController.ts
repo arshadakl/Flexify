@@ -664,7 +664,7 @@ export class FreelancerController {
     async genarateVideoCallToken(req: Request, res: Response): Promise<void> {
         try {
             const userId = req.query.id
-            
+            if(!userId) throw new Error("id is Missing")
             const  api_secret = process.env.STREEM_SECRET
             console.log(api_secret, userId,"called");
             if(api_secret){
