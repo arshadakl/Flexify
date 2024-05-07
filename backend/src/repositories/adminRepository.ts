@@ -38,5 +38,8 @@ export interface AdminRepository {
 
     getAllSubmissions(): Promise<ISubmissions[] | null>
     GetRepotedPost(): Promise<IReport[]>
+
+   getDashboardChartData(timeFrame: 'last7days' | 'last12months' | 'last5years'):Promise<any>
+   getTopFreelancers():Promise<any>
 }
 

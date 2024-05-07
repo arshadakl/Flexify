@@ -264,6 +264,16 @@ export class AdminController {
         }
     }
 
+     //get all Flagged Postes
+    async GetDashboardChartData(req: Request, res: Response): Promise<any> {
+        try {
+           const responseData = await this._adminService.getDashboardChartData()
+            res.status(200).json({status:true,chartData:responseData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

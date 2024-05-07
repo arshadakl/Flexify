@@ -75,6 +75,8 @@ export const initializeSocket = (server: HTTPServer) => {
         socket.on('notRespond', async ({ senderId, receiverId, name }) => {
             io.to(receiverId).emit('call-noResponse');
         });
+
+        
         // // manage messages 
         // socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
         //     // Save the message to the database

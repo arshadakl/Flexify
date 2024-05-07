@@ -24,4 +24,5 @@ export interface AdminServices{
 
     getAllSubmissions():Promise<ISubmissions[] | null>
     GetRepotedPost():Promise<IReport[]> 
+    getDashboardChartData():Promise<any>
 }

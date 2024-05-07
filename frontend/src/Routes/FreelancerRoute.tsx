@@ -11,7 +11,7 @@ import ForgotPasswordPage from "../Pages/ForgotPassword/ForgotPasswordPage";
 import CreatePost from "../Pages/freelancer/CreatePost";
 import Works from "../Pages/works/Works";
 import SinglePage from "../Pages/works/SinglePage";
-import RoleLoading from "../common/animations/RoleLoading";
+// import RoleLoading from "../common/animations/RoleLoading";
 import DashboardFreelancer from "../Pages/freelancer/Dashboard";
 import MyPosts from "../Pages/freelancer/MyPosts";
 import EditPost from "../Pages/freelancer/EditPost";

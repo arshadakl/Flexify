@@ -58,5 +58,6 @@ export interface Freelancer {
     description?: string;
     questionnaire: string[];
     amount: number;
-    isActive:boolean
+    isActive:boolean;
+    date?:number;
   }

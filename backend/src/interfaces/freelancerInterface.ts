@@ -16,6 +16,7 @@ export interface IWork extends Document {
   questionnaire: string[];
   amount: number;
   isActive: boolean;
+  date?:number
   user: string;
   ratings?: {
     user: Schema.Types.ObjectId | string;

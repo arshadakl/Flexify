@@ -85,32 +85,7 @@ function ChatBox({ client }: { client: any }) {
       });
     });
 
-    // Clean up on component unmount
-    return () => {
-      socket.off("newMessage");
-    };
-  }, []);
 
-  useEffect(() => {
-    chatBoxRef.current?.scrollTo({
-      top: chatBoxRef.current.scrollHeight,
-      behavior: "smooth",
-    });
-  }, [messages]);
-
-  useEffect(() => {
-    socket.on("call-offer", (name: string) => {
-      setRing(true);
-      setTimeout(() => {
-        socket.emit("call-noResponse", {
-          senderId: userId,
-          receiverId: client._id,
-        });
-        setRing(false);
-      }, 10000);
-    });
-
-    //rreject reposse
     socket.on("call-reject", () => {
       setCalling(true);
       setNoResponse(true);
@@ -121,6 +96,8 @@ function ChatBox({ client }: { client: any }) {
         CloseModal();
       }, 4000);
     });
+
+
 
     //rreject reposse
     socket.on("call-Accept", ({senderId,callId}:{senderId:string,callId:string}) => {
@@ -141,6 +118,47 @@ function ChatBox({ client }: { client: any }) {
         setNoResponse(false);
       }, 4000);
     });
+
+
+    // Clean up on component unmount
+    return () => {
+      socket.off("newMessage");
+    };
+  }, []);
+
+  useEffect(() => {
+    chatBoxRef.current?.scrollTo({
+      top: chatBoxRef.current.scrollHeight,
+      behavior: "smooth",
+    });
+  }, [messages]);
+
+  useEffect(() => {
+    // socket.on("call-offer", (name: string) => {
+    //   setRing(true);
+    //   setTimeout(() => {
+    //     socket.emit("call-noResponse", {
+    //       senderId: userId,
+    //       receiverId: client._id,
+    //     });
+    //     setRing(false);
+    //   }, 10000);
+    // });
+
+    //rreject reposse
+    // socket.on("call-reject", () => {
+    //   toast.warning("call rejected")
+    //   setCalling(true);
+    //   setNoResponse(true);
+    //   setTimeout(() => {
+    //     setCalling(false);
+    //     setNoResponse(false);
+    //     resetAllState();
+    //     CloseModal();
+    //   }, 4000);
+    // });
+
+    
   }, []);
 
   const sendMessage = (e: SyntheticEvent) => {

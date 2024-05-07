@@ -232,3 +232,13 @@ export const GetRepotedPostAPi = async()=>{
         throw errorMessage;
     }
 }
+
+export const getDashChart = async()=>{
+    try {
+        const response = await adminAPI.get('/dashboardchartdata')
+        return response.data        
+    } catch (error) {
+        const errorMessage = handleError(error);
+        throw errorMessage;
+    }
+}

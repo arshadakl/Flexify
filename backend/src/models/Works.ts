@@ -43,6 +43,10 @@ export const WorkSchema: Schema = new Schema({
     },
     description: String,
     questionnaire: [String],
+    date: {
+      type: Number,
+      default: Date.now,
+  },
     amount: {
       type: Number,
       required: true
