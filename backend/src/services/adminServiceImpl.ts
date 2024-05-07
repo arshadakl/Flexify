@@ -323,4 +323,13 @@ export class AdminServicesimple implements AdminServices {
         }
     }
 
+
+    async getProfit():Promise<any>{
+        try {
+            const profit = await this.adminRepository.getProfit()
+            return profit
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 }

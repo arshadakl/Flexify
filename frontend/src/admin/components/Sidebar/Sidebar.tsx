@@ -1,7 +1,8 @@
 import { useDispatch } from "react-redux";
 import { persistor } from "../../../Redux/store";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { logout} from "../../../Redux/Slices/adminSlice";
+import { useEffect, useState } from "react";
 
 
 function Sidebar() {
@@ -12,14 +13,26 @@ function Sidebar() {
     persistor.purge(); 
     navigate('/admin/login');
   }
+
+
+
+  const [currentDirectory, setCurrentDirectory] = useState('');
+
+  const location = useLocation();
+  useEffect(() => {
+    const pathname = location.pathname;
+    const parts = pathname.split('/');
+    setCurrentDirectory(parts[parts.length - 1]);
+  }, [location.pathname]);
+
   return (
     <>
-    <div className="flex flex-col items-center w-52 mt-14 pt-5 h-95vh overflow-hidden text-gray-400 bg-gray-900 ">
+    <div className="flex flex-col items-center w-52 mt-14 pt-5 h-95vh overflow-hidden text-gray-900 bg-slate-100 ">
  
   <div className="w-full px-2 ">
     <div className="flex flex-col items-center w-full mt-3  border-gray-700">
       <p
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='admin' && "bg-logo-green text-white" }`}
         onClick={()=>navigate('/admin')}
       >
         <svg
@@ -39,7 +52,7 @@ function Sidebar() {
         <span  className="ml-2 text-sm font-medium">Dasboard</span>
       </p>
       <p
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='users' && "bg-logo-green text-white" }`}
         onClick={()=>navigate('/admin/users')}
       >
         <i className="fa-light fa-users"></i>
@@ -47,7 +60,7 @@ function Sidebar() {
       </p>
       <p
       onClick={()=>navigate('/admin/category')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 hover:text-gray-200 hover:bg-gray-700 rounded"
+      className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='category' && "bg-logo-green text-white" }`}
         
       >
         <svg
@@ -67,7 +80,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Category</span>
       </p>
       <p onClick={()=>navigate('/admin/post')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='post' && "bg-logo-green text-white" }`}
         
       >
         <svg
@@ -87,7 +100,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Posts</span>
       </p>
       <p onClick={()=>navigate('/admin/orders')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='orders' && "bg-logo-green text-white" }`}
         
       >
        <i className="fa-sharp fa-regular fa-house-laptop" />
@@ -95,7 +108,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Orders</span>
       </p>
       <p onClick={()=>navigate('/admin/payments')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='payments' && "bg-logo-green text-white" }`}
         
       >
        <i className="fa-regular fa-credit-card" />
@@ -104,7 +117,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Transactions</span>
       </p>
       <p onClick={()=>navigate('/admin/submissions')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='submissions' && "bg-logo-green text-white" }`}
         
       >
        <i className="fa-duotone fa-cloud-word" />
@@ -112,7 +125,7 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Submissions</span>
       </p>
       <p onClick={()=>navigate('/admin/flagged-content')}
-        className="flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='flagged-content' && "bg-logo-green text-white" }`}
         
       >
        <i className="fa-duotone fa-flag" />
@@ -121,10 +134,10 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Flagged Content</span>
       </p>
     </div>
-    <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">
+    {/* <div className="flex flex-col items-center w-full mt-2 border-t border-gray-700">
       
       <a
-        className="relative flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-700 hover:text-gray-300"
+        className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='users' && "bg-logo-green text-white" }`}
         
       >
         <svg
@@ -144,10 +157,10 @@ function Sidebar() {
         <span className="ml-2 text-sm font-medium">Messages</span>
         <span className="absolute top-0 left-0 w-2 h-2 mt-2 ml-2 bg-indigo-500 rounded-full" />
       </a>
-    </div>
+    </div> */}
   </div>
   <a
-    className="flex items-center justify-center w-full h-16 mt-auto bg-gray-800 hover:bg-gray-700 hover:text-gray-300"
+    className="flex items-center justify-center w-full h-16 mt-auto bg-slate-200 hover:bg-slate-300 cursor-pointer hover:text-gray-900"
     onClick={handleLogout}
   >
     <svg

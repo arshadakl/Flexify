@@ -662,7 +662,27 @@ export class AdminRepositoryImpl implements AdminRepository {
     
     
     
-    
+    async getProfit():Promise<any>{
+        try {
+            const profit = await Order.aggregate([
+                {
+                    $project: {
+                        amount: 1, // Include the amount field
+                        profit: { $multiply: ["$amount", 0.05] } // Calculate profit (5% of amount)
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalProfit: { $sum: "$profit" } // Sum up profits
+                    }
+                }
+            ]);
+            return profit
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
     
     
     
