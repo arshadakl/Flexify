@@ -9,7 +9,7 @@ import { promises } from "dns";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { WorkModel } from "../models/Works";
 import { IWork } from "../interfaces/freelancerInterface";
-import { UpdateWriteOpResult } from "mongoose";
+import mongoose, { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Order } from "../models/Clients";
 import { TransactionModel } from "../models/Transaction";
@@ -613,26 +613,45 @@ export class AdminRepositoryImpl implements AdminRepository {
 
     async getTopFreelancers():Promise<any>{
         try {
-            const freelancers = await Freelancer.aggregate([
+            const freelancers = await Submissions.aggregate([
+                {
+                  $group: {
+                    _id: '$freelancerId',
+                    submissionsCount: { $sum: 1 }
+                  }
+                },
                 {
                   $lookup: {
-                    from: "submissions",
-                    localField: "_id",
-                    foreignField: "freelancerId",
-                    as: "submissions"
+                    from: 'freelancers',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'freelancer'
                   }
+                },
+                {
+                  $unwind: '$freelancer'
                 },
                 {
                   $project: {
                     _id: 0,
-                    username: 1,
-                    profile: 1,
-                    email: 1,
-                    submissionCount: { $size: "$submissions" }
+                    username: '$freelancer.username',
+                    email: '$freelancer.email',
+                    profile: '$freelancer.profile',
+                    submissionsCount: 1
                   }
+                },
+                {
+                  $sort: {
+                    submissionsCount: -1 // Sort in descending order
+                  }
+                },
+                {
+                  $limit: 10 // Limit the output to 10 documents
                 }
-              ])
+              ]);
               return freelancers
+            //   const res = await Submissions.find({ freelancerId:new mongoose.Types.ObjectId("661e98313b4154eee9d66a38") })
+            // return res
         } catch (error:any) {
             throw new Error(error.message)
         }

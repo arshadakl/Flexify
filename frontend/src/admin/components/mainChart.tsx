@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { ResponsiveLine } from "@nivo/line";
-import { getDashChart } from "../../common/utils/APIs/AdminApi";
+import { getDTopFreelancers, getDashChart } from "../../common/utils/APIs/AdminApi";
+import { SmallProfilePulse } from "../../common/components/ExtraComponents/SkeletonComponent";
 
 interface MyDataPoint {
   id: string;
   data: { x: string; y: number }[];
 }
 
+export 
 function MainChart() {
   const [myData, setMyData] = useState<MyDataPoint[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -116,4 +118,67 @@ function MainChart() {
   );
 }
 
-export default MainChart;
+// export default MainChart;
+
+
+
+export function TopFreelancers() {
+  const [freelancers,setFreelancers] = useState<any[]>()
+  useEffect(() => {
+    const fetchData = async ()=>{
+      const response = await getDTopFreelancers()
+      if(response.status){
+        setFreelancers(response.list)
+      }
+    }
+    fetchData()
+  }, [])
+  
+  return (
+    <div className="w-full max-w-md p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div className="flex items-center justify-between mb-4">
+              <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                Top Freelancers
+              </h5>
+              <i className="fa-regular text-xl text-logo-green fa-medal" />
+
+            </div>
+            <div className="flow-root">
+              <ul
+                role="list"
+                className="divide-y divide-gray-200 dark:divide-gray-700"
+              >
+                {freelancers ? freelancers?.map((freelancer:any,index:number)=>{
+                  return(
+                    <li className="py-3 sm:py-4" key={index}>
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <img
+                        className="w-8 h-8 rounded-full"
+                        src={freelancer.profile}
+                        alt="Neil image"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0 ms-4">
+                      <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
+                        {freelancer.username}
+                      </p>
+                      <p className="text-sm text-gray-500 truncate dark:text-gray-400">
+                      {freelancer.email}
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
+                    {freelancer.submissionsCount}
+                    </div>
+                  </div>
+                </li>
+                  )
+                }) : <SmallProfilePulse/>}
+                
+              </ul>
+            </div>
+          </div>
+  )
+}
+
+// export {TopFreelancers,MainChart}

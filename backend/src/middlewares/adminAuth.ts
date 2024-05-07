@@ -22,7 +22,7 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
     console.log(token, "token in mid");
     
     if (!token) {
-      return res.status(401).json({ message: "Unauthorized: No token provided" });
+      return res.status(401).json({ message: "Unauthorized access" });
     }
 
     const jwtSecret = process.env.JWT_SECRET;

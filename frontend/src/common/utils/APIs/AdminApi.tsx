@@ -242,3 +242,13 @@ export const getDashChart = async()=>{
         throw errorMessage;
     }
 }
+
+export const getDTopFreelancers = async()=>{
+    try {
+        const response = await adminAPI.get('/topfreelancers')
+        return response.data        
+    } catch (error) {
+        const errorMessage = handleError(error);
+        throw errorMessage;
+    }
+}
