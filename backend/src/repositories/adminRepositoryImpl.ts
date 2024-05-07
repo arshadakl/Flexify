@@ -685,5 +685,38 @@ export class AdminRepositoryImpl implements AdminRepository {
     }
     
     
+    async getCountOfUsers():Promise<any>{
+        try {
+            const usersCount = await Freelancer.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } // Count the documents
+                    }
+                }
+            ]);
+            return usersCount
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getCountOfOrder():Promise<any>{
+        try {
+            const OrderCount = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } 
+                    }
+                }
+            ]);
+            return OrderCount
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+    
     
 }

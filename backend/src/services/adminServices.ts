@@ -27,4 +27,5 @@ export interface AdminServices{
     getDashboardChartData():Promise<any>
     getTopFreelancers():Promise<any>
     getProfit():Promise<any>
+    
 }

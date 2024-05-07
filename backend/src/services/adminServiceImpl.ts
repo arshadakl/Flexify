@@ -327,7 +327,9 @@ export class AdminServicesimple implements AdminServices {
     async getProfit():Promise<any>{
         try {
             const profit = await this.adminRepository.getProfit()
-            return profit
+            const countOFusers = await this.adminRepository.getCountOfUsers()
+            const countOfOrder = await this.adminRepository.getCountOfOrder()
+            return {profit,countOFusers, countOfOrder}
         } catch (error:any) {
             throw new Error(error.message)
         }
