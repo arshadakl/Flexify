@@ -629,10 +629,10 @@ export class FreelancerController {
     async downloadSubmissionFile(req: Request, res: Response): Promise<void> {
         try {
             console.log("data reached");
-            
+
             const url = req.query.url
             console.log(url);
-            
+
             const filename = path.basename(new URL(url as string).pathname);
             console.log(filename);
             const response = await axios.get(url as string, { responseType: 'stream' });
@@ -647,31 +647,44 @@ export class FreelancerController {
     }
 
 
-    
+
     async getTransactions(req: Request, res: Response): Promise<void> {
         try {
             const userId = req.user._id
             const transactions = await this._freelancerService.getTransaction(userId)
             console.log(transactions);
-            
+
             res.status(200).json({ status: 'success', details: transactions })
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }
     }
 
-    
+
     async genarateVideoCallToken(req: Request, res: Response): Promise<void> {
         try {
             const userId = req.query.id
-            if(!userId) throw new Error("id is Missing")
-            const  api_secret = process.env.STREEM_SECRET
-            console.log(api_secret, userId,"called");
-            if(api_secret){
+            if (!userId) throw new Error("id is Missing")
+            const api_secret = process.env.STREEM_SECRET
+            console.log(api_secret, userId, "called");
+            if (api_secret) {
                 const token = jwt.sign({ "user_id": userId }, api_secret);
-                res.status(200).json({ status: 'success', token: token,id:userId })
+                res.status(200).json({ status: 'success', token: token, id: userId })
             }
-            
+
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async getchartData(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.user._id
+            // const userId = "661e98313b4154eee9d66a38"
+            const response = await this._freelancerService.getchartData(userId as string)
+            res.status(200).json({ status: 'success', chartData:response})
+
+
         } catch (error: any) {
             res.json({ status: false, error: error.message })
         }

@@ -5,10 +5,11 @@ import { motion } from "framer-motion";
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
 import RecivedWork from "../../freelancers/components/RecivedWork";
 import TransactionsTable from "../../freelancers/components/Transactions";
+import DashChart from "../../freelancers/components/DashChart";
 
 
 function DashboardFreelancer() {
-  const [tab,setTab] = useState<string>("Open Work Orders")
+  const [tab,setTab] = useState<string>("Analytics")
   initFlowbite()
   return (
     <>
@@ -29,19 +30,7 @@ function DashboardFreelancer() {
       data-tabs-inactive-classes="dark:border-transparent text-gray-500 hover:text-gray-600 dark:text-gray-400 border-gray-100 hover:border-gray-300 dark:border-gray-700 dark:hover:text-gray-300"
       role="tablist"
     >
-      <li className="me-2" role="presentation">
-        <motion.button   variants={fadeIn("down",0.1)}  initial="hidden" whileInView={"show"} viewport={{once:true}}
-          className="inline-block p-4 border-b-2 rounded-t-lg"
-          id="profile-styled-tab"
-          data-tabs-target="#styled-profile"
-          type="button"
-          role="tab" onClick={()=>setTab("Open Work Orders")}
-          aria-controls="profile"
-          aria-selected="false"
-        >
-          Work Orders
-        </motion.button>
-      </li>
+      
       <li className="me-2" role="presentation">
         <motion.button   variants={fadeIn("down",0.2)} initial="hidden" whileInView={"show"} viewport={{once:true}}
           className="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
@@ -53,6 +42,19 @@ function DashboardFreelancer() {
           aria-selected="false"
         >
           Analytics
+        </motion.button>
+      </li>
+      <li className="me-2" role="presentation">
+        <motion.button   variants={fadeIn("down",0.1)}  initial="hidden" whileInView={"show"} viewport={{once:true}}
+          className="inline-block p-4 border-b-2 rounded-t-lg"
+          id="profile-styled-tab"
+          data-tabs-target="#styled-profile"
+          type="button"
+          role="tab" onClick={()=>setTab("Open Work Orders")}
+          aria-controls="profile"
+          aria-selected="false"
+        >
+          Work Orders
         </motion.button>
       </li>
       {/* <li className="me-2" role="presentation">
@@ -84,6 +86,17 @@ function DashboardFreelancer() {
     </ul>
   </div>
   <div id="default-styled-tab-content">
+    
+    <div
+      className="hidden py-5  bg-gray-50 dark:bg-gray-800"
+      id="styled-dashboard"
+      role="tabpanel"
+      aria-labelledby="dashboard-tab"
+    >
+      <p className="text-sm text-gray-500 dark:text-gray-400 px-5">
+      <DashChart/>
+      </p>
+    </div>
     <div
       className="hidden  bg-gray-50 dark:bg-gray-800"
       id="styled-profile"
@@ -92,16 +105,6 @@ function DashboardFreelancer() {
     >
       <RecivedWork/>
       
-    </div>
-    <div
-      className="hidden py-5  bg-gray-50 dark:bg-gray-800"
-      id="styled-dashboard"
-      role="tabpanel"
-      aria-labelledby="dashboard-tab"
-    >
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-      Analytics
-      </p>
     </div>
     {/* <div
       className="hidden   bg-gray-50 dark:bg-gray-800"

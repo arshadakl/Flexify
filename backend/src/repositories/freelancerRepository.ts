@@ -50,4 +50,7 @@ export interface FreelancerRepository {
     getRequirements(id: string):Promise<any>
 
     getUserAllTransaction(userId:string): Promise<ITransaction[] | null>
+
+    getChartData(freelancerId:string):Promise<any>
+    getStaticsData(freelancerId:string):Promise<any>
 }

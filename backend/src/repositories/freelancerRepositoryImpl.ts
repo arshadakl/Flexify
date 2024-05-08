@@ -9,7 +9,7 @@ import bcrypt from "bcrypt"
 import { Category, Subcategory } from "../models/Category";
 import { WorkModel } from "../models/Works";
 import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
-import { IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
+import {  ChartDataResponse, DailyData, IWork, SingleWorkDetails } from "../interfaces/freelancerInterface";
 import { UpdateWriteOpResult } from "mongoose";
 import mongoose from 'mongoose';
 import { Order, Requirement } from "../models/Clients";
@@ -201,7 +201,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         return await WorkModel.deleteOne({ _id: id });
     }
 
-    
+
 
     async getAllActiveWorksToDiscover(): Promise<any> {
         try {
@@ -264,24 +264,24 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                 // Sort works based on averageRating in descending order
                 { $sort: { averageRating: -1 } }
             ]);
-    
+
             console.log(works, "Sorted works"); // Log the sorted works to verify
-    
+
             return works;
-    
+
         } catch (error) {
             console.log(error);
-    
+
             throw new Error(`Error getting all active work details: ${error}`);
         }
     }
-    
 
 
-   async getWorkDetails(id: string):Promise<any>{
+
+    async getWorkDetails(id: string): Promise<any> {
         try {
             console.log(id);
-            
+
             const response = await WorkModel.aggregate([
                 { $match: { _id: new mongoose.Types.ObjectId(id) } },
                 {
@@ -345,8 +345,10 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
 
 
-   async getOrderDetails(id: string):Promise<any> {
+    async getOrderDetails(id: string): Promise<any> {
         try {
+            console.log(id,"new id");
+            
             const response = await Order.aggregate([
                 { $match: { _id: new mongoose.Types.ObjectId(id) } },
                 {
@@ -365,16 +367,16 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                             email: 1,
                             profile: 1,
                         },
-                        workId:1,
-                        freelancerId:1,
-                        clientId:1,
-                        category:1,
-                        amount:1,
+                        workId: 1,
+                        freelancerId: 1,
+                        clientId: 1,
+                        category: 1,
+                        amount: 1,
                         WorkDetails: 1,
-                        date:1,
+                        date: 1,
                         status: 1,
-                        requirementStatus:1,
-                        deadline:1
+                        requirementStatus: 1,
+                        deadline: 1
                     }
                 }
 
@@ -418,10 +420,10 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
                         date: 1,
                         status: 1,
                         requirementStatus: 1,
-                        deadline:1
+                        deadline: 1
 
                     }
-                },{
+                }, {
                     $sort: {
                         date: -1 // Sort by date in descending order (reverse order)
                     }
@@ -488,7 +490,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         }
     }
 
-    async createSubmission(data:any): Promise<ISubmissions | null> {
+    async createSubmission(data: any): Promise<ISubmissions | null> {
         try {
             const response = await Submissions.create(data)
             return response
@@ -497,22 +499,22 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         }
     }
 
-        
-    async changeWorkStatus(orderId:string,status:string):Promise<UpdateWriteOpResult>{
+
+    async changeWorkStatus(orderId: string, status: string): Promise<UpdateWriteOpResult> {
         try {
-            
-            const response = await Order.updateOne({_id:orderId}, {
-                $set:{status:status}
+
+            const response = await Order.updateOne({ _id: orderId }, {
+                $set: { status: status }
             })
-            
+
             return response
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error.message)
         }
     }
 
 
-    async getRequirements(id: string):Promise<any> {
+    async getRequirements(id: string): Promise<any> {
         try {
             const response = await Requirement.aggregate([
                 { $match: { orderId: new mongoose.Types.ObjectId(id) } },
@@ -557,16 +559,302 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
 
 
-    async getUserAllTransaction(userId:string): Promise<ITransaction[] | null> {
+    async getUserAllTransaction(userId: string): Promise<ITransaction[] | null> {
         try {
             const response = await TransactionModel.aggregate([
-                {$match:{user:userId}}
+                { $match: { user: userId } }
             ])
             return response
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
+
+
+    // async getChartData(freelancerId:string):Promise<any> {
+    //     try {
+    //       const endDate = new Date();
+    //       const startDate = new Date(endDate.getTime() - (7 * 24 * 60 * 60 * 1000)); // 7 days ago
+
+    //       const response = await Order.aggregate([
+    //         {
+    //           $match: {
+    //             freelancerId: new mongoose.Types.ObjectId(freelancerId),
+    //             date: { $gte: startDate, $lte: endDate }
+    //           }
+    //         },
+    //         {
+    //           $lookup: {
+    //             from: 'freelancers',
+    //             localField: 'freelancerId',
+    //             foreignField: '_id',
+    //             as: 'freelancer'
+    //           }
+    //         },
+    //         {
+    //           $unwind: '$freelancer'
+    //         },
+    //         {
+    //           $group: {
+    //             _id: {
+    //               day: { $dateToString: { format: '%Y-%m-%d', date: '$date' } }
+    //             },
+    //             orderCount: { $sum: 1 },
+    //             totalAmount: { $sum: '$amount' }
+    //           }
+    //         },
+    //         {
+    //           $project: {
+    //             _id: 0,
+    //             day: '$_id.day',
+    //             orderCount: 1,
+    //             totalAmount: 1
+    //           }
+    //         },
+    //         {
+    //           $sort: { day: 1 }
+    //         }
+    //       ]);
+
+    //       // Fill in missing days with zeros
+    //       const filledResponse = [];
+    //       for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    //         const dateString = d.toISOString().split('T')[0];
+    //         const dataForDay = response.find((data) => data.day === dateString);
+    //         filledResponse.push({
+    //           day: dateString,
+    //           orderCount: dataForDay ? dataForDay.orderCount : 0,
+    //           totalAmount: dataForDay ? dataForDay.totalAmount : 0
+    //         });
+    //       }
+
+    //       return filledResponse;
+    //     } catch (error:any) {
+    //       throw new Error(error.message);
+    //     }
+    //   }
+
+    
+    // async getChartData(freelancerId: string): Promise<ChartDataResponse[]> {
+    //     try {
+    //       const startDate = new Date();
+    //       startDate.setDate(startDate.getDate() - 7); // Set the start date to 7 days ago
+      
+    //       const aggregationResult: any[] = await Order.aggregate([
+    //         {
+    //           $match: {
+    //             freelancerId: new mongoose.Types.ObjectId(freelancerId),
+    //             date: { $gte: startDate.getTime() }
+    //           }
+    //         },
+    //         {
+    //           $lookup: {
+    //             from: 'freelancers',
+    //             localField: 'freelancerId',
+    //             foreignField: '_id',
+    //             as: 'freelancer'
+    //           }
+    //         },
+    //         { $unwind: '$freelancer' },
+    //         {
+    //           $group: {
+    //             _id: {
+    //               freelancerId: '$freelancer._id',
+    //               day: {
+    //                 $dateToString: {
+    //                   format: '%Y-%m-%d',
+    //                   date: { $toDate: '$date' }
+    //                 }
+    //               }
+    //             },
+    //             freelancerDetails: { $first: '$freelancer' },
+    //             orderCount: { $sum: 1 },
+    //             totalAmount: { $sum: '$amount' }
+    //           }
+    //         },
+    //         { $sort: { '_id.day': 1 } },
+    //         {
+    //           $group: {
+    //             _id: '$_id.freelancerId',
+    //             freelancerDetails: { $first: '$freelancerDetails' },
+    //             dailyData: {
+    //               $push: {
+    //                 day: '$_id.day',
+    //                 orderCount: '$orderCount',
+    //                 totalAmount: '$totalAmount'
+    //               }
+    //             }
+    //           }
+    //         }
+    //       ]).exec(); // Execute the aggregation pipeline
+      
+    //       // Helper function to generate a range of dates
+    //       const generateDateRange = (start: Date, end: Date): string[] => {
+    //         const dates: string[] = [];
+    //         let currentDate = new Date(start);
+    //         while (currentDate <= end) {
+    //           dates.push(currentDate.toISOString().split('T')[0]); // Format date as 'YYYY-MM-DD'
+    //           currentDate.setDate(currentDate.getDate() + 1);
+    //         }
+    //         return dates;
+    //       };
+      
+    //       // Generate the date range array
+    //       const dateRange = generateDateRange(startDate, new Date());
+      
+    //       // Map the aggregation result to the ChartDataResponse type
+    //       const chartDataResponses: ChartDataResponse[] = aggregationResult.map(item => {
+    //         // Initialize dailyData as an empty array if it's undefined
+    //         item.dailyData = item.dailyData || [];
+      
+    //         // Fill in missing days with zeros
+    //         const filledDailyData = dateRange.map(date => {
+    //             const existingData = item.dailyData.find((d: DailyData) => d.day === date);
+    //             return existingData || { day: date, orderCount: 0, totalAmount: 0 };
+    //           });
+      
+    //         // Replace dailyData with filledDailyData
+    //         item.dailyData = filledDailyData;
+      
+    //         return item as ChartDataResponse; // Cast the item to ChartDataResponse
+    //       });
+      
+    //       return chartDataResponses;
+    //     } catch (error: any) {
+    //       throw new Error(error.message);
+    //     }
+    //   }
+
+    async  getChartData(freelancerId: string): Promise<ChartDataResponse[]> {
+        try {
+          const startDate = new Date();
+          startDate.setDate(startDate.getDate() - 7); // Set the start date to 7 days ago
+      
+          const aggregationResult: any[] = await Order.aggregate([
+            {
+              $match: {
+                freelancerId: new mongoose.Types.ObjectId(freelancerId),
+                date: { $gte: startDate.getTime() }
+              }
+            },
+            {
+              $lookup: {
+                from: 'freelancers',
+                localField: 'freelancerId',
+                foreignField: '_id',
+                as: 'freelancer'
+              }
+            },
+            { $unwind: '$freelancer' },
+            {
+              $group: {
+                _id: {
+                  freelancerId: '$freelancer._id',
+                  day: {
+                    $dateToString: {
+                      format: '%Y-%m-%d',
+                      date: { $toDate: '$date' }
+                    }
+                  }
+                },
+                freelancerDetails: { $first: '$freelancer' },
+                orderCount: { $sum: 1 },
+                totalAmount: { $sum: '$amount' }
+              }
+            },
+            { $sort: { '_id.day': 1 } },
+            {
+              $group: {
+                _id: '$_id.freelancerId',
+                freelancerDetails: { $first: '$freelancerDetails' },
+                dailyData: {
+                  $push: {
+                    day: '$_id.day',
+                    orderCount: '$orderCount',
+                    totalAmount: '$totalAmount'
+                  }
+                }
+              }
+            }
+          ]).exec(); // Execute the aggregation pipeline
+      
+          // Helper function to generate a range of dates
+          const generateDateRange = (start: Date, end: Date): string[] => {
+            const dates: string[] = [];
+            let currentDate = new Date(start);
+            while (currentDate <= end) {
+              dates.push(currentDate.toISOString().split('T')[0]); // Format date as 'YYYY-MM-DD'
+              currentDate.setDate(currentDate.getDate() + 1);
+            }
+            return dates;
+          };
+      
+          // Generate the date range array
+          const dateRange = generateDateRange(startDate, new Date());
+      
+          // Map the aggregation result to the ChartDataResponse type
+          const chartDataResponses: ChartDataResponse[] = aggregationResult.map(item => {
+            // Initialize dailyData as an empty array if it's undefined
+            item.dailyData = item.dailyData || [];
+      
+            // Separate orderCount and totalAmount into their own arrays
+            const orderCountArray = dateRange.map(date => {
+              const existingData = item.dailyData.find((d: DailyData) => d.day === date);
+              return { day: date, orderCount: existingData ? existingData.orderCount : 0 };
+            });
+      
+            const amountArray = dateRange.map(date => {
+              const existingData = item.dailyData.find((d: DailyData) => d.day === date);
+              return { day: date, totalAmount: existingData ? existingData.totalAmount : 0 };
+            });
+      
+            // Construct the final response object
+            return {
+              _id: item._id,
+              freelancerDetails: item.freelancerDetails,
+              orderCount: orderCountArray,
+              Amount: amountArray
+            };
+          });
+      
+          return chartDataResponses;
+        } catch (error: any) {
+          throw new Error(error.message);
+        }
+      }
+      
+
+
+      async getStaticsData(freelancerId:string):Promise<any>{
+        try {
+            const result = await Order.aggregate([
+                { $match: { freelancerId: freelancerId } },
+                {
+                  $group: {
+                    _id: null,
+                    totalAmount: { $sum: '$amount' },
+                  },
+                },
+                {
+                  $project: {
+                    earnings: {
+                      $multiply: [{ $divide: [{ $multiply: ['$totalAmount', 95] }, 100] }, 1],
+                    },
+                    charges: { $multiply: [{ $divide: ['$totalAmount', 100] }, 5] },
+                  },
+                },
+              ]);
+            
+              if (result.length === 0) {
+                return { earnings: 0, charges: 0 };
+              }
+            
+              const { earnings, charges } = result[0];
+              return { earnings, charges };
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+      }
 
 
 }

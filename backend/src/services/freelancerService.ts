@@ -44,4 +44,5 @@ export interface freelancerService{
     getRequirementsServ(orderId: string): Promise<any>
 
     getTransaction(userId: string): Promise<ITransaction[] | null>
+    getchartData(freelancerId:string):Promise<any>
 }

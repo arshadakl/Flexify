@@ -5,7 +5,7 @@ import {
   getDashChart,
   getStatisticsAPI,
 } from "../../common/utils/APIs/AdminApi";
-import { SmallProfilePulse } from "../../common/components/ExtraComponents/SkeletonComponent";
+import { ChartPulse, SmallProfilePulse } from "../../common/components/ExtraComponents/SkeletonComponent";
 
 interface MyDataPoint {
   id: string;
@@ -38,7 +38,7 @@ export function MainChart() {
   return (
     <>
       {loading ? (
-        <p>Loading chart...</p>
+       <ChartPulse/>
       ) : (
         <div
           className="border border-gray-200 bg-white rounded-lg shadow"

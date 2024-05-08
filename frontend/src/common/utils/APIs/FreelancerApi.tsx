@@ -484,4 +484,18 @@ export const videocallAuthAPI = async (id:any)=>{
 
 
 
+export const getchartdataAPI = async ()=>{
+  try {
+      const response = await freelancersAPI.get(`/getchartdata`);
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+
+
 export default AxiosInterceptor;
