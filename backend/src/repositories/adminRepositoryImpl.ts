@@ -678,7 +678,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                     }
                 }
             ]);
-            return profit
+            return profit[0].totalProfit
         } catch (error:any) {
             throw new Error(error.message)
         }
@@ -695,7 +695,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                     }
                 }
             ]);
-            return usersCount
+            return usersCount[0].count
         } catch (error:any) {
             throw new Error(error.message)
         }
@@ -711,7 +711,28 @@ export class AdminRepositoryImpl implements AdminRepository {
                     }
                 }
             ]);
-            return OrderCount
+            return OrderCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+
+    async getCountOfPending():Promise<any>{
+        try {
+            const pendingCount = await Order.aggregate([
+                {
+                    $match: {
+                        status: "pending"
+                    }
+                },
+                {
+                    $count: "count"
+                }
+            ]);
+            console.log(pendingCount,"pending count ");
+            
+            return pendingCount[0].count
         } catch (error:any) {
             throw new Error(error.message)
         }

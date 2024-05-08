@@ -55,7 +55,7 @@ function Sidebar() {
         className={`flex cursor-pointer items-center w-full h-12 px-3 mt-2 rounded hover:bg-logo-green hover:text-white ${currentDirectory=='users' && "bg-logo-green text-white" }`}
         onClick={()=>navigate('/admin/users')}
       >
-        <i className="fa-light fa-users"></i>
+        <i className="fa-regular fa-user-group"/>
         <span  className="ml-2 text-sm font-medium">User Manage</span>
       </p>
       <p

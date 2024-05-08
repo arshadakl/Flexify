@@ -44,5 +44,6 @@ export interface AdminRepository {
    getProfit():Promise<any>
    getCountOfUsers():Promise<any>
    getCountOfOrder():Promise<any>
+   getCountOfPending():Promise<any>
 }
 

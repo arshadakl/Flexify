@@ -15,6 +15,7 @@ function Dashboard() {
           <TopFreelancers />
         </div>
       </div>
+      
     </div>
   );
 }
