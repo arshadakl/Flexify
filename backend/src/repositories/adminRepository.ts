@@ -41,5 +41,9 @@ export interface AdminRepository {
 
    getDashboardChartData(timeFrame: 'last7days' | 'last12months' | 'last5years'):Promise<any>
    getTopFreelancers():Promise<any>
+   getProfit():Promise<any>
+   getCountOfUsers():Promise<any>
+   getCountOfOrder():Promise<any>
+   getCountOfPending():Promise<any>
 }
 

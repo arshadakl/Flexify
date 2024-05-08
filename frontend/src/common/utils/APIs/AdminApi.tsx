@@ -252,3 +252,13 @@ export const getDTopFreelancers = async()=>{
         throw errorMessage;
     }
 }
+
+export const getStatisticsAPI = async()=>{
+    try {
+        const response = await adminAPI.get('/getstatistics')
+        return response.data        
+    } catch (error) {
+        const errorMessage = handleError(error);
+        throw errorMessage;
+    }
+}

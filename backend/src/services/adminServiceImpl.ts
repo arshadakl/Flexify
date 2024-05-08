@@ -323,4 +323,16 @@ export class AdminServicesimple implements AdminServices {
         }
     }
 
+
+    async getstatistics():Promise<any>{
+        try {
+            const profit = await this.adminRepository.getProfit()
+            const users = await this.adminRepository.getCountOfUsers()
+            const order = await this.adminRepository.getCountOfOrder()
+            const pending = await this.adminRepository.getCountOfPending()
+            return {profit,users, order,pending}
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 }

@@ -26,4 +26,5 @@ export interface AdminServices{
     GetRepotedPost():Promise<IReport[]> 
     getDashboardChartData():Promise<any>
     getTopFreelancers():Promise<any>
+    getstatistics():Promise<any>
 }

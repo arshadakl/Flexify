@@ -6,7 +6,7 @@ function DefaultLayout() {
   const navigate = useNavigate()
   return (
     <>
-     <nav className="fixed top-0 z-50 w-full bg-gray-900 border-gray-700 border-b-[1px]   dark:bg-gray-800 dark:border-gray-700">
+     <nav className="fixed top-0 z-50 w-full bg-slate-100 border-gray-300 border-b-[1px]   dark:bg-gray-800 dark:border-gray-700">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between px-5">
             <div className="flex items-center justify-start rtl:justify-end">
@@ -34,7 +34,7 @@ function DefaultLayout() {
               </button>
               <p onClick={()=>navigate('/admin')} className="flex ms-2 md:me-24">
                 <img
-                  src="/images/FlexifyWhite.png"
+                  src="/images/FlexifyBlack.png"
                   className="h-12 "
                   alt="FlowBite Logo"
                 />

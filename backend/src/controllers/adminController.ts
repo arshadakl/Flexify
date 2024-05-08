@@ -284,6 +284,17 @@ export class AdminController {
         }
     }
 
+     //get statistics profit..
+    async statistics(req: Request, res: Response): Promise<any> {
+        try {
+           const responseData = await this._adminService.getstatistics()
+
+            res.status(200).json({status:true,statistics:responseData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

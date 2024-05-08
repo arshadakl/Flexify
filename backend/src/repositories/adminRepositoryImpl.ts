@@ -662,7 +662,81 @@ export class AdminRepositoryImpl implements AdminRepository {
     
     
     
+    async getProfit():Promise<any>{
+        try {
+            const profit = await Order.aggregate([
+                {
+                    $project: {
+                        amount: 1, // Include the amount field
+                        profit: { $multiply: ["$amount", 0.05] } // Calculate profit (5% of amount)
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalProfit: { $sum: "$profit" } // Sum up profits
+                    }
+                }
+            ]);
+            return profit[0].totalProfit
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
     
+    
+    async getCountOfUsers():Promise<any>{
+        try {
+            const usersCount = await Freelancer.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } // Count the documents
+                    }
+                }
+            ]);
+            return usersCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getCountOfOrder():Promise<any>{
+        try {
+            const OrderCount = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } 
+                    }
+                }
+            ]);
+            return OrderCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+
+    async getCountOfPending():Promise<any>{
+        try {
+            const pendingCount = await Order.aggregate([
+                {
+                    $match: {
+                        status: "pending"
+                    }
+                },
+                {
+                    $count: "count"
+                }
+            ]);
+            console.log(pendingCount,"pending count ");
+            
+            return pendingCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
     
     
     
