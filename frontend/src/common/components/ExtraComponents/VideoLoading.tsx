@@ -1,8 +1,9 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import animationData from "../../animations/connecting.json";
 import animationData2 from "../../animations/call-ending.json";
 import Lottie from "react-lottie";
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function VideoLoading({ type }: { type: string }) {
   const defaultOptions = {
@@ -19,6 +20,7 @@ function VideoLoading({ type }: { type: string }) {
   useEffect(() => {
     if(type=="end"){
      setTimeout(() => {
+        // location.href="/"
         navigate('/')
      }, 5000);
     }

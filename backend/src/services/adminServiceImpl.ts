@@ -298,4 +298,41 @@ export class AdminServicesimple implements AdminServices {
         }
     }
 
+    //get all Dashboard chatt data
+    // ---------------
+    async getDashboardChartData():Promise<any> {
+        try {
+            const aggregatedData = await this.adminRepository.getDashboardChartData("last5years")
+            console.log(aggregatedData);
+            
+            return aggregatedData    
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    //get all get Top Freelancers List
+    // ---------------
+    async getTopFreelancers():Promise<any> {
+        try {
+            const aggregatedData = await this.adminRepository.getTopFreelancers()
+            console.log(aggregatedData);
+            
+            return aggregatedData    
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+    async getstatistics():Promise<any>{
+        try {
+            const profit = await this.adminRepository.getProfit()
+            const users = await this.adminRepository.getCountOfUsers()
+            const order = await this.adminRepository.getCountOfOrder()
+            const pending = await this.adminRepository.getCountOfPending()
+            return {profit,users, order,pending}
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
 }

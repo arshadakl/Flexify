@@ -9,7 +9,7 @@ import { promises } from "dns";
 import { AdminInter, DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { WorkModel } from "../models/Works";
 import { IWork } from "../interfaces/freelancerInterface";
-import { UpdateWriteOpResult } from "mongoose";
+import mongoose, { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { Order } from "../models/Clients";
 import { TransactionModel } from "../models/Transaction";
@@ -67,7 +67,7 @@ export class AdminRepositoryImpl implements AdminRepository {
     async getAllCategories(): Promise<any> {
         try {
             const data = await Category.find({})
-            if(!data) throw new Error("No category")
+            if (!data) throw new Error("No category")
             return data
 
         } catch (error: any) {
@@ -82,7 +82,7 @@ export class AdminRepositoryImpl implements AdminRepository {
             let count = await Category.find({}).countDocuments()
             let totalPages = Math.floor(count / limit)
             const data = await Category.find({}).skip(skip).limit(limit)
-            if(!data) throw new Error("No category")
+            if (!data) throw new Error("No category")
             return { data, totalPages }
 
         } catch (error: any) {
@@ -148,16 +148,16 @@ export class AdminRepositoryImpl implements AdminRepository {
 
     async suspendWork(id: string, action: any): Promise<UpdateWriteOpResult> {
         try {
-            const response = await WorkModel.updateOne({ _id: id }, { 
-                $set:{isActive: action}
-             });
-            if(!action){
-                const repotedPost = await ReportModel.updateOne({reported_post_id: id }, { 
-                    $set:{admin_review: true}
-                 })
+            const response = await WorkModel.updateOne({ _id: id }, {
+                $set: { isActive: action }
+            });
+            if (!action) {
+                const repotedPost = await ReportModel.updateOne({ reported_post_id: id }, {
+                    $set: { admin_review: true }
+                })
             }
             return response
-        } catch (error:any) {
+        } catch (error: any) {
             throw new Error(error)
         }
     }
@@ -181,13 +181,13 @@ export class AdminRepositoryImpl implements AdminRepository {
                         foreignField: "_id",
                         as: "user"
                     }
-                },{
+                }, {
                     $sort: {
                         date: -1 // Sort by date in descending order (reverse order)
                     }
                 }
             ]);
-            if(!response) throw new Error("No transaction found")
+            if (!response) throw new Error("No transaction found")
             return response
         } catch (error: any) {
             throw new Error(error.message)
@@ -222,13 +222,13 @@ export class AdminRepositoryImpl implements AdminRepository {
                         foreignField: "_id",
                         as: "workDetails"
                     }
-                },{
+                }, {
                     $sort: {
-                        date: -1 
+                        date: -1
                     }
                 }
             ]);
-            if(!response) throw new Error("No transaction found")
+            if (!response) throw new Error("No transaction found")
             return response
         } catch (error: any) {
             throw new Error(error.message)
@@ -256,7 +256,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                         as: "postDetails"
                     }
                 },
-                
+
                 { $unwind: "$postDetails" },
                 {
                     $lookup: {
@@ -266,7 +266,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                         as: "FreelancerDetails"
                     }
                 },
-               
+
                 {
                     $project: {
                         FreelancerDetails: {
@@ -293,7 +293,7 @@ export class AdminRepositoryImpl implements AdminRepository {
                             questionnaire: 1,
                             amount: 1,
                             isActive: 1,
-                            _id:1
+                            _id: 1
                         },
                         reported_post_id: 1,
                         reporter_id: 1,
@@ -306,10 +306,438 @@ export class AdminRepositoryImpl implements AdminRepository {
                 }
 
             ])
-            
+
             return response
         } catch (error: any) {
             throw new Error(error.message)
         }
     }
+
+
+    // async getDashboardChartData(): Promise<any> {
+    //     // Helper function to get the date 7 days ago
+    //     const getSevenDaysAgoDate = (): Date => {
+    //         const date = new Date();
+    //         date.setDate(date.getDate() - 7);
+    //         return date;
+    //     };
+    
+    //     try {
+    //         const sevenDaysAgo = getSevenDaysAgoDate();
+    
+    //         // Aggregation pipeline for Work Posts
+    //         const workPostsPromise = WorkModel.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }, isActive: true } },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+    //         // Aggregation pipeline for Work Purchases (Orders)
+    //         const workPurchasesPromise = Order.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }} },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+    //         // Aggregation pipeline for Work Submissions
+    //         const workSubmissionsPromise = Submissions.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }, status: "approved" } },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+    //         // Await all promises and return the results
+    //         const [workPosts, workPurchases, workSubmissions] = await Promise.all([
+    //             workPostsPromise,
+    //             workPurchasesPromise,
+    //             workSubmissionsPromise
+    //         ]);
+    
+    //         return { workPosts, workPurchases, workSubmissions };
+    //     } catch (error:any) {
+    //         console.error('Error getting dashboard chart data:', error);
+    //         return { error: error.message };
+    //     }
+    // }
+
+
+    // async getDashboardChartData(): Promise<any> {
+    //     // Helper function to get the date 7 days ago
+    //     const getSevenDaysAgoDate = (): Date => {
+    //         const date = new Date();
+    //         date.setDate(date.getDate() - 7);
+    //         return date;
+    //     };
+    
+    //     try {
+    //         const sevenDaysAgo = getSevenDaysAgoDate();
+    
+            
+    //         const workPostsPromise = WorkModel.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }, isActive: true } },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+            
+    //         const workPurchasesPromise = Order.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }} },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+           
+    //         const workSubmissionsPromise = Submissions.aggregate([
+    //             { $match: { date: { $gte: sevenDaysAgo.getTime() }, status: "approved" } },
+    //             { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+    //             { $sort: { _id: 1 } }
+    //         ]).exec();
+    
+    //         //am waiting for the all data
+    //         const [workPosts, workPurchases, workSubmissions] = await Promise.all([
+    //             workPostsPromise,
+    //             workPurchasesPromise,
+    //             workSubmissionsPromise
+    //         ]);
+    
+    //         // Create an array containing the last 7 days
+    //         const datesArray = [];
+    //         for (let i = 0; i < 7; i++) {
+    //             const date = new Date();
+    //             date.setDate(date.getDate() - i);
+    //             datesArray.push(date.toISOString().split('T')[0]);
+    //         }
+    
+    //         // Merge the data obtained from aggregation queries with the dates array
+    //         const mergedData = datesArray.map(date => {
+    //             const workPostEntry = workPosts.find(entry => entry._id === date) || { count: 0 };
+    //             const workPurchaseEntry = workPurchases.find(entry => entry._id === date) || { count: 0 };
+    //             const workSubmissionEntry = workSubmissions.find(entry => entry._id === date) || { count: 0 };
+    //             return {
+    //                 date,
+    //                 workPosts: workPostEntry.count,
+    //                 workPurchases: workPurchaseEntry.count,
+    //                 workSubmissions: workSubmissionEntry.count
+    //             };
+    //         });
+    
+    //         return mergedData;
+    //     } catch (error:any) {
+    //         console.error('Error getting dashboard chart data:', error);
+    //         return { error: error.message };
+    //     }
+    // }
+    
+
+//this is okay
+// _________
+    async getDashboardChartData(timeFrame: 'last7days' | 'last12months' | 'last5years'): Promise<any> {
+        try {
+            let startDate: Date;
+            let endDate: Date = new Date(); // By default, set the end date to today
+    
+            switch (timeFrame) {
+                case 'last7days':
+                    startDate = new Date();
+                    startDate.setDate(startDate.getDate() - 7);
+                    break;
+                case 'last12months':
+                    startDate = new Date();
+                    startDate.setFullYear(startDate.getFullYear() - 1);
+                    startDate.setDate(1); // Set the day to the 1st of the month
+                    break;
+                case 'last5years':
+                    startDate = new Date();
+                    startDate.setFullYear(startDate.getFullYear() - 5);
+                    startDate.setDate(1); // Set the day to the 1st of January
+                    break;
+                default:
+                    throw new Error('Invalid time frame specified.');
+            }
+    
+            // Debugging: Print out the start and end dates
+            console.log('Start Date:', startDate);
+            console.log('End Date:', endDate);
+    
+            // Convert startDate and endDate to Unix timestamps
+            const startTimestamp = startDate.getTime();
+            const endTimestamp = endDate.getTime();
+    
+            // Call the function to retrieve data based on the calculated start and end dates
+            const data = await this.getChartData(startTimestamp, endTimestamp);
+            return data;
+        } catch (error:any) {
+            console.error('Error getting dashboard chart data:', error);
+            return { error: error.message };
+        }
+    }
+    
+    private async getChartData(startDate: number, endDate: number): Promise<any> {
+        try {
+            // Add aggregation pipelines here based on start and end dates
+            // Ensure that dates are compared correctly
+            const workPostsPromise = WorkModel.aggregate([
+                { $match: { date: { $gte: startDate, $lte: endDate }, isActive: true } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+                { $sort: { _id: 1 } }
+            ]).exec();
+            
+            const workPurchasesPromise = Order.aggregate([
+                { $match: { date: { $gte: startDate, $lte: endDate } } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+                { $sort: { _id: 1 } }
+            ]).exec();
+            
+            const workSubmissionsPromise = Submissions.aggregate([
+                { $match: { date: { $gte: startDate, $lte: endDate }, status: "approved" } },
+                { $group: { _id: { $dateToString: { format: "%Y-%m-%d", date: { $toDate: "$date" } } }, count: { $sum: 1 } } },
+                { $sort: { _id: 1 } }
+            ]).exec();
+    
+            // Await all promises and return the result
+            const [workPosts, workPurchases, workSubmissions] = await Promise.all([
+                workPostsPromise,
+                workPurchasesPromise,
+                workSubmissionsPromise
+            ]);
+    
+            // Merge the data obtained from aggregation queries
+            const mergedData = this.mergeData(workPosts, workPurchases, workSubmissions);
+            return mergedData;
+        } catch (error) {
+            console.error('Error getting chart data:', error);
+            throw error;
+        }
+    }
+    
+    // Helper function to merge data from different sources
+    // mergeData(workPosts: any[], workPurchases: any[], workSubmissions: any[]): any[] {
+    //     // Initialize an array to hold the past seven days
+    //     const pastSevenDays = [];
+    //     const today = new Date();
+    //     for (let i = 0; i < 7; i++) {
+    //         const date = new Date(today);
+    //         date.setDate(today.getDate() - i);
+    //         pastSevenDays.unshift(date.toISOString().split('T')[0]); // Add date in YYYY-MM-DD format
+    //     }
+    
+    //     // Initialize the merged data array with counts set to 0
+    //     const mergedData = pastSevenDays.map(date => ({
+    //         date,
+    //         workPosts: 0,
+    //         workPurchases: 0,
+    //         workSubmissions: 0
+    //     }));
+    
+    //     // Iterate over the actual data and update the counts in the merged data
+    //     for (const post of workPosts) {
+    //         const index = pastSevenDays.indexOf(post._id);
+    //         if (index !== -1) {
+    //             mergedData[index].workPosts = post.count;
+    //         }
+    //     }
+    //     for (const purchase of workPurchases) {
+    //         const index = pastSevenDays.indexOf(purchase._id);
+    //         if (index !== -1) {
+    //             mergedData[index].workPurchases = purchase.count;
+    //         }
+    //     }
+    //     for (const submission of workSubmissions) {
+    //         const index = pastSevenDays.indexOf(submission._id);
+    //         if (index !== -1) {
+    //             mergedData[index].workSubmissions = submission.count;
+    //         }
+    //     }
+    
+    //     // console.log(mergedData);
+    //     return mergedData;
+    // }
+    mergeData(workPosts: any[], workPurchases: any[], workSubmissions: any[]): any {
+        // Initialize an array to hold the past seven days
+        const pastSevenDays = [];
+        const today = new Date();
+        for (let i = 0; i < 7; i++) {
+            const date = new Date(today);
+            date.setDate(today.getDate() - i);
+            pastSevenDays.unshift(date.toISOString().split('T')[0]); // Add date in YYYY-MM-DD format
+        }
+    
+        // Initialize the merged data arrays with counts set to 0
+        const mergedWorkPosts = pastSevenDays.map(date => ({
+            x:date,
+            y: 0
+            // workPosts: 0
+        }));
+    
+        const mergedWorkPurchases = pastSevenDays.map(date => ({
+            x:date,
+            y: 0
+            // workPurchases: 0
+        }));
+    
+        const mergedWorkSubmissions = pastSevenDays.map(date => ({
+            x:date,
+            y: 0
+            // workSubmissions: 0
+        }));
+    
+        // Iterate over the actual data and update the counts in the merged data
+        for (const post of workPosts) {
+            const index = pastSevenDays.indexOf(post._id);
+            if (index !== -1) {
+                mergedWorkPosts[index].y = post.count;
+                // mergedWorkPosts[index].workPosts = post.count;
+            }
+        }
+        for (const purchase of workPurchases) {
+            const index = pastSevenDays.indexOf(purchase._id);
+            if (index !== -1) {
+                mergedWorkPurchases[index].y = purchase.count;
+                // mergedWorkPurchases[index].workPurchases = purchase.count;
+            }
+        }
+        for (const submission of workSubmissions) {
+            const index = pastSevenDays.indexOf(submission._id);
+            if (index !== -1) {
+                mergedWorkSubmissions[index].y = submission.count;
+                // mergedWorkSubmissions[index].workSubmissions = submission.count;
+            }
+        }
+        const data =[
+            {id:"post",data:mergedWorkPosts},{id:"order",data:mergedWorkPurchases},{id:"submissions",data:mergedWorkSubmissions}
+        ]
+        // return {post:mergedWorkPosts, order:mergedWorkPurchases, submissions:mergedWorkSubmissions};
+        return data;
+    }
+    
+
+    async getTopFreelancers():Promise<any>{
+        try {
+            const freelancers = await Submissions.aggregate([
+                {
+                  $group: {
+                    _id: '$freelancerId',
+                    submissionsCount: { $sum: 1 }
+                  }
+                },
+                {
+                  $lookup: {
+                    from: 'freelancers',
+                    localField: '_id',
+                    foreignField: '_id',
+                    as: 'freelancer'
+                  }
+                },
+                {
+                  $unwind: '$freelancer'
+                },
+                {
+                  $project: {
+                    _id: 0,
+                    username: '$freelancer.username',
+                    email: '$freelancer.email',
+                    profile: '$freelancer.profile',
+                    submissionsCount: 1
+                  }
+                },
+                {
+                  $sort: {
+                    submissionsCount: -1 // Sort in descending order
+                  }
+                },
+                {
+                  $limit: 10 // Limit the output to 10 documents
+                }
+              ]);
+              return freelancers
+            //   const res = await Submissions.find({ freelancerId:new mongoose.Types.ObjectId("661e98313b4154eee9d66a38") })
+            // return res
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+
+
+    
+    
+    
+    async getProfit():Promise<any>{
+        try {
+            const profit = await Order.aggregate([
+                {
+                    $project: {
+                        amount: 1, // Include the amount field
+                        profit: { $multiply: ["$amount", 0.05] } // Calculate profit (5% of amount)
+                    }
+                },
+                {
+                    $group: {
+                        _id: null,
+                        totalProfit: { $sum: "$profit" } // Sum up profits
+                    }
+                }
+            ]);
+            return profit[0].totalProfit
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+    
+    async getCountOfUsers():Promise<any>{
+        try {
+            const usersCount = await Freelancer.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } // Count the documents
+                    }
+                }
+            ]);
+            return usersCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+
+    async getCountOfOrder():Promise<any>{
+        try {
+            const OrderCount = await Order.aggregate([
+                {
+                    $group: {
+                        _id: null,
+                        count: { $sum: 1 } 
+                    }
+                }
+            ]);
+            return OrderCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+
+    async getCountOfPending():Promise<any>{
+        try {
+            const pendingCount = await Order.aggregate([
+                {
+                    $match: {
+                        status: "pending"
+                    }
+                },
+                {
+                    $count: "count"
+                }
+            ]);
+            console.log(pendingCount,"pending count ");
+            
+            return pendingCount[0].count
+        } catch (error:any) {
+            throw new Error(error.message)
+        }
+    }
+    
+    
+    
 }

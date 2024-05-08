@@ -264,6 +264,37 @@ export class AdminController {
         }
     }
 
+     //get chart data
+    async GetDashboardChartData(req: Request, res: Response): Promise<any> {
+        try {
+           const responseData = await this._adminService.getDashboardChartData()
+            res.status(200).json({status:true,chartData:responseData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+     //get Top freelancers
+    async getTopFreelancers(req: Request, res: Response): Promise<any> {
+        try {
+           const responseData = await this._adminService.getTopFreelancers()
+            res.status(200).json({status:true,list:responseData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+     //get statistics profit..
+    async statistics(req: Request, res: Response): Promise<any> {
+        try {
+           const responseData = await this._adminService.getstatistics()
+
+            res.status(200).json({status:true,statistics:responseData})
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }

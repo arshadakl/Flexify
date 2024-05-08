@@ -35,5 +35,10 @@ router.get('/getalltransaction',protector,adminController.getallTransaction.bind
 router.get('/getallSubmissions',protector,adminController.getAllSubmissions.bind(adminController));
 router.get('/repotedpost',protector,adminController.GetRepotedPost.bind(adminController));
 
+//dashboard
+router.get('/dashboardchartdata',protector,adminController.GetDashboardChartData.bind(adminController));
+router.get('/topfreelancers',adminController.getTopFreelancers.bind(adminController));
+router.get('/getstatistics',adminController.statistics.bind(adminController));
+
 
 export default router;
