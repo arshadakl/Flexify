@@ -275,26 +275,38 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     //     }
     // }
 
-    async getAllActiveWorksToDiscover(searchTerm: string,filter:string, page: number): Promise<any> {
+
+
+    async getAllActiveWorksToDiscover(searchTerm: string, categoryName: string, page: number): Promise<any> {
         try {
-          const limit = 3;
+          const limit = 6;
           const skip = (page - 1) * limit;
       
           // Define the regular expression for searching
-          const regex = new RegExp(searchTerm, 'i');
+          const searchRegex = new RegExp(searchTerm, 'i');
+          const categoryRegex = new RegExp(categoryName, 'i');
       
           const works = await WorkModel.aggregate([
             {
-              $match: searchTerm
-                ? {
-                    isActive: true,
-                    $or: [
-                      { title: { $regex: regex } },
-                      { categoryNames: { $elemMatch: { $regex: regex } } },
-                      { tags: { $elemMatch: { $regex: regex } } },
-                    ],
-                  }
-                : { isActive: true }, // If searchTerm is empty, match only active works
+              $match: {
+                isActive: true,
+                ...(searchTerm || categoryName
+                  ? {
+                      $or: [
+                        ...(searchTerm
+                          ? [
+                              { title: { $regex: searchRegex } },
+                              { categoryNames: { $elemMatch: { $regex: searchRegex } } },
+                              { tags: { $elemMatch: { $regex: searchRegex } } },
+                            ]
+                          : []),
+                        ...(categoryName
+                          ? [{ categoryNames: { $elemMatch: { $regex: categoryRegex } } }]
+                          : []),
+                      ],
+                    }
+                  : {}),
+              },
             },
             // Lookup user details
             {
@@ -348,18 +360,25 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
           ]);
       
           // Get the total count of documents
-          const count = await WorkModel.countDocuments(
-            searchTerm
+          const count = await WorkModel.countDocuments({
+            isActive: true,
+            ...(searchTerm || categoryName
               ? {
-                  isActive: true,
                   $or: [
-                    { title: { $regex: regex } },
-                    { categoryNames: { $elemMatch: { $regex: regex } } },
-                    { tags: { $elemMatch: { $regex: regex } } },
+                    ...(searchTerm
+                      ? [
+                          { title: { $regex: searchRegex } },
+                          { categoryNames: { $elemMatch: { $regex: searchRegex } } },
+                          { tags: { $elemMatch: { $regex: searchRegex } } },
+                        ]
+                      : []),
+                    ...(categoryName
+                      ? [{ categoryNames: { $elemMatch: { $regex: categoryRegex } } }]
+                      : []),
                   ],
                 }
-              : { isActive: true }
-          );
+              : {}),
+          });
       
           const totalPages = Math.ceil(count / limit);
       
@@ -370,6 +389,103 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
           throw new Error(`Error getting all active work details: ${error}`);
         }
       }
+
+
+    // async getAllActiveWorksToDiscover(searchTerm: string,filter:string, page: number): Promise<any> {
+    //     try {
+    //       const limit = 6;
+    //       const skip = (page - 1) * limit;
+      
+    //       // Define the regular expression for searching
+    //       const regex = new RegExp(searchTerm, 'i');
+      
+    //       const works = await WorkModel.aggregate([
+    //         {
+    //           $match: searchTerm
+    //             ? {
+    //                 isActive: true,
+    //                 $or: [
+    //                   { title: { $regex: regex } },
+    //                   { categoryNames: { $elemMatch: { $regex: regex } } },
+    //                   { tags: { $elemMatch: { $regex: regex } } },
+    //                 ],
+    //               }
+    //             : { isActive: true }, // If searchTerm is empty, match only active works
+    //         },
+    //         // Lookup user details
+    //         {
+    //           $lookup: {
+    //             from: 'freelancers',
+    //             localField: 'user',
+    //             foreignField: '_id',
+    //             as: 'user',
+    //           },
+    //         },
+    //         { $unwind: '$user' },
+    //         // Lookup freelancer details
+    //         {
+    //           $lookup: {
+    //             from: 'freelancerdetails',
+    //             localField: 'user._id',
+    //             foreignField: 'user',
+    //             as: 'freelancerdetails',
+    //           },
+    //         },
+    //         // Project only the required fields
+    //         {
+    //           $project: {
+    //             user: { _id: 1, username: 1, email: 1, profile: 1, role: 1 },
+    //             title: 1,
+    //             category: 1,
+    //             subcategory: 1,
+    //             categoryNames: 1,
+    //             tags: 1,
+    //             image1: 1,
+    //             image2: 1,
+    //             image3: 1,
+    //             deliveryPeriod: 1,
+    //             referenceMaterial: 1,
+    //             logo: 1,
+    //             description: 1,
+    //             questionnaire: 1,
+    //             amount: 1,
+    //             isActive: 1,
+    //             freelancerdetails: 1,
+    //             // Include averageRating field for sorting
+    //             averageRating: { $ifNull: ['$averageRating', 0] }, // Use 0 if averageRating is null
+    //           },
+    //         },
+    //         // Sort works based on averageRating in descending order
+    //         { $sort: { averageRating: -1 } },
+    //         // Skip documents based on the page number
+    //         { $skip: skip },
+    //         // Limit the number of documents to retrieve
+    //         { $limit: limit },
+    //       ]);
+      
+    //       // Get the total count of documents
+    //       const count = await WorkModel.countDocuments(
+    //         searchTerm
+    //           ? {
+    //               isActive: true,
+    //               $or: [
+    //                 { title: { $regex: regex } },
+    //                 { categoryNames: { $elemMatch: { $regex: regex } } },
+    //                 { tags: { $elemMatch: { $regex: regex } } },
+    //               ],
+    //             }
+    //           : { isActive: true }
+    //       );
+      
+    //       const totalPages = Math.ceil(count / limit);
+      
+    //       console.log(works, 'Sorted works');
+    //       return { works, totalPages };
+    //     } catch (error) {
+    //       console.log(error);
+    //       throw new Error(`Error getting all active work details: ${error}`);
+    //     }
+    //   }
 
     // for search 
     async getAllActiveWorksToDiscoverSearch(searchTerm: string): Promise<any> {

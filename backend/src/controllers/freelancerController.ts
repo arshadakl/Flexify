@@ -477,9 +477,9 @@ export class FreelancerController {
 
     async getallWorksToDiscover(req: Request, res: Response): Promise<any> {
         try {
-            const searchKey = req.query.search ? req.query.skey :""
-            const filter = req.query.search ? req.query.fkey :""
-            const page = req.query.search ? req.query.page : 1
+            const searchKey = req.query.skey ? req.query.skey :""
+            const filter = req.query.fkey ? req.query.fkey :""
+            const page = req.query.page ? req.query.page : 1
             const works = await this._freelancerService.getallWorksToDiscoverService(searchKey as string,filter as string,page as number)
             res.status(200).json({ status: 'success', data: works })
         } catch (error: any) {
