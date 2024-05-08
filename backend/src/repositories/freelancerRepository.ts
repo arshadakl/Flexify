@@ -29,7 +29,10 @@ export interface FreelancerRepository {
     createWorkPost(workData:IWork):Promise<IWork>
 
     getAllWorkOfUser(id: string): Promise<IWork[] | null>
-    getAllActiveWorksToDiscover():Promise<any>
+
+    getAllActiveWorksToDiscover(searchKey:string,categoryName:string,page:number):Promise<any>
+    getAllActiveWorksToDiscoverSearch(searchTerm: string): Promise<any>
+
     deleteWork(id:string):Promise<DeleteResult>
 
     // singlePostDetails(id:string):Promise<any>

@@ -30,7 +30,7 @@ export interface freelancerService{
     uploadMultiFiles(filePaths: string[], folderName: string):Promise<any>
     CategoryDataFetch(categoryId: string, subCategoryId: string): Promise<any>
     getallWorksOfUserServ(id:string): Promise<IWork[] | null>
-    getallWorksToDiscoverService(): Promise<any>
+    getallWorksToDiscoverService(searchKey:string,filter:string,page:number): Promise<any>
     deleteWorkPost(id:string): Promise<any>
     getSingleWorkDetails(id:string): Promise<any>
     getRecivedWorkDetails(id:string): Promise<IOrder[] | null >

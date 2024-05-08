@@ -303,9 +303,9 @@ export const getUsrAllWork = async ()=>{
   }
 }
 
-export const getAllWorks = async ()=>{
+export const getAllWorks = async (skey:string,fkey:string,page:number)=>{
   try {
-      const response = await freelancersAPI.get('/getAllWorks');
+      const response = await freelancersAPI.get(`/getAllWorks?skey=${skey}&fkey=${fkey}&page=${page}`);
       return response.data
   } catch (error) {
     const errorMessage = handleError(error);
