@@ -59,4 +59,6 @@ router.get('/downloadFile',protector,freelancerController.downloadSubmissionFile
 router.get('/alltransactions',protector,freelancerController.getTransactions.bind(freelancerController))
 router.get('/videocall-auth',freelancerController.genarateVideoCallToken.bind(freelancerController))
 
+router.get('/getchartdata',protector,freelancerController.getchartData.bind(freelancerController))
+
 export default router;

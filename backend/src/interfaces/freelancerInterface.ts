@@ -62,3 +62,40 @@ export interface SingleWorkDetails {
 export interface MyError {
   message: string;
 }
+
+
+
+export interface DailyData {
+  day: string;
+  orderCount: number;
+  totalAmount: number;
+}
+
+export interface FreelancerDetails {
+  _id: mongoose.Types.ObjectId;
+  username: string;
+  email: string;
+  // Add other properties as needed
+}
+
+export interface ChartDataResponse {
+  _id: mongoose.Types.ObjectId;
+  freelancerDetails: FreelancerDetails;
+  orderCount: { day: string; orderCount: number; }[];
+  Amount: { day: string; totalAmount: number; }[];
+}
+
+
+export interface DataPoint {
+  day: string;
+  orderCount?: number;
+  totalAmount?: number;
+}
+
+export interface ChartData {
+  labels: string[];
+  datasets: {
+    label: string;
+    data: number[];
+  }[];
+}

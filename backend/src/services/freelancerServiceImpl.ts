@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from 'jsonwebtoken';
 import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
-import { IWork } from '../interfaces/freelancerInterface';
+import { ChartData, DataPoint, IWork } from '../interfaces/freelancerInterface';
 import fs from 'fs'
 import { IOrder, ISubmissions, ITransaction } from '../interfaces/clientInterface';
 import path from 'path';
@@ -606,6 +606,41 @@ export class FreelancerService {
             
             const response = await this.freelancerRepository.getUserAllTransaction(userId)
             return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+    
+    
+    async getchartData(userId: string): Promise<any> {
+        try {
+            const convertDataForChart=(data: DataPoint[]): ChartData => {
+                const chartData: ChartData = {
+                  labels: [],
+                  datasets: []
+                };
+              
+                const dataset = {
+                  label: "",
+                  data: [] as number[]
+                };
+              
+                data.forEach(entry => {
+                  chartData.labels.push(entry.day);
+                  dataset.data.push(entry.orderCount ?? entry.totalAmount ?? 0); // Assuming either orderCount or totalAmount is present
+                });
+              
+                chartData.datasets.push(dataset);
+                return chartData;
+              };
+            const response = await this.freelancerRepository.getChartData(userId)
+            const statistics = await this.freelancerRepository.getStaticsData(userId)
+            const orders = convertDataForChart(response[0].orderCount)
+            const Amount = convertDataForChart(response[0].Amount)
+            // console.log(response[0].orderCount);
+            
+            return {orders,Amount,statistics}
         } catch (error: any) {
             throw new Error(error.message)
         }
