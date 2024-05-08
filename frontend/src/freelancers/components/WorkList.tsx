@@ -13,7 +13,9 @@ function WorkList() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getAllWorks();
-      setWordData(response.data);
+      console.log(response);
+      
+      setWordData(response.data.works      );
     };
     fetchData();
   }, []);
@@ -35,7 +37,7 @@ function WorkList() {
           <hr className="my-3" />
         </div>
         <div className="flex flex-wrap justify-center">
-          {wordData?.map((work:any,index:number) => {
+          {wordData && wordData?.map((work:any,index:number) => {
             return (
               
               <>

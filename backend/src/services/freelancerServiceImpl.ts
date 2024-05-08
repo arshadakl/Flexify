@@ -471,9 +471,9 @@ export class FreelancerService {
     }
 
 
-    async getallWorksToDiscoverService(): Promise<any> {
+    async getallWorksToDiscoverService(searchKey:string,filter:string,page:number): Promise<any> {
         try {
-            const allWorks = await this.freelancerRepository.getAllActiveWorksToDiscover()
+            const allWorks = await this.freelancerRepository.getAllActiveWorksToDiscover(searchKey,filter,page)
 
             if (allWorks) {
                 return allWorks
