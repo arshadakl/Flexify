@@ -62,6 +62,7 @@ function WorkList() {
   const handileSearch = (e:SyntheticEvent) => {
     e.preventDefault();
     fetchData(skey, "", 1)
+    setSkey('')
 
   };
 
@@ -282,12 +283,9 @@ function WorkList() {
                     </>
                   );
                 })}
-                {wordData.length==0 && <>
-                <div className="w-full   mx-auto">
-                  <p>Work No found</p>
-                </div>
-                </>}
+                
             </div>
+            
           </div>
           <div className=" w-full flex justify-center my-5">
             {/* <nav aria-label="Page navigation example "> */}

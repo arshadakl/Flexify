@@ -2,7 +2,7 @@
 
 import { promises } from "dns";
 import { DeleteResult, ICategory, ISubcategory } from "../interfaces/adminInterface";
-import { IWork } from "../interfaces/freelancerInterface";
+import { INotification, IWork } from "../interfaces/freelancerInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
@@ -39,7 +39,7 @@ export interface FreelancerRepository {
     getWorkDetails(id:string):Promise<any>
     getRecivedWork(id:string):Promise<IOrder[] | null>
 
-    getAllActivepost(freelancerId:string):Promise<IWork[] | null>
+    getAllActivepost(freelancerId:string,page:number):Promise<any | null>
     getAllSuspendedpost(freelancerId:string):Promise<IWork[] | null>
 
     getSingleWork(workId:string):Promise<IWork | null>
@@ -53,7 +53,9 @@ export interface FreelancerRepository {
     getRequirements(id: string):Promise<any>
 
     getUserAllTransaction(userId:string): Promise<ITransaction[] | null>
-
+    
     getChartData(freelancerId:string):Promise<any>
     getStaticsData(freelancerId:string):Promise<any>
+
+    getNotification(userId:string): Promise<INotification[] | null>
 }

@@ -10,8 +10,8 @@ function InspiringPost() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllWorks();
-      setWordData(response.data);
+      const response = await getAllWorks("","",1);
+      setWordData(response.data.works);
     };
     fetchData();
   }, []);
@@ -25,7 +25,7 @@ function InspiringPost() {
       <div className="bg-slate-100 w-screen p-5 h-96 flex flex-col justify-center content-center">
         <h1 className="text-md w-8/12 px-2 text-xl font-semibold font-poppins text-slate-700 mx-auto">Inspiring work made on Flexify</h1>
         <div className="flex w-4/6 mx-auto">
-          {wordData?.slice(0, 4).map((work: any, index: number) => {
+          {wordData && wordData?.slice(0, 4).map((work: any, index: number) => {
             return (
               <>
                 <motion.div

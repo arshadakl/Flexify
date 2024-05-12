@@ -60,5 +60,6 @@ router.get('/alltransactions',protector,freelancerController.getTransactions.bin
 router.get('/videocall-auth',freelancerController.genarateVideoCallToken.bind(freelancerController))
 
 router.get('/getchartdata',protector,freelancerController.getchartData.bind(freelancerController))
+router.get('/getnotification',protector,freelancerController.getNotification.bind(freelancerController))
 
 export default router;

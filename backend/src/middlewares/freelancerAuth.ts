@@ -4,11 +4,11 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { FreelancerRepositoryImpl } from "../repositories/freelancerRepositoryImpl";
 
-// Extend the Request interface to include a user property
+
 declare global {
   namespace Express {
     interface Request {
-      user?: any; // Update the type of user as per your requirements
+      user?: any; 
     }
   }
 }
@@ -49,7 +49,7 @@ const protector = async (req: Request, res: Response, next: NextFunction) => {
       if (err instanceof jwt.TokenExpiredError) {
         return res.status(401).json({ message: "Login expired" });
       } else {
-        throw err; // rethrow the error to be caught by the outer catch block
+        throw err; 
       }
     }
   } catch (error) {

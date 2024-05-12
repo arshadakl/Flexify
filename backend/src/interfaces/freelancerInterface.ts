@@ -99,3 +99,9 @@ export interface ChartData {
     data: number[];
   }[];
 }
+
+export interface INotification extends Document {
+  toUser: string; 
+  message: string; 
+  date: Date; 
+}

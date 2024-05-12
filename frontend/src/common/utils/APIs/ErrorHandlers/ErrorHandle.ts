@@ -3,6 +3,7 @@ import axios, { AxiosError } from 'axios';
 // import { useLogout } from '../logoutUtils';
 import store, { persistor } from "../../../../Redux/store";
 import { logout } from "../../../../Redux/Slices/freelancerSlice";
+import { toast } from 'sonner';
 // import { useNavigation } from '../config/NavigationContext';
 
 
@@ -17,7 +18,7 @@ export const handleError = (
     if (axios.isAxiosError<ResponseData>(err)) {
         const axiosError = err as AxiosError<ResponseData>;
         // Handle specific error codes
-        console.log(axiosError.response?.data.message,"error mesages");
+        // console.log(axiosError.response?.data.message,"error mesages");
         switch (axiosError.response?.status) {
             
             case 401:
@@ -42,6 +43,7 @@ export const handleError = (
                     window.location.href="/login"
                     return new Error('you are logged out');
                 } else {
+                    toast.warning(axiosError.response.data.message )
                     return new Error('You are not authorized to access this resource.');
                 }
             case 403:

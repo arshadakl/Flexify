@@ -56,7 +56,7 @@ export class FreelancerController {
             // } 
         } catch (error: any) {
             // res.json({ error: "Invalid credentials", status: false });
-            res.status(400).json({ error: error.message, status: false });
+            res.status(401).json({message:error.message, error: error.message, status: false });
         }
     }
 
@@ -568,7 +568,8 @@ export class FreelancerController {
     async getPosts(req: Request, res: Response): Promise<void> {
         try {
             const FreelancerID = req.user._id
-            const ActiveOrders = await this._freelancerService.getActivePosts(FreelancerID)
+            const page = req.query.page
+            const ActiveOrders = await this._freelancerService.getActivePosts(FreelancerID,Number(page))
             const SuspendedOrders = await this._freelancerService.getSuspendedPosts(FreelancerID)
 
             res.status(200).json({ status: 'success', active: ActiveOrders, suspended: SuspendedOrders })
@@ -682,6 +683,18 @@ export class FreelancerController {
             // const userId = "661e98313b4154eee9d66a38"
             const response = await this._freelancerService.getchartData(userId as string)
             res.status(200).json({ status: 'success', chartData:response})
+
+
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
+    async getNotification(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.user._id
+            const response = await this._freelancerService.getNotification(userId as string)
+            res.status(200).json({ status: 'success', notifications:response})
 
 
         } catch (error: any) {

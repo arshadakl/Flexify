@@ -553,13 +553,13 @@ export class AdminRepositoryImpl implements AdminRepository {
     //     return mergedData;
     // }
     mergeData(workPosts: any[], workPurchases: any[], workSubmissions: any[]): any {
-        // Initialize an array to hold the past seven days
+
         const pastSevenDays = [];
         const today = new Date();
         for (let i = 0; i < 7; i++) {
             const date = new Date(today);
             date.setDate(today.getDate() - i);
-            pastSevenDays.unshift(date.toISOString().split('T')[0]); // Add date in YYYY-MM-DD format
+            pastSevenDays.unshift(date.toISOString().split('T')[0]); 
         }
     
         // Initialize the merged data arrays with counts set to 0
@@ -578,22 +578,22 @@ export class AdminRepositoryImpl implements AdminRepository {
         const mergedWorkSubmissions = pastSevenDays.map(date => ({
             x:date,
             y: 0
-            // workSubmissions: 0
+       
         }));
     
-        // Iterate over the actual data and update the counts in the merged data
+        
         for (const post of workPosts) {
             const index = pastSevenDays.indexOf(post._id);
             if (index !== -1) {
                 mergedWorkPosts[index].y = post.count;
-                // mergedWorkPosts[index].workPosts = post.count;
+               
             }
         }
         for (const purchase of workPurchases) {
             const index = pastSevenDays.indexOf(purchase._id);
             if (index !== -1) {
                 mergedWorkPurchases[index].y = purchase.count;
-                // mergedWorkPurchases[index].workPurchases = purchase.count;
+               
             }
         }
         for (const submission of workSubmissions) {
@@ -606,7 +606,7 @@ export class AdminRepositoryImpl implements AdminRepository {
         const data =[
             {id:"post",data:mergedWorkPosts},{id:"order",data:mergedWorkPurchases},{id:"submissions",data:mergedWorkSubmissions}
         ]
-        // return {post:mergedWorkPosts, order:mergedWorkPurchases, submissions:mergedWorkSubmissions};
+        
         return data;
     }
     
@@ -642,16 +642,15 @@ export class AdminRepositoryImpl implements AdminRepository {
                 },
                 {
                   $sort: {
-                    submissionsCount: -1 // Sort in descending order
+                    submissionsCount: -1 
                   }
                 },
                 {
-                  $limit: 10 // Limit the output to 10 documents
+                  $limit: 10 
                 }
               ]);
               return freelancers
-            //   const res = await Submissions.find({ freelancerId:new mongoose.Types.ObjectId("661e98313b4154eee9d66a38") })
-            // return res
+        
         } catch (error:any) {
             throw new Error(error.message)
         }
@@ -667,14 +666,14 @@ export class AdminRepositoryImpl implements AdminRepository {
             const profit = await Order.aggregate([
                 {
                     $project: {
-                        amount: 1, // Include the amount field
-                        profit: { $multiply: ["$amount", 0.05] } // Calculate profit (5% of amount)
+                        amount: 1, 
+                        profit: { $multiply: ["$amount", 0.05] } 
                     }
                 },
                 {
                     $group: {
                         _id: null,
-                        totalProfit: { $sum: "$profit" } // Sum up profits
+                        totalProfit: { $sum: "$profit" } 
                     }
                 }
             ]);

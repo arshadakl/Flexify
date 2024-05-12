@@ -1,7 +1,7 @@
 import { JwtPayload } from "jsonwebtoken";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
-import { IWork } from "../interfaces/freelancerInterface";
+import { INotification, IWork } from "../interfaces/freelancerInterface";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 
 export interface freelancerService{
@@ -45,4 +45,6 @@ export interface freelancerService{
 
     getTransaction(userId: string): Promise<ITransaction[] | null>
     getchartData(freelancerId:string):Promise<any>
+
+    getNotification(userId: string): Promise<INotification[] | null>
 }

@@ -4,6 +4,7 @@ export interface IConversation extends Document {
     recipients: mongoose.Types.ObjectId[];
     lastMessage?: string;
     date: number;
+    lastMessageAt:number
 }
 
 
