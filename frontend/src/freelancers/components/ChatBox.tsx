@@ -10,7 +10,7 @@ import { initFlowbite } from "flowbite";
 import Lottie from "react-lottie";
 import animationData from "./../../common/animations/calling.json";
 import animationData2 from "./../../common/animations/redCall.json";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 function ChatBox({ client }: { client: any }) {
@@ -85,6 +85,17 @@ function ChatBox({ client }: { client: any }) {
       });
     });
 
+    socket.on("messageReadBeat", (newMessage: IChatMessage) => {
+      setMessages((prevMessages: IChatMessage[]) => {
+        return prevMessages.map((message) => {
+          if (message._id === newMessage._id && message.status === 'unread') {
+            return { ...message, status: newMessage.status };
+          }
+          return message;
+        });
+      });
+    });
+
 
     socket.on("call-reject", () => {
       setCalling(true);
@@ -131,35 +142,17 @@ function ChatBox({ client }: { client: any }) {
       top: chatBoxRef.current.scrollHeight,
       behavior: "smooth",
     });
+
+    messages.forEach((message) => {
+      if (message.status === 'unread' && message.to == userId) {
+        socket.emit('messageRead', {messageId:message._id});
+      }
+    });
   }, [messages]);
 
-  useEffect(() => {
-    // socket.on("call-offer", (name: string) => {
-    //   setRing(true);
-    //   setTimeout(() => {
-    //     socket.emit("call-noResponse", {
-    //       senderId: userId,
-    //       receiverId: client._id,
-    //     });
-    //     setRing(false);
-    //   }, 10000);
-    // });
-
-    //rreject reposse
-    // socket.on("call-reject", () => {
-    //   toast.warning("call rejected")
-    //   setCalling(true);
-    //   setNoResponse(true);
-    //   setTimeout(() => {
-    //     setCalling(false);
-    //     setNoResponse(false);
-    //     resetAllState();
-    //     CloseModal();
-    //   }, 4000);
-    // });
-
-    
-  }, []);
+  // useEffect(() => {
+   
+  // }, []);
 
   const sendMessage = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -255,7 +248,14 @@ function ChatBox({ client }: { client: any }) {
                         </p>
                       </div>
                       <p className="text-[10px] text-end text-slate-400">
-                        {FormatDateTimeString(message.date as any)}
+                        {FormatDateTimeString(message.date as any)} | 
+                        {message.status=="read" ? <i className="text-blue-600 fa-solid fa-check-double px-1" /> : 
+                         <i className="fa-solid fa-check px-1" />}
+
+
+
+
+
                       </p>
                     </div>
                     <img
@@ -282,8 +282,9 @@ function ChatBox({ client }: { client: any }) {
                         </p>
                       </div>
                       <p className="text-[10px] text-slate-400">
-                        {FormatDateTimeString(message.date as any)}
+                        {FormatDateTimeString(message.date as any)} 
                       </p>
+                      
                     </div>
                   </motion.div>
                 )}

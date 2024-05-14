@@ -3,6 +3,7 @@ import { Server } from "socket.io";
 import { Server as HTTPServer } from "http";
 import { ChatService } from "../services/chatService";
 import { ChatRepository } from "../repositories/chatRepository";
+import { IMessage } from "../interfaces/chatInterface";
 
 
 const chatRepository = new ChatRepository()
@@ -61,7 +62,23 @@ export const initializeSocket = (server: HTTPServer) => {
             io.to(senderId).emit('message', savedMessage);
         });
 
-        //manage messages 
+
+
+        //Message Read manage
+        socket.on('messageRead', async ({ messageId}:{messageId:string}) => {
+            console.log("message readed");
+            const response = await chatService.manageMessageRead(messageId)
+           
+            if(response) {
+                io.to(response?.from.toString()).emit('messageReadBeat', response);
+            }
+
+            console.log(messageId);
+            
+        });
+
+
+        //manage notification 
         socket.on('notify', async ({ toUser, message }) => {
             console.log(message);
             await chatService.saveNotification(toUser, message);

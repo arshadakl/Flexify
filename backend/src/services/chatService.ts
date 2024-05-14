@@ -78,6 +78,16 @@ export class ChatService {
     }
   }
 
+  async manageMessageRead(messageId: string): Promise<IMessage | null> {
+    try {
+      const messages = await this.chatRepository.ReadMessage(messageId);
+      return messages;
+    
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async saveNotification(toUser: string, message: string): Promise<INotification> {
     try {
       const notif = await this.chatRepository.saveNotification(toUser, message);

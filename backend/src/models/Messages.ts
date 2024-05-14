@@ -40,6 +40,11 @@ const MessageSchema: Schema<IMessage> = new Schema<IMessage>({
         type: Number,
         default: Date.now,
     },
+    status: {
+        type: String,
+        enum: ['unread', 'read'],
+        default: 'unread',
+    },
 });
 
 // Define models

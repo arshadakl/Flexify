@@ -15,6 +15,7 @@ export interface IMessage extends Document {
     from: mongoose.Types.ObjectId;
     body: string;
     date: number;
+    status: "unread" | "read" 
 }
 
 export interface IReport extends Document {

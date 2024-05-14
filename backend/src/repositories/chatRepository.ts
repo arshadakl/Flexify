@@ -1,9 +1,11 @@
 // chatRepository.ts
-import { IConversation } from '../interfaces/chatInterface';
+import { response } from 'express';
+import { IConversation, IMessage } from '../interfaces/chatInterface';
 import { INotification } from '../interfaces/freelancerInterface';
 import { Freelancer } from '../models/Freelancer';
 import { Conversation, Message } from '../models/Messages'; // Assuming chatModel.ts contains your Mongoose models
 import { NotificationModel } from '../models/Notification';
+import { UpdateWriteOpResult } from 'mongoose';
 
 
 export interface ChatRepositoryImp {
@@ -11,6 +13,7 @@ export interface ChatRepositoryImp {
   createMessage(conversationId: string, senderId: string, receiverId: string, messageText: string): Promise<any>
   getConversationsByUser(userId: string): Promise<any[]>;
   getMessagesInConversation(conversationId: string): Promise<any[]>;
+  ReadMessage(messageId: string): Promise<IMessage | null>;
   findConversation(senderId: string, receiverId: string): Promise<any>
   saveNotification(toUser: string, message: string): Promise<INotification>
   getLastNNotifications(toUserId: string): Promise<INotification[]>
@@ -64,6 +67,18 @@ export class ChatRepository implements ChatRepositoryImp {
     return await newConversation.save();
   }
 
+ 
+  async ReadMessage(messageId:string): Promise<IMessage | null> {
+    await  Message.findOneAndUpdate(
+      { _id: messageId },
+      { $set: { status: 'read' } },
+      { new: true }
+  )
+  const newData = await Message.findById(messageId)
+  return newData
+  }
+
+  
   async saveNotification(toUser: string, message: string): Promise<INotification> {
     try {
       const newNotification = new NotificationModel({
