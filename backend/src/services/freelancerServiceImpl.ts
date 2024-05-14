@@ -9,7 +9,7 @@ import { jwtDecode } from "jwt-decode";
 import { JwtPayload } from 'jsonwebtoken';
 import { ICategory, ISubcategory } from '../interfaces/adminInterface';
 import { uploadMultipleToCloudinary, uploadToCloudinary } from '../utils/Cloudinary';
-import { ChartData, DataPoint, IWork } from '../interfaces/freelancerInterface';
+import { ChartData, DataPoint, INotification, IWork } from '../interfaces/freelancerInterface';
 import fs from 'fs'
 import { IOrder, ISubmissions, ITransaction } from '../interfaces/clientInterface';
 import path from 'path';
@@ -35,14 +35,14 @@ export class FreelancerService {
         const freelancer = await this.freelancerRepository.findByUsername(username);
         if (!freelancer) {
             // return null; 
-            throw new Error("Failed to find Freelancer")
+            throw new Error("If you do not have an account, please create a new one as the user was not found.")
         }
         if (freelancer.isBlocked == "Block") {
             throw new Error("your account is blocked")
         }
         const isPasswordValid = await this.freelancerRepository.checkPassword(username, password);
         if (!isPasswordValid) {
-            throw new Error("Failed to check")
+            throw new Error("incorrect credentials")
         }
         freelancer.password = ""
         freelancer.OTP = 0
@@ -529,9 +529,9 @@ export class FreelancerService {
         }
     }
 
-    async getActivePosts(freelancerId: string): Promise<IWork[] | null> {
+    async getActivePosts(freelancerId: string,page:number): Promise<IWork[] | null> {
         try {
-            const response = await this.freelancerRepository.getAllActivepost(freelancerId)
+            const response = await this.freelancerRepository.getAllActivepost(freelancerId,page)
             return response
         } catch (error: any) {
             throw new Error(error.message)
@@ -641,6 +641,18 @@ export class FreelancerService {
             // console.log(response[0].orderCount);
             
             return {orders,Amount,statistics}
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+
+
+       
+    async getNotification(userId: string): Promise<INotification[] | null> {
+        try {
+            
+            const response = await this.freelancerRepository.getNotification(userId)
+            return response
         } catch (error: any) {
             throw new Error(error.message)
         }

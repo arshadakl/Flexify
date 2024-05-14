@@ -75,7 +75,7 @@ const Popular: React.FC<PopularProps> = ({ scroll }) => {
         <div className='my-6' >
     <div className='w-full  h-32 overflow-hidden ease-in duration-300'>
     <div className=' overflow-hidden ' style={{transform: `scale(${1 + scroll / 20})`}}>
-    <motion.h1 variants={fadeIn("up",1)} initial="hidden" whileInView={"show"} viewport={{once:true}} className={` text-center z-10  top-0 font-Outfit m-0 py-6 bg-gradient-to-r from-green-200 to-slate-50 bg-clip-text text-transparent`}
+    <motion.h1 variants={fadeIn("up",1)} initial="hidden" whileInView={"show"} viewport={{once:true}} className={` text-center z-10  top-0 font-Outfit m-0 py-6 bg-gradient-to-r from-green-500 to-slate-50 bg-clip-text text-transparent`}
      style={{fontWeight:`${700+scroll}` , opacity:0.5, fontSize:` 50px` }}
     
     >Grow together</motion.h1>

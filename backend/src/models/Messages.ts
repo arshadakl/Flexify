@@ -12,9 +12,13 @@ const ConversationSchema: Schema<IConversation> = new Schema<IConversation>({
         type: Number,
         default: Date.now,
     },
+    lastMessageAt:{
+        type: Number,
+        default: Date.now,
+    }
 });
 
-// Message Schema definition
+
 const MessageSchema: Schema<IMessage> = new Schema<IMessage>({
     conversation: {
         type: Schema.Types.ObjectId,
@@ -35,6 +39,11 @@ const MessageSchema: Schema<IMessage> = new Schema<IMessage>({
     date: {
         type: Number,
         default: Date.now,
+    },
+    status: {
+        type: String,
+        enum: ['unread', 'read'],
+        default: 'unread',
     },
 });
 

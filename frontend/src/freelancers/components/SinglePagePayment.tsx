@@ -3,6 +3,7 @@ import {loadStripe} from '@stripe/stripe-js';
 import { checkoutAPI } from '../../common/utils/APIs/ClientApi';
 import store from '../../Redux/store';
 import { toast } from 'sonner';
+import socket from '../../common/utils/config/socket';
 
 
 function SinglePagePayment({post,setIsLoad}:{post:any,setIsLoad:any}) {
@@ -16,7 +17,12 @@ function SinglePagePayment({post,setIsLoad}:{post:any,setIsLoad:any}) {
   
 
   const MakePayment = async () => {
+
     if(rol!=="client"){
+      socket.emit("notify", {
+        toUser: selectedWork.user,
+        message:"You have new Work"
+      });
       toast.warning("only can purchase for clients")
       return
     }

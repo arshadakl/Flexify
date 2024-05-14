@@ -4,6 +4,7 @@ export interface IConversation extends Document {
     recipients: mongoose.Types.ObjectId[];
     lastMessage?: string;
     date: number;
+    lastMessageAt:number
 }
 
 
@@ -14,6 +15,7 @@ export interface IMessage extends Document {
     from: mongoose.Types.ObjectId;
     body: string;
     date: number;
+    status: "unread" | "read" 
 }
 
 export interface IReport extends Document {

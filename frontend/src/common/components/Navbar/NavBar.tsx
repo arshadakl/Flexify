@@ -16,6 +16,7 @@ import AxiosInterceptor, {
 import { toast } from "sonner";
 import RoleLoading from "../../animations/RoleLoading";
 import CallNotification from "../ExtraComponents/CallNotification";
+import NotificationSection from "../ExtraComponents/NotificationSection";
 
 function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
   const [role, setRole] = useState(null);
@@ -148,6 +149,12 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                   </p>
                 </li>
               ) : null}
+              {freelancerDetails.freelancer !== null && (
+                <>
+               <NotificationSection bg={bg}/>
+              </>
+              
+              ) }
 
               {/* {freelancerDetails.freelancer !== null ? (
                 <li>

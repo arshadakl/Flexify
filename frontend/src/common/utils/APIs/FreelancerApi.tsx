@@ -73,13 +73,14 @@ const AxiosInterceptor: React.FC = () => {
 export const LoginApi = async ({ username, password }: LoginData) => {
   try {
     const response = await freelancersAPI.post('/login', { username, password });
+    console.log(response);
+    
     return response.data;
-  } catch (error: unknown) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(`Login failed: ${error.message}`);
-    } else {
-      throw new Error('An unexpected error occurred during login.');
-    }
+  } catch (error: any) {
+    console.log(error.message);
+    const errorMessage = handleError(error);
+    
+    throw errorMessage;
   }
 };
 
@@ -357,9 +358,9 @@ export const getRecivedOrdersAPI = async ()=>{
   }
 }
 
-export const getAllPost = async ()=>{
+export const getAllPost = async (page:number)=>{
   try {
-      const response = await freelancersAPI.get('/allpost');
+      const response = await freelancersAPI.get(`/allpost?page=${page}`);
       console.log(response.data);
       
       return response.data
@@ -487,6 +488,20 @@ export const videocallAuthAPI = async (id:any)=>{
 export const getchartdataAPI = async ()=>{
   try {
       const response = await freelancersAPI.get(`/getchartdata`);
+      console.log(response.data);
+      
+      return response.data
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+}
+
+
+
+export const getNotificationsAPI = async ()=>{
+  try {
+      const response = await freelancersAPI.get(`/getnotification`);
       console.log(response.data);
       
       return response.data
