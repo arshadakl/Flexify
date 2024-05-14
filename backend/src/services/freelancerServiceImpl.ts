@@ -407,6 +407,7 @@ export class FreelancerService {
             const response = await this.freelancerRepository.createWorkPost(workData)
             console.log(response);
             if (response) {
+                await this.freelancerRepository.addOrUpdateActivity(workData.user)
                 return true
             }
         } catch (error: any) {
@@ -581,6 +582,7 @@ export class FreelancerService {
             }
             const response = await this.freelancerRepository.createSubmission(formData)
             if(response){
+                await this.freelancerRepository.addOrUpdateActivity(data.freelancerId)
                 const statusChange = await this.freelancerRepository.changeWorkStatus(data.orderId,"Awaiting Approval")
             }
             

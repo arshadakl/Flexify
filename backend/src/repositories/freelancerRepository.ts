@@ -58,4 +58,6 @@ export interface FreelancerRepository {
     getStaticsData(freelancerId:string):Promise<any>
 
     getNotification(userId:string): Promise<INotification[] | null>
+
+    addOrUpdateActivity(freelancerId: string): Promise<void>
 }

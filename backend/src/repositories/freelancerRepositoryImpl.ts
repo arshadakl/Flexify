@@ -16,6 +16,7 @@ import { Order, Requirement } from "../models/Clients";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { TransactionModel } from "../models/Transaction";
 import { NotificationModel } from "../models/Notification";
+import { FreelancerActivity } from "../models/Activity";
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -727,21 +728,21 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
       const limit = 3;
       const skip = (page - 1) * limit;
-      
+
       const totalCount = await WorkModel.countDocuments({ user: freelancerId, isActive: true });
       const totalPages = Math.ceil(totalCount / limit);
-      
+
       const works = await WorkModel.aggregate([
-          { $match: { user: freelancerId, isActive: true } },
-          { $sort: { date: -1 } }, 
-          { $skip: skip },
-          { $limit: limit } 
+        { $match: { user: freelancerId, isActive: true } },
+        { $sort: { date: -1 } },
+        { $skip: skip },
+        { $limit: limit }
       ]);
-      
+
       // Return total pages along with the paginated data
       return {
-          works,
-          totalPages
+        works,
+        totalPages
       };
     } catch (error: any) {
       throw new Error(error.message)
@@ -1155,22 +1156,47 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
   }
 
 
-  
-  async getNotification(userId:string): Promise<INotification[] | null> {
+
+  async getNotification(userId: string): Promise<INotification[] | null> {
     try {
       // const response = await NotificationModel.aggregate([
       //   { $match: { toUser: userId } },
       //   // { $sort: { date: -1 } }
       // ])
-      console.log(userId,"User Id");
-      
-      const response = await NotificationModel.find({toUser:userId})
+      console.log(userId, "User Id");
+
+      const response = await NotificationModel.find({ toUser: userId })
       return response
     } catch (error: any) {
       throw new Error(error.message)
     }
   }
 
+  async addOrUpdateActivity(freelancerId: string): Promise<void> {
+    try {
+      const currentDate = new Date().toISOString().split('T')[0];
 
+      let activityDoc = await FreelancerActivity.findOne({ freelancerId: new mongoose.Types.ObjectId(freelancerId) });
+
+      if (!activityDoc) {
+        activityDoc = new FreelancerActivity({
+          freelancerId: new mongoose.Types.ObjectId(freelancerId),
+          activities: [{ value: 1, day: currentDate }]
+        });
+      } else {
+        const activityIndex = activityDoc.activities.findIndex(activity => activity.day === currentDate);
+
+        if (activityIndex !== -1) {
+          activityDoc.activities[activityIndex].value += 1;
+        } else {
+          activityDoc.activities.push({ value: 1, day: currentDate });
+        }
+      }
+
+      await activityDoc.save();
+    } catch (error: any) {
+      throw new Error(`Error adding or updating activity: ${error.message}`);
+    }
+  }
 
 }
