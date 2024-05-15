@@ -12,7 +12,7 @@ import helmet from "helmet";
 import { initializeSocket } from "./src/utils/Socket";
 
 const app = express();
-const PORT = 3000; 
+const PORT = 4000; 
 
 connectDB()
 
