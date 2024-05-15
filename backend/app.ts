@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ limit: '150mb', extended: true }));
 
 app.use(
     cors({
-      origin: ["http://localhost:5173"],
+      origin: ["https://flexify-five.vercel.app"],
       methods: ["GET,PUT,PATCH,POST,DELETE"],
       credentials: true,
     })
