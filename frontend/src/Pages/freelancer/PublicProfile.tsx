@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getFreelancerDataAPI, getfreelancerratingAPI } from "../../common/utils/APIs/ClientApi";
 import NavBar from "../../common/components/Navbar/NavBar";
 import { Star } from "../../common/components/ExtraComponents/Star";
+import ActivityCalendar from "../../freelancers/components/ActivityCalendar";
 // import { toast } from "sonner";
 
 function PublicProfile() {
@@ -93,7 +94,10 @@ function PublicProfile() {
               </p>
             </div>
           </div>
-
+          <div className="  mx-auto">
+                  <ActivityCalendar/>
+          </div>
+{/*  */}
           <div className="w-11/12 md:1/2  mb-32  mx-auto bg-slate-50/80 border-t-[1px] border-gray-100 rounded  dark:bg-gray-800 dark:border-gray-700">
             <div className="flex flex-col items-center">
               <ul className="w-full px-5 py-5 divide-y divide-gray-200 dark:divide-gray-700">

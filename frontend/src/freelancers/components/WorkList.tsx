@@ -16,7 +16,7 @@ function WorkList() {
   const [categories, setCategories] = useState<CategoryInter[]>();
   const [page, setPage] = useState<number>(1);
   const [skey, setSkey] = useState<string>("");
-  const [fkey, setFkey] = useState<string>("");
+  // const [fkey, setFkey] = useState<string>("");
   const [totalPages, setTotalPages] = useState<number>(0);
   const navigate = useNavigate();
 

@@ -51,6 +51,8 @@ function ChatBox({ client }: { client: any }) {
     setRing(false);
     setCalling(false);
     setNoResponse(false);
+    console.log(ring);
+    
   };
 
   const CloseModal = () => {
@@ -111,7 +113,7 @@ function ChatBox({ client }: { client: any }) {
 
 
     //rreject reposse
-    socket.on("call-Accept", ({senderId,callId}:{senderId:string,callId:string}) => {
+    socket.on("call-Accept", ({callId}:{senderId:string,callId:string}) => {
       CloseModal()
       navigate(`/videocall?id=${callId}`)
       resetAllState();

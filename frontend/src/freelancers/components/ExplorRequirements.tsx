@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { downloadFileAPI, getrequirementsAPI } from "../../common/utils/APIs/FreelancerApi";
 // import { FormatDateString } from "../../common/utils/Services/dateFormater";
 
 function ExplorRequirements() {
-  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("id");

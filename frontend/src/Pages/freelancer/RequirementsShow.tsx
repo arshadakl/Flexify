@@ -1,4 +1,3 @@
-import React from 'react'
 import NavBar from '../../common/components/Navbar/NavBar'
 import ExplorRequirements from '../../freelancers/components/ExplorRequirements'
 
