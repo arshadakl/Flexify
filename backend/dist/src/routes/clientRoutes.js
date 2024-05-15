@@ -1,0 +1,40 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const clientsRepository_1 = require("../repositories/clientsRepository");
+const chatRepository_1 = require("../repositories/chatRepository");
+const clientsServices_1 = require("../services/clientsServices");
+const freelancerRepositoryImpl_1 = require("../repositories/freelancerRepositoryImpl");
+const clientsController_1 = require("../controllers/clientsController");
+const freelancerAuth_1 = require("../middlewares/freelancerAuth");
+const multerConfig_1 = require("../middlewares/multerConfig");
+const chatService_1 = require("../services/chatService");
+const chatController_1 = require("../controllers/chatController");
+const router = (0, express_1.Router)();
+const clientRepository = new clientsRepository_1.ClientRepositoryImpl();
+const freelancerRepository = new freelancerRepositoryImpl_1.FreelancerRepositoryImpl();
+const clientService = new clientsServices_1.ClientService(clientRepository, freelancerRepository);
+const clientController = new clientsController_1.ClientController(clientService);
+const chatRepository = new chatRepository_1.ChatRepository();
+const chatService = new chatService_1.ChatService(chatRepository);
+const chatController = new chatController_1.ChatController(chatService);
+router.post('/profileCompletion', clientController.profileCompletion.bind(clientController));
+router.post('/create-checkout-sessions', freelancerAuth_1.protector, clientController.checkoutPayment.bind(clientController));
+router.post('/webhook', clientController.WebhookManage.bind(clientController));
+router.get('/clientorders', freelancerAuth_1.protector, clientController.clientOrders.bind(clientController));
+router.get('/singleorder', freelancerAuth_1.protector, clientController.getSingleOrder.bind(clientController));
+router.post('/requirementsubmit', multerConfig_1.multerMid.fields([
+    { name: 'referenceMaterial', maxCount: 1 },
+    { name: 'logo', maxCount: 1 },
+]), clientController.submitWorkRequirements.bind(clientController));
+router.get('/latestorderid', freelancerAuth_1.protector, clientController.getLastOrder.bind(clientController));
+router.get('/deliverdwork', freelancerAuth_1.protector, clientController.getDeliverdWork.bind(clientController));
+router.get('/downloadsubmission', freelancerAuth_1.protector, clientController.downloadSubmissionFile.bind(clientController));
+router.patch('/manageapproval', freelancerAuth_1.protector, clientController.manageWorkApproval.bind(clientController));
+router.get('/getfreelancerdata', freelancerAuth_1.protector, clientController.getFreelancerData.bind(clientController));
+router.get('/getConversations', freelancerAuth_1.protector, chatController.getConversationsByUser.bind(chatController));
+router.post('/reportpost', freelancerAuth_1.protector, clientController.reportPost.bind(clientController));
+router.post('/addRating', freelancerAuth_1.protector, clientController.addRatingController.bind(chatController));
+router.get('/getrating', freelancerAuth_1.protector, clientController.getRatingByUserAndWork.bind(chatController));
+router.get('/getfreelancerrating', clientController.getAverageRatingForFreelancer.bind(chatController));
+exports.default = router;
