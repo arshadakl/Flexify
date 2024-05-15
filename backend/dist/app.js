@@ -16,7 +16,7 @@ const Cloudinary_1 = __importDefault(require("./src/utils/Cloudinary"));
 const helmet_1 = __importDefault(require("helmet"));
 const Socket_1 = require("./src/utils/Socket");
 const app = (0, express_1.default)();
-const PORT = 3000;
+const PORT = 4000;
 (0, mongoConfig_1.connectDB)();
 const server = http_1.default.createServer(app);
 const io = (0, Socket_1.initializeSocket)(server);
