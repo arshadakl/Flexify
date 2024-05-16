@@ -18,7 +18,6 @@ function OrderSubmition() {
     const fetchData = async () => {
       const response = await singleOrderDetails(workId as string);
       setWorks(response.data);
-      // console.log(response.data[0].client[0], "response");
     };
     fetchData();
   }, [workId]);
@@ -39,7 +38,7 @@ function OrderSubmition() {
                 })}
               </div>
             </div>
-            <div className="xl:w-4/12 md:w-5/12 w-11/12 mx-auto md:mx-0">
+            <div className="xl:w-4/12 md:w-5/12 w-11/12 md:pb-0 pb-10 mx-auto md:mx-0">
                 {works && <ChatBox client={works[0].client[0]} />}
               </div>
             </div>

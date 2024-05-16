@@ -26,7 +26,6 @@ function WorkList() {
     pagenew: number
   ) => {
     const response = await getAllWorks(skeynew, fkeynew, pagenew);
-    console.log(response);
     setTotalPages(response.data.totalPages);
     setWordData(response.data.works);
   };
@@ -43,9 +42,7 @@ function WorkList() {
     fetchData("", "", page);
   }, []);
 
-  useEffect(() => {
-    console.log(wordData, "work data");
-  }, [wordData]);
+
   // const {setSelectedWork} = useContext(AuthContext);
 
   const handileSinglePage = (work: IWork) => {
@@ -73,10 +70,10 @@ function WorkList() {
   return (
     <>
       <MotionConfig transition={{ duration: 1.2 }}>
-        <main className="w-full grid">
-          <div className=" w-9/12 mt-5 grid grid-flow-col place-self-end center ">
-            <h1 className="font-semibold text-xl mx-5">Most popular Services </h1>
-            <h1 className="font-semibold text-2xl place-self-end center mx-10 w-full gap-5">
+        <main className="w-full grid ">
+          <div className="w-9/12  mt-5 grid md:grid-flow-col grid-flow-row place-self-end center ">
+            <h1 className="font-semibold text-xl mx-5 my-auto ">Most popular Services </h1>
+            <h1 className="font-semibold text-2xl place-self-end center  mx-10  w-full gap-5">
               <form onSubmit={(e)=>handileSearch(e)} className="w-full mx-auto my-3" >
                 <label
                   htmlFor="default-search"
@@ -129,7 +126,7 @@ function WorkList() {
                 <ul className="w-11/12 mx-auto px-5  text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   {categories?.map((category: CategoryInter) => {
                     return (
-                      <li className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
+                      <li key={category._id} className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600">
                         <div className="flex items-center ps-3">
                           <input
                             id={category._id}
@@ -160,7 +157,7 @@ function WorkList() {
                 wordData?.map((work: any, index: number) => {
                   return (
                     <>
-                      <motion.div
+                      <motion.div key={work._id}
                         variants={fadeIn("down", ((index - 1) / 9) * 0.5 + 0.1)}
                         initial="hidden"
                         whileInView={"show"}
@@ -262,7 +259,7 @@ function WorkList() {
                                       .slice(0, 2)
                                       .map((tag: any) => {
                                         return (
-                                          <motion.span
+                                          <motion.span key={tag}
                                             variants={fadeIn("left", 1)}
                                             initial="hidden"
                                             whileInView={"show"}

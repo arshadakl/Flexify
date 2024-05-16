@@ -1,3 +1,4 @@
+import Footer from '../../common/components/HomeComponents/Footer'
 import NavBar from '../../common/components/Navbar/NavBar'
 import ExplorRequirements from '../../freelancers/components/ExplorRequirements'
 
@@ -6,6 +7,7 @@ function RequirementsShow() {
     <>
     <NavBar fixed={"top"} bg="white"/>
     <ExplorRequirements/>
+    <Footer/>
     </>
   )
 }

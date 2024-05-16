@@ -22,9 +22,9 @@ function InspiringPost() {
   };
   return (
     <>
-      <div className="bg-slate-100 w-screen p-5 h-96 flex flex-col justify-center content-center">
+      <div className="bg-slate-100 w-screen p-5 h-full py-16 flex flex-col justify-center content-center">
         <h1 className="text-md w-8/12 px-2 text-xl font-semibold font-poppins text-slate-700 mx-auto">Inspiring work made on Flexify</h1>
-        <div className="flex w-4/6 mx-auto">
+        <div className="flex md:flex-row flex-col  w-4/6 mx-auto">
           {wordData && wordData?.slice(0, 4).map((work: any, index: number) => {
             return (
               <>
@@ -33,7 +33,7 @@ function InspiringPost() {
                   initial="hidden"
                   whileInView={"show"}
                   viewport={{ once: true }}
-                  className="lg:w-1/5 sm:w-2/5 w-1/1 m-3 "
+                  className="lg:w-1/5  md:w-2/5 w-1/1 m-3 "
                   onClick={() => handileSinglePage(work)}
                 >
                   <div className=" m-auto ">

@@ -23,11 +23,9 @@ function ForgotPasswordPage() {
     } else {
       toast.error(response.error);
     }
-    console.log(response);
   };
 
   const handleOTPSubmit = async (email: string, code: number) => {
-    console.log(email, code);
     const data = { email, code };
     const response = await otpApiForgotpassword(data);
     if (response.status) {

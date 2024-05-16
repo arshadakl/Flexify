@@ -20,7 +20,7 @@ const CarouselSingle: React.FC<CarouselProps> = ({ images }) => {
       <div className="flex overflow-x-auto">
         {images.map((imageUrl, index) => (
           <div key={index} className={`w-full ${index !== currentIndex ? 'hidden' : ''}`}>
-            <img src={imageUrl}  alt={`Image ${index + 1}`} className="w-full min-h-96 rounded-lg" />
+            <img src={imageUrl}  alt={`Image ${index + 1}`} className="w-full md:min-h-64 rounded-lg" />
           </div>
         ))}
       </div>

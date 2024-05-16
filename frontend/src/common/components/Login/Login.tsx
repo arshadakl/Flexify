@@ -54,9 +54,7 @@ const Login = () => {
 
     try {
       dispatch(loginStart());
-      console.log("called");
       const response = await LoginApi(formData);
-      console.log(response, "normal data");
 
       dispatch(loginSuccess(response.freelancer));
       navigate("/");
@@ -68,10 +66,7 @@ const Login = () => {
   const handlGoogleAuth = async (key: string) => {
     try {
       const response = await googleAuthLogin(key);
-      console.log(response, "google data");
-
       if (response.status) {
-        console.log(response.freelancer);
 
         toast.success("Successfully Logined");
         dispatch(loginSuccess(response.freelancer));
@@ -171,13 +166,11 @@ const Login = () => {
                       <div className="flex justify-center">
                         <GoogleLogin
                           onSuccess={(credentialResponse) => {
-                            console.log("test", credentialResponse);
                             if (credentialResponse.credential) {
                               handlGoogleAuth(credentialResponse.credential);
                             }
                           }}
                           onError={() => {
-                            console.log("Login Failed");
                             toast.error("Login Failed");
                           }}
                         />
