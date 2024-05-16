@@ -14,7 +14,6 @@ function ChatingComponent() {
       const response = await getFreelancerDataAPI(id as string);
       if (response.status) {
         setData(response.details);
-        console.log(response.details);
       }
     };
     fetchData();
@@ -24,7 +23,7 @@ function ChatingComponent() {
 
   return (
     <>
-      <div className="flex md:flex-row flex-col  text-gray-900 w-screen md:max-h-screen md:overflow-hidden  gap-1 px-10 pt-32">
+      <div className="flex md:flex-row flex-col  text-gray-900 w-screen md:max-h-screen md:overflow-hidden  gap-1 md:px-5 px-1 py-32 mb-24">
         <div className="md:w-2/5 w-1/1 ">
           <div className="w-full  md:max-h-screen md:overflow-y-scroll md:pb-10 ">
           <div className=" w-11/12 font-poppins md:1/2  items-center  mx-auto bg-slate-50/80 pb-7   rounded  dark:bg-gray-800 dark:border-gray-700 ">

@@ -1,4 +1,5 @@
 import ChatingComponent from "../../clients/components/ChatingComponent"
+import Footer from "../../common/components/HomeComponents/Footer"
 import NavBar from "../../common/components/Navbar/NavBar"
 
 function ChatPage() {
@@ -6,6 +7,7 @@ function ChatPage() {
     <>
     <NavBar fixed={"top"} bg="white"/>
     <ChatingComponent/>
+    <Footer/>
     </>
   )
 }
