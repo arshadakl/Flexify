@@ -5,15 +5,8 @@ import SellerDetails from "../../common/components/ExtraComponents/SellerDetails
 import { useNavigate } from "react-router-dom";
 
 function SingleWorkSection({ post }: { post: any }) {
-  console.log(post);
-  console.log(post[0]?.categoryNames, "category details");
   const selectedWork = post[0];
-  // const {selectedWork} = useContext(AuthContext);
-  //   useEffect(()=>{
-  //     if(selectedWork){
 
-  //     }
-  //   },[])
   const navigate = useNavigate();
   const images: any[] = [
     selectedWork?.image1,
@@ -170,7 +163,7 @@ function SingleWorkSection({ post }: { post: any }) {
               <div className="relative w-full">
                 {selectedWork?.tags[0].split(",").map((tag: string) => {
                   return (
-                    <span className="bg-gray-100 text-gray-800 text-md font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
+                    <span key={tag} className="bg-gray-100 text-gray-800 text-md font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
                       #{tag}
                     </span>
                   );

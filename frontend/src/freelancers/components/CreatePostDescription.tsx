@@ -42,7 +42,6 @@ function CreatePostDescription(data: any) {
   }, [questions]);
 
   useEffect(() => {
-    console.log(croppedImage1);
 
     data.setDetails((prevDetails: any) => ({
       ...prevDetails,
@@ -89,16 +88,14 @@ function CreatePostDescription(data: any) {
     }
   };
 
-  
-
   return (
     <>
       <div className="w-full  bg-slate-50 min-h-[80vh] py-5">
-        <div className="md:w-3/5 w-5/6 mx-auto m-3 ">
+        <div className="lg:w-3/5 w-5/6 mx-auto m-3 ">
           <p className="cursor-pointer pb-2 text-xl ">Description & Pricing</p>
           <hr />
         </div>
-        <div className="block md:w-3/5 w-5/6 mx-auto p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div className="block lg:w-3/5 w-6/6 mx-auto p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <div className="flex flex-col gap-5">
             <div className="flex">
               <p className="cursor-pointer pb-2 text-xl ">
@@ -106,19 +103,9 @@ function CreatePostDescription(data: any) {
               </p>
             </div>
             <div className="flex">
-              <div className="flex w-full gap-3 p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                <div className="block w-1/3  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                  {/* <ImageDroper
-                    previewImage={previewImage1}
-                    setPreviewImage={setPreviewImage1}
-                    croppedImage={croppedImage1}
-                    setCroppedImage={setCroppedImage1}
-                    name="image1"
-                    isOpen={true}
-                    // imageRef={imageRef1}
-                  /> */}
-
-<ImageDroper
+              <div className="flex flex-col md:flex-row w-full gap-3 p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <div className="block md:w-1/3 w-full  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                  <ImageDroper
                     previewImage={previewImage1}
                     setPreviewImage={setPreviewImage1}
                     croppedImage={croppedImage1 as File | null}
@@ -131,7 +118,7 @@ function CreatePostDescription(data: any) {
                     name="image1"
                   />
                 </div>
-                <div className="block w-1/3 disabled  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <div className="block md:w-1/3 w-full disabled  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                   <ImageDroper
                     previewImage={previewImage2}
                     setPreviewImage={setPreviewImage2}
@@ -145,7 +132,7 @@ function CreatePostDescription(data: any) {
                     name="image2"
                   />
                 </div>
-                <div className="block w-1/3  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <div className="block md:w-1/3 w-full  bg-white border border-gray-200 rounded dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
                   {/* <ImageDroper
                     previewImage={previewImage3}
                     setPreviewImage={setPreviewImage3}
@@ -200,12 +187,12 @@ function CreatePostDescription(data: any) {
                   <h3 className="mb-4 font-semibold text-gray-900 dark:text-white">
                     Requirements
                   </h3>
-                  <ul className="w-96 text-sm font-medium text-gray-900 bg-white border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                  <ul className="w-full  text-sm font-medium text-gray-900  border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                     <li className="w-full border-b border-gray-300 rounded-t-lg dark:border-gray-600">
                       <div className="flex items-center ps-3 px-5">
                         <label
                           htmlFor="react-checkbox"
-                          className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          className="w-full py-3 ms-2 mx-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
                           Reference Materials
                         </label>
@@ -224,11 +211,11 @@ function CreatePostDescription(data: any) {
                         />
                       </div>
                     </li>
-                    <li className="w-full border-b border-gray-300 rounded-t-lg dark:border-gray-600">
+                    <li className="w-full  border-b border-gray-300 rounded-t-lg dark:border-gray-600">
                       <div className="flex items-center ps-3 px-5">
                         <label
                           htmlFor="angular-checkbox"
-                          className="w-full py-3 ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          className="w-full py-3 ms-2 mx-3 text-sm font-medium text-gray-900 dark:text-gray-300"
                         >
                           Logo
                         </label>

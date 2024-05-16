@@ -4,7 +4,7 @@ function SellerDetails({ seller,details }: { seller: any,details:any }) {
   const navigate = useNavigate()
   return (
     <>
-      <div className="px-6">
+      <div className="md:px-6 px-3 ">
         <h1 className="text-xl">About the seller</h1>
         <div>
           <p onClick={()=>navigate(`/freelancer/${seller._id}`)} className="cursor-pointer flex items-center no-underline  hover:underline text-black">

@@ -53,7 +53,6 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
   const manageRoleChange = async () => {
     const role =
       freelancerDetails.freelancer.role == "client" ? "freelancer" : "client";
-    console.log(role, "this is role");
     setIsLoad(true);
     const response = await switchRoleAPI(role);
     if (response.status) {
@@ -114,18 +113,18 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
               />
             </svg>
           </button>
-<CallNotification/>
+          <CallNotification />
           <div
             className={`${
               isDropdown ? "" : "hidden"
-            } w-full  md:block md:w-auto bg:`}
+            } w-full  md:block md:w-auto z-10 bg:`}
             id="navbar-default"
           >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border  rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0  md:bg-transparent bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            <ul className={`font-medium flex flex-col text-gray-800 ${bg == "none" ?  'md:text-white' : "text-gray-800" } p-4 md:p-0 mt-4 border  rounded-lg  md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0  md:bg-transparent bg-slate-200 md:dark:bg-gray-900 dark:border-gray-700`}>
               <li>
                 <p
                   onClick={() => navigate("/")}
-                  className="block cursor-pointer py-2 px-3  bg-logo-green rounded md:bg-transparent  md:p-0 dark:text-white md:dark:text-blue-500"
+                  className="block cursor-pointer py-2 px-3  bg-logo-green rounded md:bg-transparent  md:p-0 "
                   aria-current="page"
                 >
                   Home
@@ -149,23 +148,18 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                   </p>
                 </li>
               ) : null}
+
+              
               {freelancerDetails.freelancer !== null && (
                 <>
-               <NotificationSection bg={bg}/>
-              </>
-              
-              ) }
-
-              {/* {freelancerDetails.freelancer !== null ? (
                 <li>
-                  <p
-                    onClick={handleLogout}
-                    className="block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0  md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent cursor-pointer"
-                  >
-                    Logout
-                  </p>
+
+                  <NotificationSection bg={bg} /> 
                 </li>
-              ) : null} */}
+                </>
+              )}
+
+           
 
               {!freelancerDetails.freelancer ? (
                 <li>
@@ -180,15 +174,7 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
               <li>
                 {freelancerDetails.freelancer !== null ? (
                   <>
-                    {/* <button
-                        id="dropdownHoverButton"
-                        data-dropdown-toggle="dropdownHover"
-                        data-dropdown-trigger="hover"
-                        className="cursor-pointer outline outline-2 outline-offset-8  block py-2 px-3  rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-logo-green md:p-0 :text-white md::hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-                      >
-                        <i className="fa-light fa-user mr-2" />
-                        {freelancerDetails.freelancer.username}
-                      </button> */}
+                   
                     <img
                       id="dropdownHoverButton"
                       data-dropdown-toggle="dropdownHover"
@@ -199,8 +185,8 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                           ? freelancerDetails.freelancer.profile
                           : "https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg"
                       }
-                      alt="Bonnie image"
-                    />
+                      alt="profile image"
+                    /> 
 
                     <>
                       {/* Dropdown menu */}
@@ -279,32 +265,36 @@ function NavBar({ bg, fixed }: { bg: string; fixed: string }) {
                               Profile
                             </p>
                           </motion.li>
-                          {role == "client" && <>
-                          <motion.li>
-                            <p
-                              onClick={() => navigate("/client/orders")}
-                              className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                          {role == "client" && (
+                            <>
+                              <motion.li>
+                                <p
+                                  onClick={() => navigate("/client/orders")}
+                                  className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                >
+                                  Orders
+                                </p>
+                              </motion.li>
+                              <motion.li>
+                                <p
+                                  onClick={() => navigate("/client/dashboard")}
+                                  className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                >
+                                  Dashboard
+                                </p>
+                              </motion.li>
+                            </>
+                          )}
+                          {role !== "client" && (
+                            <motion.li>
+                              <p
+                                onClick={() => navigate("/dashboard")}
+                                className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                               >
-                              Orders
-                            </p>
-                          </motion.li>
-                          <motion.li>
-                            <p
-                              onClick={() => navigate("/client/dashboard")}
-                              className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                              Dashboard
-                            </p>
-                          </motion.li>
-                              </>}
-                          {role !== "client" && <motion.li>
-                            <p
-                              onClick={() => navigate("/dashboard")}
-                              className="block cursor-pointer px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                            >
-                              Dashboard
-                            </p>
-                          </motion.li>}
+                                Dashboard
+                              </p>
+                            </motion.li>
+                          )}
                           {/* {role == "client" && } */}
                           <hr />
                           <motion.li>
