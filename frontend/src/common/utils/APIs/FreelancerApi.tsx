@@ -1,11 +1,11 @@
 // AxiosInterceptor.tsx
-import React, { useEffect } from 'react';
-import axios from 'axios';
-import { BASE_API_URL } from '../config/constants';
-import {  useSelector } from 'react-redux';
-import { profileCompletionForm } from '../../components/ProfileCompletionParts/CompletionForm';
+import React, { useEffect } from "react";
+import axios from "axios";
+import { BASE_API_URL } from "../config/constants";
+import { useSelector } from "react-redux";
+import { profileCompletionForm } from "../../components/ProfileCompletionParts/CompletionForm";
 
-import { handleError } from './ErrorHandlers/ErrorHandle';
+import { handleError } from "./ErrorHandlers/ErrorHandle";
 
 export const freelancersAPI = axios.create({
   baseURL: `${BASE_API_URL}/freelancers`,
@@ -36,29 +36,28 @@ export interface VerificationData {
   code: number;
 }
 
-interface resetPasswordData{
+interface resetPasswordData {
   password: string;
   token: string;
 }
 
 const AxiosInterceptor: React.FC = () => {
   const user = useSelector((state: any) => state.freelancer);
-  
+
   useEffect(() => {
     const requestInterceptor = freelancersAPI.interceptors.request.use(
       (config) => {
         if (user.freelancer) {
-          config.headers['Authorization'] = user.freelancer.token ;
-        }else{
-          config.headers['Authorization'] = "noToken" ;
+          config.headers["Authorization"] = user.freelancer.token;
+        } else {
+          config.headers["Authorization"] = "noToken";
         }
 
         return config;
       },
       (error) => Promise.reject(error)
     );
-    // console.log("called intresepter");
-    
+    //
 
     // Clean up the request interceptor when the component unmounts
     return () => {
@@ -66,27 +65,27 @@ const AxiosInterceptor: React.FC = () => {
     };
   }, [user]);
 
-  return null; 
+  return null;
 };
-
 
 export const LoginApi = async ({ username, password }: LoginData) => {
   try {
-    const response = await freelancersAPI.post('/login', { username, password });
-    console.log(response);
-    
+    const response = await freelancersAPI.post("/login", {
+      username,
+      password,
+    });
+
     return response.data;
   } catch (error: any) {
-    console.log(error.message);
     const errorMessage = handleError(error);
-    
+
     throw errorMessage;
   }
 };
 
 export const signupApi = async (signupData: SignupData) => {
   try {
-    const response = await freelancersAPI.post('/signup', signupData);
+    const response = await freelancersAPI.post("/signup", signupData);
     return response.data;
   } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
@@ -97,7 +96,10 @@ export const signupApi = async (signupData: SignupData) => {
 
 export const otpApi = async (verificationData: VerificationData) => {
   try {
-    const response = await freelancersAPI.post('/verification', verificationData);
+    const response = await freelancersAPI.post(
+      "/verification",
+      verificationData
+    );
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -105,9 +107,14 @@ export const otpApi = async (verificationData: VerificationData) => {
   }
 };
 
-export const otpApiForgotpassword = async (verificationData: VerificationData) => {
+export const otpApiForgotpassword = async (
+  verificationData: VerificationData
+) => {
   try {
-    const response = await freelancersAPI.post('/forgotpasswordotp', verificationData);
+    const response = await freelancersAPI.post(
+      "/forgotpasswordotp",
+      verificationData
+    );
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -115,9 +122,9 @@ export const otpApiForgotpassword = async (verificationData: VerificationData) =
   }
 };
 
-export const passwordReset = async (data:resetPasswordData) => {
+export const passwordReset = async (data: resetPasswordData) => {
   try {
-    const response = await freelancersAPI.post('/passwordreset', data);
+    const response = await freelancersAPI.post("/passwordreset", data);
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -127,8 +134,7 @@ export const passwordReset = async (data:resetPasswordData) => {
 
 export const profileCompletion = async (formData: profileCompletionForm) => {
   try {
-    const response = await freelancersAPI.post('/profileCompletion', formData);
-    console.log(response);
+    const response = await freelancersAPI.post("/profileCompletion", formData);
 
     return response.data;
   } catch (error: unknown) {
@@ -136,10 +142,12 @@ export const profileCompletion = async (formData: profileCompletionForm) => {
     throw errorMessage;
   }
 };
-export const roleSpecify = async (id:string,role:string) => {
+export const roleSpecify = async (id: string, role: string) => {
   try {
-    const response = await freelancersAPI.post('/rolespecify', {id:id,role:role});
-    console.log(response);
+    const response = await freelancersAPI.post("/rolespecify", {
+      id: id,
+      role: role,
+    });
 
     return response.data;
   } catch (error: unknown) {
@@ -147,9 +155,9 @@ export const roleSpecify = async (id:string,role:string) => {
     throw errorMessage;
   }
 };
-export const switchRoleAPI = async (role:string) => {
+export const switchRoleAPI = async (role: string) => {
   try {
-    const response = await freelancersAPI.post('/changerole', {role:role});
+    const response = await freelancersAPI.post("/changerole", { role: role });
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -159,7 +167,7 @@ export const switchRoleAPI = async (role:string) => {
 
 export const profileUpdate = async (formData: profileCompletionForm) => {
   try {
-    const response = await freelancersAPI.post('/profileUpdate', formData);
+    const response = await freelancersAPI.post("/profileUpdate", formData);
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -169,7 +177,7 @@ export const profileUpdate = async (formData: profileCompletionForm) => {
 
 export const reSendOTP = async (email: string) => {
   try {
-    const response = await freelancersAPI.post('/resendOtp', { email });
+    const response = await freelancersAPI.post("/resendOtp", { email });
     return response.data;
   } catch (error: unknown) {
     const errorMessage = handleError(error);
@@ -179,8 +187,7 @@ export const reSendOTP = async (email: string) => {
 
 export const googleAuth = async (key: string) => {
   try {
-    const response = await freelancersAPI.post('/googleAuth', { key });
-    console.log(response);
+    const response = await freelancersAPI.post("/googleAuth", { key });
 
     return response.data;
   } catch (error: unknown) {
@@ -191,7 +198,7 @@ export const googleAuth = async (key: string) => {
 
 export const googleAuthLogin = async (key: string) => {
   try {
-    const response = await freelancersAPI.post('/googleAuthLogin', { key });
+    const response = await freelancersAPI.post("/googleAuthLogin", { key });
     return response.data;
   } catch (error: any) {
     // if (axios.isAxiosError(error)) {
@@ -206,11 +213,8 @@ export const googleAuthLogin = async (key: string) => {
 
 export const fetchProfileData = async () => {
   try {
-    console.log("called api");
+    const response = await freelancersAPI.get("/profileData");
 
-    const response = await freelancersAPI.get('/profileData');
-    console.log(response,"user PRofie data");
-    
     return response.data;
   } catch (error: unknown) {
     // if (axios.isAxiosError(error)) {
@@ -220,20 +224,20 @@ export const fetchProfileData = async () => {
     // }
     const errorMessage = handleError(error);
     throw errorMessage;
-
   }
 };
 
-
-
 export const uploadProfileImage = async (formData: FormData) => {
   try {
-    const response = await freelancersAPI.post('/uploadProfileImage', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    console.log(response, "api res");
+    const response = await freelancersAPI.post(
+      "/uploadProfileImage",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return response.data;
   } catch (error: unknown) {
@@ -242,215 +246,195 @@ export const uploadProfileImage = async (formData: FormData) => {
   }
 };
 
-
 export const forgotPassword = async (email: string) => {
   try {
-    const response = await freelancersAPI.post('/forgotpassword', { email });
+    const response = await freelancersAPI.post("/forgotpassword", { email });
     return response.data;
   } catch (error: any) {
-    console.log(error);
-    
     const errorMessage = handleError(error);
     throw errorMessage;
   }
 };
 
-
-export const getAllCategories = async ()=>{
+export const getAllCategories = async () => {
   try {
-      const response = await freelancersAPI.get('/allcategories');
-      return response.data
+    const response = await freelancersAPI.get("/allcategories");
+    return response.data;
   } catch (error) {
     const errorMessage = handleError(error);
     throw errorMessage;
   }
-}
+};
 
-export const getAllSubCategories = async ()=>{
+export const getAllSubCategories = async () => {
   try {
-      const response = await freelancersAPI.get('/allsubcategories');
-      return response.data
+    const response = await freelancersAPI.get("/allsubcategories");
+    return response.data;
   } catch (error) {
     const errorMessage = handleError(error);
     throw errorMessage;
   }
-}
+};
 
-
-
-export const workPostAPI = async (formData:any)=>{
+export const workPostAPI = async (formData: any) => {
   try {
-      const response = await freelancersAPI.post('/worksubmit',formData,{
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      });
-      console.log(response);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getUsrAllWork = async ()=>{
-  try {
-      const response = await freelancersAPI.get('/getuserwork');
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getAllWorks = async (skey:string,fkey:string,page:number)=>{
-  try {
-      const response = await freelancersAPI.get(`/getAllWorks?skey=${skey}&fkey=${fkey}&page=${page}`);
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getSingleWorkAPI = async (id:string)=>{
-  try {
-    console.log(id);
-    
-      const response = await freelancersAPI.get( `/singlework/${id}`);
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const singleOrderDetails = async (id:string)=>{
-  try {
-      const response = await freelancersAPI.get( `/singleorder/${id}`);
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const deleteWork = async (id:any)=>{
-  try {
-      const response = await freelancersAPI.delete(`/deletework?id=${id}`);
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getRecivedOrdersAPI = async ()=>{
-  try {
-      const response = await freelancersAPI.get('/recivedorders');
-      console.log(response.data);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getAllPost = async (page:number)=>{
-  try {
-      const response = await freelancersAPI.get(`/allpost?page=${page}`);
-      console.log(response.data);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-
-export const getTransactionsAPI = async ()=>{
-  try {
-      const response = await freelancersAPI.get('/alltransactions');
-      console.log(response.data);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const getSingleWork = async (id:string)=>{
-  try {
-    console.log(id,"work id");
-    
-      const response = await freelancersAPI.get(`/getSingleWork?id=${id}`);
-      console.log(response.data);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-
-export const updateWorkAPI = async (form:any,id:string)=>{
-  try {
-      const data= {id:id,data:form};
-      const response = await freelancersAPI.patch(`/updatework`,data);      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-export const submitOrderWork = async (form:any)=>{
-  try {     
-      const response = await freelancersAPI.post('/submitorderwork',form,{
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        }
-      }); 
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-
-export const getrequirementsAPI = async (id:string)=>{
-  try {
-    console.log(id,"work id");
-    
-      const response = await freelancersAPI.get(`/getrequirements?id=${id}`);
-      console.log(response.data);
-      
-      return response.data
-  } catch (error) {
-    const errorMessage = handleError(error);
-    throw errorMessage;
-  }
-}
-
-
-
-export const downloadFileAPI = async (pathurl:string) => {
-  try {
-    console.log(pathurl,"path usesdasd ");
-    
-    const response: any = await freelancersAPI.get(`/downloadFile?url=${pathurl}`, {
-      responseType: "blob",
+    const response = await freelancersAPI.post("/worksubmit", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     });
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getUsrAllWork = async () => {
+  try {
+    const response = await freelancersAPI.get("/getuserwork");
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getAllWorks = async (skey: string, fkey: string, page: number) => {
+  try {
+    const response = await freelancersAPI.get(
+      `/getAllWorks?skey=${skey}&fkey=${fkey}&page=${page}`
+    );
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getSingleWorkAPI = async (id: string) => {
+  try {
+    const response = await freelancersAPI.get(`/singlework/${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const singleOrderDetails = async (id: string) => {
+  try {
+    const response = await freelancersAPI.get(`/singleorder/${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const deleteWork = async (id: any) => {
+  try {
+    const response = await freelancersAPI.delete(`/deletework?id=${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getRecivedOrdersAPI = async () => {
+  try {
+    const response = await freelancersAPI.get("/recivedorders");
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getAllPost = async (page: number) => {
+  try {
+    const response = await freelancersAPI.get(`/allpost?page=${page}`);
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getTransactionsAPI = async () => {
+  try {
+    const response = await freelancersAPI.get("/alltransactions");
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getSingleWork = async (id: string) => {
+  try {
+    const response = await freelancersAPI.get(`/getSingleWork?id=${id}`);
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const updateWorkAPI = async (form: any, id: string) => {
+  try {
+    const data = { id: id, data: form };
+    const response = await freelancersAPI.patch(`/updatework`, data);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const submitOrderWork = async (form: any) => {
+  try {
+    const response = await freelancersAPI.post("/submitorderwork", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const getrequirementsAPI = async (id: string) => {
+  try {
+    const response = await freelancersAPI.get(`/getrequirements?id=${id}`);
+
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
+export const downloadFileAPI = async (pathurl: string) => {
+  try {
+    const response: any = await freelancersAPI.get(
+      `/downloadFile?url=${pathurl}`,
+      {
+        responseType: "blob",
+      }
+    );
     const contentDispositionHeader = response.headers.get(
       "Content-Disposition"
     );
-    console.log("Content-Disposition:", contentDispositionHeader);
+
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement("a");
     link.href = url;
@@ -469,48 +453,37 @@ export const downloadFileAPI = async (pathurl:string) => {
   }
 };
 
-
-
-export const videocallAuthAPI = async (id:any)=>{
+export const videocallAuthAPI = async (id: any) => {
   try {
-      const response = await freelancersAPI.get(`/videocall-auth?id=${id}`);
-      console.log(response.data);
-      
-      return response.data
+    const response = await freelancersAPI.get(`/videocall-auth?id=${id}`);
+
+    return response.data;
   } catch (error) {
     const errorMessage = handleError(error);
     throw errorMessage;
   }
-}
+};
 
-
-
-export const getchartdataAPI = async ()=>{
+export const getchartdataAPI = async () => {
   try {
-      const response = await freelancersAPI.get(`/getchartdata`);
-      console.log(response.data);
-      
-      return response.data
+    const response = await freelancersAPI.get(`/getchartdata`);
+
+    return response.data;
   } catch (error) {
     const errorMessage = handleError(error);
     throw errorMessage;
   }
-}
+};
 
-
-
-export const getNotificationsAPI = async ()=>{
+export const getNotificationsAPI = async () => {
   try {
-      const response = await freelancersAPI.get(`/getnotification`);
-      console.log(response.data);
-      
-      return response.data
+    const response = await freelancersAPI.get(`/getnotification`);
+
+    return response.data;
   } catch (error) {
     const errorMessage = handleError(error);
     throw errorMessage;
   }
-}
-
-
+};
 
 export default AxiosInterceptor;

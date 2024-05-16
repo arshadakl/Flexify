@@ -30,7 +30,6 @@ function OrderSubmission() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await deliverdworkAPI(orderId as string);
-      console.log(response, "response");
       setWork(response.details);
     };
     fetchData();
@@ -48,7 +47,6 @@ function OrderSubmission() {
     try {
       const response = await downloadsubmissionFileAPI(work._id);
       if (response == "downloaded") {
-        console.log("streem data get");
       }
     } catch (error) {
       console.error("Error downloading file:", error);
@@ -61,7 +59,6 @@ function OrderSubmission() {
       const response = await manageApprovalAPI(work._id, status, work.orderId);
       if (response.status) {
         setIsLoad(false);
-        console.log(response.details);
 
         setWork(response.details);
         toast.success(`work ${response.details.status}`);
@@ -77,14 +74,14 @@ function OrderSubmission() {
 
       {work && (
         <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
-          <div className=" md:w-4/6 w-11/12  mx-auto">
+          <div className=" lg:w-4/6 w-11/12  mx-auto">
             <h1 className="text-2xl font-poppins font-medium">
               Delivered Work
             </h1>
             <hr className="my-2" />
             <div className="bg-white border px-5 py-10 ">
-              <div className="flex">
-                <div className="w-2/4">
+              <div className="flex flex-col md:flex-row">
+                <div className="md:w-2/4 w-full">
                   <h1 className="text-md text-2xl mx-5">
                     ID :{" "}
                     <span className="font-medium text-gray-500">
@@ -101,7 +98,7 @@ function OrderSubmission() {
 
                 
 
-                <div className="w-2/4 flex justify-end px-5 ">
+                <div className="md:w-2/4 w-full flex md:justify-end justify-start mt-5 md:px-5 px-2">
                   <div className="border border-gray-400 rounded-full min-w-2/4 h-8 flex items-center px-2">
                     {work.status == "approved" ? (
                       <>

@@ -9,6 +9,7 @@ import {  createFormData } from "../../common/utils/Services/convertFormData";
 import AxiosInterceptor, { workPostAPI } from "../../common/utils/APIs/FreelancerApi";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import Footer from "../../common/components/HomeComponents/Footer";
 
 function CreatePost() {
   const [isLoad,setIsloading] = useState<boolean>(false)
@@ -55,22 +56,20 @@ function CreatePost() {
   
   const [details, setDetails] = useState<DetailsINter>({
     images:{first:"",second:"",third:""},
-    deliveryPeriod: 0,
+    deliveryPeriod: 1,
     referenceMaterial: false,
     logo:false,
     description:"",
     questionnaire: [],
-    amount:100 
+    amount:1000 
   });
 
   useEffect(() => {
-    console.log(details);
   }, [details])
 
   const handileSubmite = async ()=>{
 
       const formDataInstance: FormData =  createFormData(formData, details);
-      console.log(formDataInstance);   
       setIsloading(true)
         const response = await workPostAPI(formDataInstance)
         if(response.status){
@@ -91,6 +90,7 @@ function CreatePost() {
       { step==1 ? <CreatePostOver setStep={setStep} formData={formData} setFormData={setFormData} /> : null}
       {step==2 ? <CreatePostDescription  details={details} setDetails={setDetails} setStep={setStep}/> : null}
       {step==3 ? <CreatePostPublish isLoad={isLoad} setStep={setStep} formData={formData} details={details} handileSubmite={handileSubmite} /> : null}
+      <Footer/>
     </>
   );
 }

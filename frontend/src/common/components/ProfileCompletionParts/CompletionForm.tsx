@@ -48,11 +48,7 @@ const Profile = ({ userType }: { userType: string }) => {
 
 
 
-  // useEffect(() => {
-  //   console.log("user ID : ", userId);
-  //   console.log(userType);
 
-  // }, [temp]);
 
   const addSkills = () => {
     if (input === "") return;
@@ -87,7 +83,6 @@ const Profile = ({ userType }: { userType: string }) => {
       ...formData,
       [event.target.name]: event.target.value,
     });
-    console.log(formData);
   };
 
 
@@ -130,11 +125,9 @@ const Profile = ({ userType }: { userType: string }) => {
 
     if (!isValid) {
       Object.values(errors).forEach((error) => toast.error(error));
-      console.log(errors);
       return;
     }
 
-    console.log("updated data ", formData);
 
     const response = await profileCompletion(formData);
     if (response.status) {
@@ -144,7 +137,6 @@ const Profile = ({ userType }: { userType: string }) => {
       // const userDataString = JSON.stringify(response.freelancer);
       // localStorage.setItem("user_data", userDataString);
       navigate("/");
-      console.log("Form submitted successfully");
     }else{
       toast.error("some error occurred")
       
