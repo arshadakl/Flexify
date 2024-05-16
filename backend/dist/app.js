@@ -24,7 +24,7 @@ app.use(body_parser_1.default.json({ limit: '150mb' }));
 (0, Cloudinary_1.default)();
 app.use(body_parser_1.default.urlencoded({ limit: '150mb', extended: true }));
 app.use((0, cors_1.default)({
-    origin: ["https://flexify-five.vercel.app"],
+    origin: ["https://flexify.services"],
     methods: ["GET,PUT,PATCH,POST,DELETE"],
     credentials: true,
 }));
