@@ -73,7 +73,6 @@ function ChatBox({ client }: { client: any }) {
     };
 
     fetchData();
-    console.log(userId);
 
     // socket.emit("join", { userId });
 
@@ -192,7 +191,7 @@ function ChatBox({ client }: { client: any }) {
       <div className=" border border-gray-400/50  rounded-t-lg  ">
         <div className="flex bg-gray-0 justify-between px-5 rounded-t-lg py-5 shadow-xl">
           <div className="flex  w-2/4 ">
-            <div className="border-2  rounded-full border-blue-600 ">
+            <div className="border-2 h-10 w-10 rounded-full border-blue-600 ">
               <img
                 className="h-10 w-10 rounded-full border-2 border-white"
                 src={client.profile}
