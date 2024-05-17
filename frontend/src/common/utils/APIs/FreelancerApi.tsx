@@ -486,4 +486,14 @@ export const getNotificationsAPI = async () => {
   }
 };
 
+export const getActivity = async (id:string) => {
+  try {
+    const response = await freelancersAPI.get(`/getactivity?id=${id}`);
+    return response.data;
+  } catch (error) {
+    const errorMessage = handleError(error);
+    throw errorMessage;
+  }
+};
+
 export default AxiosInterceptor;

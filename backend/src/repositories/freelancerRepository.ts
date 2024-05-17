@@ -6,6 +6,7 @@ import { INotification, IWork } from "../interfaces/freelancerInterface";
 import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { UpdateWriteOpResult } from "mongoose";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
+import { IFreelancerActivity } from "../models/Activity";
 
 export interface FreelancerRepository {
     findByUsername(username: string): Promise<Freelancer | null>;
@@ -60,4 +61,6 @@ export interface FreelancerRepository {
     getNotification(userId:string): Promise<INotification[] | null>
 
     addOrUpdateActivity(freelancerId: string): Promise<void>
+
+    getActivity(freelancerId: string): Promise<IFreelancerActivity | undefined>
 }

@@ -49,4 +49,5 @@ router.get('/alltransactions', freelancerAuth_1.protector, freelancerController.
 router.get('/videocall-auth', freelancerController.genarateVideoCallToken.bind(freelancerController));
 router.get('/getchartdata', freelancerAuth_1.protector, freelancerController.getchartData.bind(freelancerController));
 router.get('/getnotification', freelancerAuth_1.protector, freelancerController.getNotification.bind(freelancerController));
+router.get('/getactivity', freelancerController.getActivity.bind(freelancerController));
 exports.default = router;

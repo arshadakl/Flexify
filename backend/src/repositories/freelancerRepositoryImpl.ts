@@ -16,7 +16,7 @@ import { Order, Requirement } from "../models/Clients";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
 import { TransactionModel } from "../models/Transaction";
 import { NotificationModel } from "../models/Notification";
-import { FreelancerActivity } from "../models/Activity";
+import { FreelancerActivity, IFreelancerActivity } from "../models/Activity";
 const ObjectId = mongoose.Types.ObjectId;
 
 
@@ -1196,6 +1196,18 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
       await activityDoc.save();
     } catch (error: any) {
       throw new Error(`Error adding or updating activity: ${error.message}`);
+    }
+  }
+
+
+  async getActivity(freelancerId: string): Promise<IFreelancerActivity | undefined> {
+    try {
+      const activityDoc = await FreelancerActivity.findOne({ freelancerId: freelancerId });
+      if (activityDoc) {
+        return activityDoc
+      }
+    } catch (error: any) {
+      throw new Error(error.message)
     }
   }
 

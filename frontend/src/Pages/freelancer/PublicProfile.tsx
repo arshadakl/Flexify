@@ -95,7 +95,7 @@ function PublicProfile() {
             </div>
           </div>
           <div className="  mx-auto">
-                  <ActivityCalendar/>
+                  <ActivityCalendar id={id as string}/>
           </div>
 {/*  */}
           <div className="w-11/12 md:1/2  mb-32  mx-auto bg-slate-50/80 border-t-[1px] border-gray-100 rounded  dark:bg-gray-800 dark:border-gray-700">

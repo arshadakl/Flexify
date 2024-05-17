@@ -14,6 +14,7 @@ import fs from 'fs'
 import { IOrder, ISubmissions, ITransaction } from '../interfaces/clientInterface';
 import path from 'path';
 import axios from 'axios';
+import { IFreelancerActivity } from '../models/Activity';
 
 // import { uploadFile } from '../utils/Cloudinary';
 
@@ -655,6 +656,19 @@ export class FreelancerService {
             
             const response = await this.freelancerRepository.getNotification(userId)
             return response
+        } catch (error: any) {
+            throw new Error(error.message)
+        }
+    }
+       
+    async getActivity(freelancerId: string): Promise<IFreelancerActivity | [] > {
+        try {
+            
+            const response = await this.freelancerRepository.getActivity(freelancerId)
+            if(response){
+                return response
+            }
+            return []
         } catch (error: any) {
             throw new Error(error.message)
         }
