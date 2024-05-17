@@ -228,7 +228,7 @@ function FreelancerProfilePage() {
                     ) : (
                       <>
                         <div className="font-poppins flex flex-col w-full min-h-full">
-                          <h1 className="underline py-5">Active Orders</h1>
+                          <h1 className="underline py-5">Lastest Orders</h1>
                           <ProfileOrders />
                         </div>
                         {/* <OrdersTable  /> */}

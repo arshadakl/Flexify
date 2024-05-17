@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getNotificationsAPI } from "../../utils/APIs/FreelancerApi";
+import { formatDateNotification } from "../../utils/Services/dateFormater";
 
 function NotificationSection({ bg }: { bg: string }) {
   const [notification, setNotification] = useState<any[]>();
@@ -51,7 +52,7 @@ function NotificationSection({ bg }: { bg: string }) {
                     {notif.message}
                   </div>
                   <div className="text-xs text-blue-600 dark:text-blue-500">
-                    {notif.date}
+                    { formatDateNotification(notif.date) }
                   </div>
                 </div>
               </a>
