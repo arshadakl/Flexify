@@ -11,6 +11,7 @@ import Orders from "../Pages/admin/Orders";
 import Payments from "../Pages/admin/Payments";
 import Submissions from "../Pages/admin/Submissions";
 import FlaggedContent from "../Pages/admin/FlaggedContent";
+import NotFound from "../Pages/NotFound";
 function AdminRouter() {
   const { admin } = useSelector((state: any) => state.admin);
 
@@ -33,6 +34,8 @@ function AdminRouter() {
         </Route>
 
       </Route>
+      <Route path="/*" element={<NotFound />} />
+
     </Routes>
   );
 }

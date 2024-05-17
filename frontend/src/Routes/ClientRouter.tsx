@@ -8,6 +8,7 @@ import ClientProtect from "../clients/components/ClientProtect";
 import Submissions from "../Pages/client/Submissions";
 import TransactionsClient from "../Pages/client/TransactionsClient";
 import ChatPage from "../Pages/client/ChatPage";
+import NotFound from "../Pages/NotFound";
 
 function ClientRouter() {
   return (
@@ -24,6 +25,8 @@ function ClientRouter() {
         <Route path="/orders/chat/:id" element={<ChatPage />} />
 
       </Route>
+      <Route path="/*" element={<NotFound />} />
+
     </Routes>
   );
 }
