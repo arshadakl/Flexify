@@ -120,8 +120,8 @@ export class ClientService {
                 payment_method_types: ["card"],
                 line_items: purchaseDetails,
                 mode: "payment",
-                success_url: "http://localhost:5173/client/success",
-                cancel_url: "http://localhost:5173/client/fail",
+                success_url: "https://flexify.services/client/success",
+                cancel_url: "https://flexify.services/client/fail",
             });
 
             console.log(session.id, " session ID #############################");
