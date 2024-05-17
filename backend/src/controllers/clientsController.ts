@@ -95,7 +95,8 @@ export class ClientController {
     async clientOrders(req: Request, res: Response): Promise<void> {
         try {
             const user = req.user._id
-            const order = await this.ClientService.getAllOrders(user)
+            const page = req.query.page ? req.query.page : 1
+            const order = await this.ClientService.getAllOrders(user,page as number)
             if (order) {
                 res.status(200).json({ status: true, orders: order })
             }

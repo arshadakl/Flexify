@@ -66,13 +66,42 @@ export class ClientRepositoryImpl implements ClientRepository {
         }
     }
 
-    async getAllordersOfClient(client: string): Promise<IOrder[] | null> {
+    // async getAllordersOfClient(client: string): Promise<IOrder[] | null> {
+    //     try {
+    //         return await Order.find({ clientId: client }).sort({ date: -1 });
+    //     } catch (error: any) {
+    //         throw new Error(error.message)
+    //     }
+    // }
+
+    async getAllOrdersOfClient(client: string, page: number): Promise<{ orders: IOrder[], totalPages: number, currentPage: number } | null> {
         try {
-            return await Order.find({ clientId: client }).sort({ date: -1 });
+
+            const limit = 5
+            const skip = (page - 1) * limit;
+    
+            // Get the total count of orders for the client
+            const count = await Order.countDocuments({ clientId: client });
+    
+            // Calculate the total number of pages
+            const totalPages = Math.ceil(count / limit);
+    
+            // Fetch the orders with pagination
+            const orders = await Order.find({ clientId: client })
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit);
+    
+            return {
+                orders,
+                totalPages,
+                currentPage: page,
+            };
         } catch (error: any) {
-            throw new Error(error.message)
+            throw new Error(error.message);
         }
     }
+    
 
     async getSingleOrder(id: string): Promise<IOrder | null> {
         try {

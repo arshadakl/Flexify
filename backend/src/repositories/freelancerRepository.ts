@@ -38,7 +38,8 @@ export interface FreelancerRepository {
 
     // singlePostDetails(id:string):Promise<any>
     getWorkDetails(id:string):Promise<any>
-    getRecivedWork(id:string):Promise<IOrder[] | null>
+    // getRecivedWork(id:string):Promise<IOrder[] | null>
+    getReceivedWork(id: string, page: number): Promise<{ works: IOrder[], totalPages: number, currentPage: number } | null>
 
     getAllActivepost(freelancerId:string,page:number):Promise<any | null>
     getAllSuspendedpost(freelancerId:string):Promise<IWork[] | null>

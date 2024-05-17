@@ -58,9 +58,9 @@ export const checkoutAPI = async (id: string) => {
   }
 };
 
-export const getAllOrdersAPI = async () => {
+export const getAllOrdersAPI = async (pageNumber:number) => {
   try {
-    const response = await clientAPI.get("/clientorders");
+    const response = await clientAPI.get(`/clientorders?page=${pageNumber}`);
     return response.data;
   } catch (error) {
     const errorMessage = handleError(error);

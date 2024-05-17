@@ -583,9 +583,12 @@ class FreelancerRepositoryImpl {
         }
     }
     ;
-    async getRecivedWork(id) {
+    async getReceivedWork(id, page) {
         try {
-            // const works = await Order.find({freelancerId: id});
+            const limit = 6;
+            const skip = (page - 1) * limit;
+            const count = await Clients_1.Order.countDocuments({ freelancerId: new mongoose_1.default.Types.ObjectId(id) });
+            const totalPages = Math.ceil(count / limit);
             const works = await Clients_1.Order.aggregate([
                 { $match: { freelancerId: new mongoose_1.default.Types.ObjectId(id) } },
                 {
@@ -614,15 +617,26 @@ class FreelancerRepositoryImpl {
                         requirementStatus: 1,
                         deadline: 1
                     }
-                }, {
+                },
+                {
                     $sort: {
-                        date: -1 // Sort by date in descending order (reverse order)
+                        date: -1 // Sort by date in descending order
                     }
+                },
+                {
+                    $skip: skip
+                },
+                {
+                    $limit: limit
                 }
             ]);
             if (!works)
                 throw new Error("Work not found");
-            return works;
+            return {
+                works,
+                totalPages,
+                currentPage: page,
+            };
         }
         catch (error) {
             throw new Error(error.message);

@@ -10,7 +10,7 @@ function TransactionTable() {
   const navigate = useNavigate()
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getAllOrdersAPI();
+      const response = await getAllOrdersAPI(1);
       setOrders(response.orders);
       console.log(response);
     };

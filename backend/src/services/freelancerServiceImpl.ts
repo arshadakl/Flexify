@@ -522,9 +522,9 @@ export class FreelancerService {
         }
     }
 
-    async getRecivedWorkDetails(id: string): Promise<IOrder[] | null> {
+    async getRecivedWorkDetails(id: string,page:number): Promise<{ works: IOrder[], totalPages: number, currentPage: number } | null> {
         try {
-            const OrderDetails = await this.freelancerRepository.getRecivedWork(id)
+            const OrderDetails = await this.freelancerRepository.getReceivedWork(id,page)
             return OrderDetails
         } catch (error: any) {
             throw new Error(error.message)

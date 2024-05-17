@@ -189,9 +189,9 @@ class ClientService {
     }
     //used for get all orders of client 
     // ---------------------------------
-    async getAllOrders(user) {
+    async getAllOrders(user, pageNumber) {
         try {
-            const orders = await this.clientRepository.getAllordersOfClient(user);
+            const orders = await this.clientRepository.getAllOrdersOfClient(user, pageNumber);
             if (orders) {
                 return orders;
             }

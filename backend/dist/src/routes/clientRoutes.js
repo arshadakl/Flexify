@@ -31,7 +31,7 @@ router.get('/latestorderid', freelancerAuth_1.protector, clientController.getLas
 router.get('/deliverdwork', freelancerAuth_1.protector, clientController.getDeliverdWork.bind(clientController));
 router.get('/downloadsubmission', freelancerAuth_1.protector, clientController.downloadSubmissionFile.bind(clientController));
 router.patch('/manageapproval', freelancerAuth_1.protector, clientController.manageWorkApproval.bind(clientController));
-router.get('/getfreelancerdata', freelancerAuth_1.protector, clientController.getFreelancerData.bind(clientController));
+router.get('/getfreelancerdata', clientController.getFreelancerData.bind(clientController));
 router.get('/getConversations', freelancerAuth_1.protector, chatController.getConversationsByUser.bind(chatController));
 router.post('/reportpost', freelancerAuth_1.protector, clientController.reportPost.bind(clientController));
 router.post('/addRating', freelancerAuth_1.protector, clientController.addRatingController.bind(chatController));

@@ -676,50 +676,68 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
   };
 
 
-  async getRecivedWork(id: string): Promise<IOrder[] | null> {
-    try {
-      // const works = await Order.find({freelancerId: id});
-      const works = await Order.aggregate([
-        { $match: { freelancerId: new mongoose.Types.ObjectId(id) } },
-        {
-          $lookup: {
-            from: "freelancers",
-            localField: "clientId",
-            foreignField: "_id",
-            as: "client"
-          }
-        },
-        {
-          $project: {
-            client: {
-              username: 1,
-              profile: 1,
-              email: 1
-            },
-            workId: 1,
-            freelancerId: 1,
-            clientId: 1,
-            category: 1,
-            amount: 1,
-            WorkDetails: 1,
-            date: 1,
-            status: 1,
-            requirementStatus: 1,
-            deadline: 1
 
-          }
-        }, {
-          $sort: {
-            date: -1 // Sort by date in descending order (reverse order)
-          }
-        }
-      ])
-      if (!works) throw new Error("Work not found");
-      return works
+  async getReceivedWork(id: string, page: number): Promise<{ works: IOrder[], totalPages: number, currentPage: number } | null> {
+    try {
+      const limit =6
+        const skip = (page - 1) * limit;
+        const count = await Order.countDocuments({ freelancerId: new mongoose.Types.ObjectId(id) });
+
+        const totalPages = Math.ceil(count / limit);
+
+        const works = await Order.aggregate([
+            { $match: { freelancerId: new mongoose.Types.ObjectId(id) } },
+            {
+                $lookup: {
+                    from: "freelancers",
+                    localField: "clientId",
+                    foreignField: "_id",
+                    as: "client"
+                }
+            },
+            {
+                $project: {
+                    client: {
+                        username: 1,
+                        profile: 1,
+                        email: 1
+                    },
+                    workId: 1,
+                    freelancerId: 1,
+                    clientId: 1,
+                    category: 1,
+                    amount: 1,
+                    WorkDetails: 1,
+                    date: 1,
+                    status: 1,
+                    requirementStatus: 1,
+                    deadline: 1
+                }
+            },
+            {
+                $sort: {
+                    date: -1 // Sort by date in descending order
+                }
+            },
+            {
+                $skip: skip
+            },
+            {
+                $limit: limit
+            }
+        ]);
+
+        if (!works) throw new Error("Work not found");
+
+        return {
+            works,
+            totalPages,
+            currentPage: page,
+        };
     } catch (error: any) {
-      throw new Error(error.message);
+        throw new Error(error.message);
     }
-  }
+}
 
 
   // get all active post

@@ -90,7 +90,8 @@ class ClientController {
     async clientOrders(req, res) {
         try {
             const user = req.user._id;
-            const order = await this.ClientService.getAllOrders(user);
+            const page = req.query.page ? req.query.page : 1;
+            const order = await this.ClientService.getAllOrders(user, page);
             if (order) {
                 res.status(200).json({ status: true, orders: order });
             }

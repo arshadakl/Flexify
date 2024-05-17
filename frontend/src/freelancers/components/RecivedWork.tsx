@@ -6,19 +6,23 @@ import { useNavigate } from "react-router-dom";
 
 function RecivedWork() {
   const navigate = useNavigate()
+  const [page, setPage] = useState<number>(1);
+  const [totalPage, setTotalpage] = useState(1);
   const [orders, setOrders] = useState<any>();
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const response = await getRecivedOrdersAPI();
-      console.log(response.orders, "resposnesjsjkdf sk dj fkjskd");
 
-      if (response.status) {
-        setOrders(response.orders);
-      }
-    };
+  const fetchOrders = async () => {
+    const response = await getRecivedOrdersAPI(page);
+
+    if (response.status) {
+      setOrders(response.orders.works);
+      setTotalpage(response.orders.totalPages);
+    }
+  };
+
+  useEffect(() => {
+    
     fetchOrders();
-    console.log(orders, "Datas");
-  }, []);
+  }, [page]);
   const currentDate = new Date();
 
   return (
@@ -119,6 +123,43 @@ function RecivedWork() {
             })}
           </tbody>
         </table>
+        <>
+                <div className="w-full flex px-5 py-2 justify-end ">
+                  <nav aria-label="Page navigation example">
+                    <ul className="inline-flex -space-x-px text-sm">
+                      <li>
+                        <button
+                          disabled={page == 1 ? true : false}
+                          onClick={() => setPage(page - 1)}
+                          className="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Previous
+                        </button>
+                      </li>
+                      <li>
+                        <p
+                          aria-current="page"
+                          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          {page}
+                        </p>
+                      </li>
+
+                      <li>
+                        <p
+                          onClick={() => {
+                            if (page == totalPage + 1) return;
+                            setPage(page + 1);
+                          }}
+                          className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >
+                          Next
+                        </p>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+              </>
         {orders && (
           <h1 className="text-center w-full text-2xl font-semibold py-5 text-slate-400">
             {orders.length === 0 ? "No Orders Found" : ""}

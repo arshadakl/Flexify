@@ -11,7 +11,8 @@ export interface ClientRepository {
     FindTransactionBySession(id:string): Promise<ITransaction | null>
     updateTransaction(session:string,status:string): Promise<UpdateWriteOpResult>
     createOrder(order:IOrder): Promise<IOrder>
-    getAllordersOfClient(client:string): Promise<IOrder[] | null>
+    // getAllordersOfClient(client:string): Promise<IOrder[] | null>
+    getAllOrdersOfClient(client: string, page: number): Promise<{ orders: IOrder[], totalPages: number, currentPage: number } | null>
     getSingleOrder(id:string): Promise<IOrder | null>
     addRequirements(data:any):Promise<any>
     changeRequirementStatus(orderId:string,status:Boolean):Promise<any>
