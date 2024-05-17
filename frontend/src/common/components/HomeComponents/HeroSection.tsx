@@ -1,11 +1,18 @@
 // import NavBar from "../Navbar/NavBar";
 
 import { motion,MotionConfig } from "framer-motion";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { fadeIn } from "../../animations/Frame_Motion/variants";
+import { useNavigate } from "react-router-dom";
 
 function HeroSection() {
+  const [searchKey,setSsearchKey] = useState<string>("")
   const [isDropdown,setIsDropDown] = useState<Boolean>(false)
+  const navigate = useNavigate()
+  const manageSearch = (e:SyntheticEvent)=>{
+    e.preventDefault()
+    navigate(`/works?search=${searchKey}`)
+  }
   const manageDropdown = ()=>{
     if(isDropdown==false){
       setIsDropDown(true)
@@ -32,7 +39,7 @@ function HeroSection() {
                   <motion.h1 variants={fadeIn("up",0.8)} initial="hidden" whileInView={"show"} viewport={{once:true}} className="text-2xl text-white lg:text-4xl font-poppins m-0 py-5 font-semibold leading-tight tracking-tight   dark:text-white">
                   Find the right freelance <br />service, right away
                   </motion.h1> 
-                  <form className="max-w-lg mx-auto">
+                  <form onSubmit={(e)=>manageSearch(e)} className="max-w-lg mx-auto">
                     <motion.div variants={fadeIn("right",1)} initial="hidden" whileInView={"show"} viewport={{once:true}}>
                     <div className="flex">
                       <label
@@ -111,7 +118,7 @@ function HeroSection() {
                       <div className="relative w-full">
                         <input
                           type="search"
-                          id="search-dropdown"
+                          id="search-dropdown" value={searchKey} onChange={(e)=>setSsearchKey(e.target.value)}
                           className="block p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700  dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
                           placeholder="Search Logo, Design..."
                         />
