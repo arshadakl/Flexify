@@ -9,7 +9,7 @@ function ProfileOrders() {
     useEffect(() => {
       const fetchData = async () => {
         const response = await getAllOrdersAPI(1);
-        setOrders(response.orders);
+        setOrders(response.orders.orders);
         console.log(response);
       };
       fetchData();
