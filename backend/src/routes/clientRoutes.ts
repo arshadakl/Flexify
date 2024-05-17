@@ -33,7 +33,7 @@ router.get('/latestorderid',protector,clientController.getLastOrder.bind(clientC
 router.get('/deliverdwork',protector,clientController.getDeliverdWork.bind(clientController));
 router.get('/downloadsubmission',protector,clientController.downloadSubmissionFile.bind(clientController));
 router.patch('/manageapproval',protector,clientController.manageWorkApproval.bind(clientController));
-router.get('/getfreelancerdata',protector,clientController.getFreelancerData.bind(clientController));
+router.get('/getfreelancerdata',clientController.getFreelancerData.bind(clientController));
 router.get('/getConversations',protector,chatController.getConversationsByUser.bind(chatController));
 router.post('/reportpost',protector,clientController.reportPost.bind(clientController));
 router.post ('/addRating',protector,clientController.addRatingController.bind(chatController));
