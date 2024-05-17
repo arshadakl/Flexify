@@ -12,6 +12,8 @@ import { fadeIn } from "../../common/animations/Frame_Motion/variants";
 import { CategoryInter } from "../../interfaces/Admin";
 
 function WorkList() {
+  const queryParams = new URLSearchParams(location.search);
+  const searchKey = queryParams.get("search");
   const [wordData, setWordData] = useState<any>();
   const [categories, setCategories] = useState<CategoryInter[]>();
   const [page, setPage] = useState<number>(1);
@@ -39,7 +41,11 @@ function WorkList() {
       }
     };
     fetch();
-    fetchData("", "", page);
+    if(searchKey){
+      fetchData(searchKey as string, "", page);
+    }else{
+      fetchData("", "", page);
+    }
   }, []);
 
 
