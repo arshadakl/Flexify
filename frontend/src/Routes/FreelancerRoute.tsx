@@ -21,6 +21,7 @@ import DualProtect from "../freelancers/components/DualProtect";
 import PublicProfile from "../Pages/freelancer/PublicProfile";
 import VideoCallPage from "../Pages/client/VideoCall";
 import VideoLoading from "../common/components/ExtraComponents/VideoLoading";
+import NotFound from "../Pages/NotFound";
 
 function FreelancerRoute() {
   return (
@@ -51,6 +52,8 @@ function FreelancerRoute() {
         <Route path="dashboard/order-management" element={<OrderManagment />} />
         <Route path="dashboard/requirements" element={<RequirementsShow />} />
       </Route>
+      <Route path="/*" element={<NotFound />} />
+
     </Routes>
   );
 }
