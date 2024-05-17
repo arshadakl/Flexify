@@ -577,5 +577,17 @@ class FreelancerService {
             throw new Error(error.message);
         }
     }
+    async getActivity(freelancerId) {
+        try {
+            const response = await this.freelancerRepository.getActivity(freelancerId);
+            if (response) {
+                return response;
+            }
+            return [];
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 exports.FreelancerService = FreelancerService;

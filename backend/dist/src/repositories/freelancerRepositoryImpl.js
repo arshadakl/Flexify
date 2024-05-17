@@ -1050,5 +1050,16 @@ class FreelancerRepositoryImpl {
             throw new Error(`Error adding or updating activity: ${error.message}`);
         }
     }
+    async getActivity(freelancerId) {
+        try {
+            const activityDoc = await Activity_1.FreelancerActivity.findOne({ freelancerId: freelancerId });
+            if (activityDoc) {
+                return activityDoc;
+            }
+        }
+        catch (error) {
+            throw new Error(error.message);
+        }
+    }
 }
 exports.FreelancerRepositoryImpl = FreelancerRepositoryImpl;

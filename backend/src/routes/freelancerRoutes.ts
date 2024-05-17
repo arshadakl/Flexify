@@ -62,4 +62,6 @@ router.get('/videocall-auth',freelancerController.genarateVideoCallToken.bind(fr
 router.get('/getchartdata',protector,freelancerController.getchartData.bind(freelancerController))
 router.get('/getnotification',protector,freelancerController.getNotification.bind(freelancerController))
 
+router.get('/getactivity',freelancerController.getActivity.bind(freelancerController))
+
 export default router;

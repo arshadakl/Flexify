@@ -625,5 +625,16 @@ class FreelancerController {
             res.json({ status: false, error: error.message });
         }
     }
+    async getActivity(req, res) {
+        try {
+            const userId = req.query.id;
+            const response = await this._freelancerService.getActivity(userId);
+            console.log(response);
+            res.status(200).json({ status: 'success', activity: response });
+        }
+        catch (error) {
+            res.json({ status: false, error: error.message });
+        }
+    }
 }
 exports.FreelancerController = FreelancerController;

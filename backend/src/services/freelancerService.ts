@@ -3,6 +3,7 @@ import { Freelancer, FreelancerDetails } from "../models/Freelancer";
 import { ICategory, ISubcategory } from "../interfaces/adminInterface";
 import { INotification, IWork } from "../interfaces/freelancerInterface";
 import { IOrder, ISubmissions, ITransaction } from "../interfaces/clientInterface";
+import { IFreelancerActivity } from "../models/Activity";
 
 export interface freelancerService{
     login(username: string, password: string): Promise<Freelancer | null>
@@ -47,4 +48,6 @@ export interface freelancerService{
     getchartData(freelancerId:string):Promise<any>
 
     getNotification(userId: string): Promise<INotification[] | null>
+
+    getActivity(freelancerId: string): Promise<IFreelancerActivity | [] >
 }

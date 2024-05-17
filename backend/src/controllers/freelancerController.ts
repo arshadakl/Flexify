@@ -702,6 +702,21 @@ export class FreelancerController {
         }
     }
 
+    async getActivity(req: Request, res: Response): Promise<void> {
+        try {
+            const userId = req.query.id
+            
+            const response = await this._freelancerService.getActivity(userId as string)
+            console.log(response);
+            
+            res.status(200).json({ status: 'success', activity:response})
+
+
+        } catch (error: any) {
+            res.json({ status: false, error: error.message })
+        }
+    }
+
 
 
 }
