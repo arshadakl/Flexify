@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, MotionConfig } from "framer-motion"
 import { fadeIn } from '../../animations/Frame_Motion/variants';
+import { useNavigate } from 'react-router-dom';
 
 interface CardData {
  imageSrc: string;
@@ -52,15 +53,22 @@ interface CardProps {
 interface PopularProps {
    scroll: any; // Adjust the type according to your needs
  }
+ 
 
-const Card: React.FC<CardProps & { progress: number }> = ({ imageSrc, altText, title, progress  }) => (
-  <motion.div variants={fadeIn("right", progress)} initial="hidden" whileInView={"show"} className="flex-none w-56 relative" >
+const Card: React.FC<CardProps & { progress: number }> = ({ imageSrc, altText, title, progress  }) =>{ 
+   const navigate = useNavigate()
+
+const manageSearch = (searchkey:string)=>{
+   navigate(`/works?search=${searchkey}`)
+ }
+   return (
+  <motion.div onClick={()=>manageSearch(title)} variants={fadeIn("right", progress)} initial="hidden" whileInView={"show"} className="flex-none w-56 relative cursor-pointer" >
     <img className="w-full h-auto rounded" src={imageSrc} alt={altText} />
     <div className="absolute top-0 left-0 p-4 text-white">
       {title}
     </div>
  </motion.div>
-);
+)};
 
 const Popular: React.FC<PopularProps> = ({ scroll }) => {
 
