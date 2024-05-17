@@ -343,9 +343,9 @@ export const deleteWork = async (id: any) => {
   }
 };
 
-export const getRecivedOrdersAPI = async () => {
+export const getRecivedOrdersAPI = async (page:number) => {
   try {
-    const response = await freelancersAPI.get("/recivedorders");
+    const response = await freelancersAPI.get(`/recivedorders?page=${page}`);
 
     return response.data;
   } catch (error) {

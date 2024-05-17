@@ -34,7 +34,7 @@ export interface freelancerService{
     getallWorksToDiscoverService(searchKey:string,filter:string,page:number): Promise<any>
     deleteWorkPost(id:string): Promise<any>
     getSingleWorkDetails(id:string): Promise<any>
-    getRecivedWorkDetails(id:string): Promise<IOrder[] | null >
+    getRecivedWorkDetails(id:string,page:number): Promise<{ works: IOrder[], totalPages: number, currentPage: number } | null>
 
     getActivePosts(freelancerId:string): Promise<IWork[] | null>
     getSuspendedPosts(freelancerId:string): Promise<IWork[] | null>

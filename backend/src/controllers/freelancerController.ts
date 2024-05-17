@@ -558,7 +558,8 @@ export class FreelancerController {
     async getRecivedWork(req: Request, res: Response): Promise<void> {
         try {
             const FreelancerID = req.user._id
-            const OrdersDetails = await this._freelancerService.getRecivedWorkDetails(FreelancerID)
+            const page = req.query.page ? req.query.page : 1
+            const OrdersDetails = await this._freelancerService.getRecivedWorkDetails(FreelancerID,page as number)
             res.status(200).json({ status: 'success', orders: OrdersDetails })
         } catch (error: any) {
             res.json({ status: false, error: error.message })

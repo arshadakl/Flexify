@@ -1,4 +1,5 @@
 import Orders from "../../clients/components/orders"
+import Footer from "../../common/components/HomeComponents/Footer"
 import NavBar from "../../common/components/Navbar/NavBar"
 
 function OrdersPage() {
@@ -6,6 +7,7 @@ function OrdersPage() {
     <>
       <NavBar bg="white" fixed="none" />
       <Orders/>
+      <Footer/>
     </>
   )
 }

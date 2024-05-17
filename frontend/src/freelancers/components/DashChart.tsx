@@ -81,7 +81,7 @@ function DashChart() {
         id="stats"
         className="grid gird-cols-1 md:grid-cols-2 lg:grid-cols-2  gap-6 my-5"
       >
-        <div className="bg-red-200 w-full border-sm shadow p-6 rounded-lg ">
+        <div className="bg-white w-full border-sm shadow p-6 rounded-lg ">
           <div className="flex flex-row space-x-4 items-center justify-between">
             <div>
               <p className="text-gray-500 text-xl font-medium my-2 leading-4">

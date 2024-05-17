@@ -58,9 +58,31 @@ class ClientRepositoryImpl {
             throw new Error(error.message);
         }
     }
-    async getAllordersOfClient(client) {
+    // async getAllordersOfClient(client: string): Promise<IOrder[] | null> {
+    //     try {
+    //         return await Order.find({ clientId: client }).sort({ date: -1 });
+    //     } catch (error: any) {
+    //         throw new Error(error.message)
+    //     }
+    // }
+    async getAllOrdersOfClient(client, page) {
         try {
-            return await Clients_1.Order.find({ clientId: client }).sort({ date: -1 });
+            const limit = 5;
+            const skip = (page - 1) * limit;
+            // Get the total count of orders for the client
+            const count = await Clients_1.Order.countDocuments({ clientId: client });
+            // Calculate the total number of pages
+            const totalPages = Math.ceil(count / limit);
+            // Fetch the orders with pagination
+            const orders = await Clients_1.Order.find({ clientId: client })
+                .sort({ date: -1 })
+                .skip(skip)
+                .limit(limit);
+            return {
+                orders,
+                totalPages,
+                currentPage: page,
+            };
         }
         catch (error) {
             throw new Error(error.message);

@@ -452,9 +452,9 @@ class FreelancerService {
             throw new Error(error.message);
         }
     }
-    async getRecivedWorkDetails(id) {
+    async getRecivedWorkDetails(id, page) {
         try {
-            const OrderDetails = await this.freelancerRepository.getRecivedWork(id);
+            const OrderDetails = await this.freelancerRepository.getReceivedWork(id, page);
             return OrderDetails;
         }
         catch (error) {
