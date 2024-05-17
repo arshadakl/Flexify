@@ -4,6 +4,7 @@ import { getFreelancerDataAPI, getfreelancerratingAPI } from "../../common/utils
 import NavBar from "../../common/components/Navbar/NavBar";
 import { Star } from "../../common/components/ExtraComponents/Star";
 import ActivityCalendar from "../../freelancers/components/ActivityCalendar";
+import Footer from "../../common/components/HomeComponents/Footer";
 // import { toast } from "sonner";
 
 function PublicProfile() {
@@ -150,6 +151,7 @@ function PublicProfile() {
           </div>
         </div>
     </div>
+    <Footer/>
     </>
   )
 }
