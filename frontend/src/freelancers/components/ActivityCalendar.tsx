@@ -9,15 +9,15 @@ interface Activity {
   _id: string;
 }
 
-interface ApiResponse {
-  status: string;
-  activity: {
-    _id: string;
-    freelancerId: string;
-    activities: Activity[];
-    __v: number;
-  };
-}
+// interface ApiResponse {
+//   status: string;
+//   activity: {
+//     _id: string;
+//     freelancerId: string;
+//     activities: Activity[];
+//     __v: number;
+//   };
+// }
 
 const getYears = (data: Activity[]): number[] => {
   const years = new Set<number>();
@@ -37,9 +37,10 @@ const ActivityCalendar = ({ id }: { id: string }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response: ApiResponse = await getActivity(id as string);
-
-      if (response.status === "success") {
+      const response: any = await getActivity(id as string);
+      // console.log(response);
+      
+      if (response.activity.length!=0 && response.status === "success") {
         const data = response.activity?.activities;
         setActivityData(data);
         if (data.length > 0) {
@@ -52,7 +53,7 @@ const ActivityCalendar = ({ id }: { id: string }) => {
   }, [id]);
 
   if (activityData.length === 0) {
-    return <div>No activity data available.</div>;
+    return <div></div>;
   }
 
   const years = getYears(activityData);
@@ -72,7 +73,7 @@ const ActivityCalendar = ({ id }: { id: string }) => {
         <div
           className="flex h-48 lg:h-64 md:w-4/6 w-full bg-white mx-auto border rounded-md"
         >
-          {activityData.length > 0 && (
+          {activityData.length!==0 && (
             <ResponsiveCalendar
               data={dataForYear}
               from={formatDate(minDate)}
