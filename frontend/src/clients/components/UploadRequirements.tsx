@@ -20,7 +20,7 @@ function UploadRequirements() {
   const [referenceMaterialFile, setReferenceMaterialFile] = useState<
     File | string
   >("");
-  const [logoFile, setLogoFile] = useState<File | string>("");
+  const [logoFile, setLogoFile] = useState<File | null>(null)
   const [questionnaireResponses, setQuestionnaireResponses] = useState<
     { question: string; answer: string }[]
   >([]);
@@ -241,7 +241,7 @@ function UploadRequirements() {
                     <i className="fa-light fa-file-arrow-up mx-2" /> Logo
                   </label>
                   <p className="text-[12px]">
-                    {logoFile != "" ? (
+                    {logoFile != null ? (
                       <span className="text-green-600">
                         <i className="fa-light fa-circle-check mx-1"></i>File
                         Selected

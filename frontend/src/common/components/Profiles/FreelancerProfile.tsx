@@ -24,27 +24,19 @@ function FreelancerProfilePage() {
   const profileData = useSelector((state: any) => state.freelancer);
   const freelancerDetails = profileData.freelancer;
   const [baseData, setBaseData] = useState<profileCompletionForm>();
-  // const [wordData, setWordData] = useState<IWork[]>();
-  //    const [isEdit, setIsEdit] = useState(false)
-  //   const [imageSrc, setImageSrc] = useState<string>("https://static.vecteezy.com/system/resources/previews/013/042/571/original/default-avatar-profile-icon-social-media-user-photo-in-flat-style-vector.jpg");
 
   const handleLogout = () => {
-    console.log("called to logout");
 
-    dispatch(logout()); // Dispatch the logout action
-    persistor.purge(); // Then purge the persisted data
-    navigate("/");
+    dispatch(logout());
+    persistor.purge(); 
   };
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(freelancerDetails, "redux profile data");
       if (freelancerDetails.token) {
         try {
           const response = await fetchProfileData();
-          console.log(response, "das das dsad");
           setBaseData(response.userDetails);
-          console.log(baseData, "base data here..");
         } catch (error) {
           console.error("Error fetching profile data:", error);
         }
@@ -60,9 +52,9 @@ function FreelancerProfilePage() {
     <>
       <AxiosInterceptor />
       <div className="bg-slate-100 :min-h-screen pb-10">
-        <div className="flex md:flex-row flex-col text-gray-900 w-screen gap-10 px-10 pt-12">
+        <div className="flex md:flex-row flex-col text-gray-900 w-screen gap-10 px-0 pt-12">
           <div className="md:w-2/5 w-1/1">
-            <div className="w-4/5 md:1/2  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="md:w-4/5 w-1/1   mx-3 md:mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex justify-end px-4 pt-4">
                 <p
                   onClick={() => {
@@ -146,7 +138,7 @@ function FreelancerProfilePage() {
               </div>
             </div>
 
-            <div className="w-4/5 md:1/2  mt-5  mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
+            <div className="md:w-4/5 w-1/1   mt-5 mx-3 md:mx-auto bg-white border-t-[1px] border-gray-100 rounded shadow dark:bg-gray-800 dark:border-gray-700">
               <div className="flex flex-col items-center">
                 <ul className="w-full px-5 py-3 divide-y divide-gray-200 dark:divide-gray-700">
                   <li className="pb-3 sm:pb-4">
@@ -202,7 +194,7 @@ function FreelancerProfilePage() {
             initial="hidden"
             whileInView={"show"}
             viewport={{ once: true }}
-            className="md:w-3/5  w-1/1 "
+            className="md:w-3/5  w-1/1 mx-3"
           >
             <div className="min-h-60 transition-all flex flex-col shadow-sm rounded dark:bg-slate-900 dark:border-gray-700 dark:shadow-slate-700/[.7]">
               {!isEdit ? (

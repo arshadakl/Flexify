@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { downloadFileAPI, getrequirementsAPI } from "../../common/utils/APIs/FreelancerApi";
 // import { FormatDateString } from "../../common/utils/Services/dateFormater";
 
 function ExplorRequirements() {
-  const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const orderId = queryParams.get("id");
@@ -29,7 +28,7 @@ function ExplorRequirements() {
   }
   return (
     <>
-      <div className="bg-slate-100 pt-28 w-full py-5  min-h-screen font-poppins">
+      <div className="bg-slate-100 pt-28 w-full md:py-28 py-10  min-h-80vh  font-poppins">
         <div className=" md:w-4/6 w-11/12  mx-auto">
           <h1 className="text-xl font-poppins">Work Requirements</h1>
           <hr className="my-2" />
@@ -76,7 +75,7 @@ function ExplorRequirements() {
             <p className="text-[13px] py-2 mx-5 text-gray-500 font-light">
               * Download requirements
             </p>
-            <div className="mx-5 flex">
+            <div className="mx-5 flex flex-col md:flex-row">
               {(data?.referenceMaterial!=="") && (
                 <div>
                   <label onClick={()=>handileDownload(data?.referenceMaterial)}

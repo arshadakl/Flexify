@@ -75,10 +75,10 @@ function CreatePostOver(data:any) {
     <>
 
       <div className="w-full  bg-slate-50 min-h-[80vh] py-5">
-        <div className="block md:w-3/5 w-5/6 mx-auto p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+        <div className="block lg:w-3/5 w-5/6 mx-auto p-6 bg-white border border-gray-200 rounded   dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
           <div className="flex flex-col gap-5">
-            <div className="flex">
-              <div className="w-2/6">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-2/6 w-1/1 ">
                 <label
                   htmlFor="message"
                   className="text-start text-xl   block mb-2 font-bold text-gray-900 dark:text-white"
@@ -91,7 +91,7 @@ function CreatePostOver(data:any) {
                   search for a service like yours.
                 </p>
               </div>
-              <div className="w-4/6">
+              <div className="md:w-4/6 w-1/1 mt-3 md:mt-0">
                 <textarea
                   id="message"
                   rows={3} value={data.formData.title} name="title" onChange={(e)=>{  handleChange(e) }}
@@ -104,8 +104,8 @@ function CreatePostOver(data:any) {
               </div>
             </div>
 
-            <div className="flex">
-              <div className="w-2/6">
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-2/6 w-1/1">
                 <label
                   htmlFor="message"
                   className="text-start text-xl   block mb-2 font-bold text-gray-900 dark:text-white"
@@ -117,7 +117,7 @@ function CreatePostOver(data:any) {
                   work.
                 </p>
               </div>
-              <div className="w-4/6 gap-2 flex justify-evenly my-auto">
+              <div className="md:w-4/6 w-1/1 mt-3 md:mt-0 gap-2 flex justify-evenly my-auto">
                 <div className="w-1/2">
                   <select
                     id="countries" name="category" value={data.formData.category}
@@ -153,8 +153,8 @@ function CreatePostOver(data:any) {
               </div>
             </div>
 
-            <div className="flex mt-2">
-              <div className="w-2/6">
+            <div className=" mt-2 flex flex-col md:flex-row">
+              <div className="md:w-2/6 w-1/1">
                 <label
                   htmlFor="message"
                   className="text-start text-xl  mb-2 block  font-bold text-gray-900 dark:text-white"
@@ -166,7 +166,7 @@ function CreatePostOver(data:any) {
                   services you offer. Use all 5 tags to get found.
                 </p>
               </div>
-              <div className="w-4/6">
+              <div className="md:w-4/6 w-1/1 mt-3 md:mt-0">
                 <label className="block mb-2 text-xl font-semibold text-gray-900 dark:text-white">
                   keywords
                 </label>

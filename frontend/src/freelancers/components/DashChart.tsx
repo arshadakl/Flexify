@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getchartdataAPI } from "../../common/utils/APIs/FreelancerApi";
 function DashChart() {
   const [chartData, setChartData] = useState<any>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const response = await getchartdataAPI();
@@ -22,33 +23,20 @@ function DashChart() {
         data: chartData?.orders?.datasets[0].data,
         fill: false,
         borderColor: "#FEC84D",
-        tension: 0.1,
+        tension: 0.1, // Correctly placed tension property
       },
-      //   {
-      //     label: 'Line 2',
-      //     data: chartData?.Amount?.datasets[0].data,
-      //     fill: false,
-      //     borderColor: 'rgb(255, 99, 132)',
-      //     tension: 0.1
-      //   }
     ],
   };
+
   const data2 = {
     labels: chartData?.orders?.labels,
     datasets: [
-      //   {
-      //     label: 'Line 1',
-      //     data: chartData?.orders?.datasets[0].data,
-      //     fill: false,
-      //     borderColor: 'rgb(75, 192, 192)',
-      //     tension: 0.1
-      //   },
       {
         label: "Line 2",
         data: chartData?.Amount?.datasets[0].data,
         fill: false,
         borderColor: "#00B16D",
-        tension: 0.1,
+        tension: 0.1, // Correctly placed tension property
       },
     ],
   };
@@ -58,52 +46,31 @@ function DashChart() {
     type: "line",
     data: data1,
     options: {
-      animation: {
-        tension: {
-          duration: 3000,
-          easing: "linear",
-          from: 1,
-          to: 0,
-          loop: true,
-        },
-      },
       scales: {
         y: {
-          // defining min and max so hiding the dataset does not change scale range
           min: 0,
           max:
             chartData?.orders?.datasets[0].data.reduce(
-              (a: number, b: number) => a + b
-            ) /
-              chartData?.orders?.datasets[0].data.length +
-            1,
+              (a: number, b: number) => Math.max(a, b),
+              0
+            ) + 1,
         },
       },
     },
   };
+
   const config2: ChartConfiguration<"line"> = {
     type: "line",
     data: data2,
     options: {
-      animation: {
-        tension: {
-          duration: 3000,
-          easing: "linear",
-          from: 1,
-          to: 0,
-          loop: true,
-        },
-      },
       scales: {
         y: {
-          // defining min and max so hiding the dataset does not change scale range
           min: 0,
           max:
             chartData?.Amount?.datasets[0].data.reduce(
-              (a: number, b: number) => a + b
-            ) /
-              chartData?.Amount?.datasets[0].data.length +
-            4000,
+              (a: number, b: number) => Math.max(a, b),
+              0
+            ) + 4000,
         },
       },
     },
@@ -112,9 +79,9 @@ function DashChart() {
     <>
       <div
         id="stats"
-        className="grid gird-cols-1 md:grid-cols-2 lg:grid-cols-4  gap-6 my-5"
+        className="grid gird-cols-1 md:grid-cols-2 lg:grid-cols-2  gap-6 my-5"
       >
-        <div className="bg-white border-sm shadow p-6 rounded-lg ">
+        <div className="bg-red-200 w-full border-sm shadow p-6 rounded-lg ">
           <div className="flex flex-row space-x-4 items-center justify-between">
             <div>
               <p className="text-gray-500 text-xl font-medium my-2 leading-4">
@@ -152,7 +119,7 @@ function DashChart() {
                 Service Charges
               </p>
               <p className="text-gray-900 font-bold text-3xl inline-flex items-center space-x-2">
-                <span>{chartData && chartData.statistics.charges}</span>
+                <span>{chartData && Math.floor(chartData.statistics.charges)}</span>
                 
                 
               </p>

@@ -5,13 +5,12 @@ import socket from "../../utils/config/socket";
 import store from "../../../Redux/store";
 import ringSound from "../../Audio/videoCallRing.mp3";
 import { uid } from 'uid';
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
 function CallNotification() {
   const navigate = useNavigate()
   const [ring, setRing] = useState<boolean>(false);
-  const [calling, setCalling] = useState<boolean>(false);
+  // const [calling, setCalling] = useState<boolean>(false);
   const state = store.getState();
   const freelancer = state.freelancer.freelancer;
   const userId = freelancer?._id;
