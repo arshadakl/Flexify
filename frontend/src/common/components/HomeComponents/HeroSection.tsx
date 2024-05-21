@@ -9,6 +9,9 @@ import { CategoryInter } from "../../../interfaces/Admin";
 import { getAllCategories } from "../../utils/APIs/FreelancerApi";
 
 function HeroSection() {
+  
+  
+
   const [searchKey, setSsearchKey] = useState<string>("");
   const navigate = useNavigate();
   const [categories, setCategories] = useState<CategoryInter[]>();
@@ -37,8 +40,11 @@ function HeroSection() {
           initial="hidden"
           whileInView={"show"}
           viewport={{ once: true }}
-          className="flex  lg:bg-[url('/images/heroBanner.jpg')] bg-flexy-green hero-banner h-50vh lg:h-80vh "
+          className="flex 
+           
+            bg-flexy-green hero-banner h-50vh lg:h-80vh "
         >
+           {/* lg:bg-[url('/images/heroBanner.jpg')] */}
           {/* Left Pane */}
           {/* <img src="/images/FlexifyBlack.png" className="absolute w-28 m-8  lg:block hidden" alt="" /> */}
           {/* <NavBar/> */}
@@ -160,11 +166,12 @@ function HeroSection() {
             </div>
           </div>
           {/* Right Pane */}
-          {/* <div className="hidden signup-banner lg:flex   items-center justify-center flex-1 bg-white text-black">
-          <div className=" text-center">
-            
-          </div>
-        </div> */}
+          <div className="hidden signup-banner lg:flex bg-flexy-green  items-center justify-center flex-1  text-black">
+          {/* <Lottie options={defaultOptions} height={550} width={550} /> */}
+          <video className="bg-flexy-green h-full" autoPlay loop muted playsInline>
+      <source src="/images/bg-home.webm" type="video/webm" />
+    </video>
+        </div>
         </motion.div>
       </MotionConfig>
     </>
