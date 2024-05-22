@@ -3,6 +3,7 @@ import CarouselSingle from "../../common/components/ExtraComponents/CarosuelSing
 import { fadeIn } from "../../common/animations/Frame_Motion/variants";
 import SellerDetails from "../../common/components/ExtraComponents/SellerDetails";
 import { useNavigate } from "react-router-dom";
+import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
 
 function SingleWorkSection({ post }: { post: any }) {
   const selectedWork = post[0];
@@ -44,8 +45,8 @@ function SingleWorkSection({ post }: { post: any }) {
               </motion.span>
             </motion.h1>
           </div>
-          <div className="flex">
-            <p className="cursor-pointer font-semibold pb-0 text-3xl ">
+          <div className="flex break-words  overflow-hidden">
+            <p className="cursor-pointer  font-semibold pb-0 text-3xl ">
               {selectedWork?.title}
             </p>
           </div>
@@ -69,7 +70,7 @@ function SingleWorkSection({ post }: { post: any }) {
             </motion.span>
           </p>
 
-          <div className="flex">
+          <div className="flex w-full">
             <div className="container mx-auto">
               <CarouselSingle images={images} />
             </div>
@@ -164,7 +165,7 @@ function SingleWorkSection({ post }: { post: any }) {
                 {selectedWork?.tags[0].split(",").map((tag: string) => {
                   return (
                     <span key={tag} className="bg-gray-100 text-gray-800 text-md font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300">
-                      #{tag}
+                      #{ShortenDescription(tag,6)}
                     </span>
                   );
                 })}

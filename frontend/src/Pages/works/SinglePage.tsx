@@ -66,10 +66,10 @@ function SinglePage() {
 
       <NavBar bg="white" fixed="none" />
       <div className="flex md:flex-row flex-col  md:w-5/6 w-6/6 mx-auto mt-5 gap-3 ">
-        <div className="md:w-4/5 mb-5 ">
+        <div className="md:w-4/6 w-2/2 mb-5 ">
           {post && <SingleWorkSection post={post} />}
         </div>
-        <div className="md:w-2/5 ">
+        <div className="md:w-2/6 w-2/2">
           <div className=" w-full mt-16 px-1 border border-gray-300 rounded">
             {post && <SinglePagePayment setIsLoad={setIsLoad} post={post} />}
           </div>

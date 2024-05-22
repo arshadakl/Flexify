@@ -5,6 +5,7 @@ import { AuthContext } from "../../utils/config/context";
 import { toast } from "sonner";
 import { profileCompletionForm } from "../ProfileCompletionParts/CompletionForm";
 import { profileUpdate } from "../../utils/APIs/FreelancerApi";
+import { ShortenDescription } from "../../utils/Services/shortenDescription";
 
 function FreelancerProfileUpdateForm(users:any) {
   const { setIsEdit, setFreelancerDetails, freelancerDetails } = useContext(AuthContext);
@@ -194,7 +195,7 @@ function FreelancerProfileUpdateForm(users:any) {
               id="badge-dismiss-dark"
               className="inline-flex mb-2 items-center px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-300"
             >
-              {item}
+              {ShortenDescription(item,10)}
               <button
                 onClick={() => removeSkill(item)}
                 type="button"

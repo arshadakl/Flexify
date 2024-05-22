@@ -16,6 +16,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "../../animations/Frame_Motion/variants";
 // import OrdersTable from "../../../admin/components/OrdersTable";
 import ProfileOrders from "../../../clients/components/ProfileOrders";
+import { ShortenDescription } from "../../utils/Services/shortenDescription";
 
 function FreelancerProfilePage() {
   const { isEdit, setIsEdit } = useContext(AuthContext);
@@ -176,7 +177,7 @@ function FreelancerProfilePage() {
                               id="badge-dismiss-dark"
                               className="inline-flex mb-2 items-center px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-gray-100 rounded dark:bg-gray-700 dark:text-gray-300"
                             >
-                              {skill}
+                              {ShortenDescription(skill,10)}
                             </span>
                           );
                         })}
