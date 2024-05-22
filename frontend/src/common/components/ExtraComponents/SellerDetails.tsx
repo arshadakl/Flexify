@@ -29,9 +29,9 @@ function SellerDetails({ seller,details }: { seller: any,details:any }) {
             <h1 className="text-gray-500">From</h1>
             <h1 className="">{details.Country}</h1>
             <h1 className="text-gray-500 mt-2">Languages</h1>
-            <h1 className="">{details.language}</h1>
+            <h1 className="break-words">{details.language}</h1>
             <hr className="my-2" />
-            <h1 className="">{details.bio}</h1>
+            <h1 className="break-words">{details.bio}</h1>
         </div>
       </div>
     </>
