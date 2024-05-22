@@ -5,6 +5,7 @@ import NavBar from "../../common/components/Navbar/NavBar";
 import { Star } from "../../common/components/ExtraComponents/Star";
 import ActivityCalendar from "../../freelancers/components/ActivityCalendar";
 import Footer from "../../common/components/HomeComponents/Footer";
+import { ShortenDescription } from "../../common/utils/Services/shortenDescription";
 // import { toast } from "sonner";
 
 function PublicProfile() {
@@ -14,11 +15,7 @@ function PublicProfile() {
     const [rating, setRating] = useState(0);
 
     const handleSelect = async() => {
-    //   setRating(index * 2);
-    //   const response = await addRatingAPI(work.workId,(index * 2))
-    //   if(response.status){
-    //     toast.success("Thank you for your rating")
-    //   }
+
     };
     useEffect(() => {
       const fetchData = async () => {
@@ -40,7 +37,7 @@ function PublicProfile() {
 
     <div>
     <div className="md:w-6/5 w-1/1 my-5">
-          <div className="w-full  md:max-h-screen md:overflow-y-scroll md:pb-10 ">
+          <div className="w-full  md:min-h-screen  md:pb-10 ">
           <div className=" w-11/12 font-poppins md:1/2  items-center  mx-auto bg-slate-50/80 pb-7   rounded  dark:bg-gray-800 dark:border-gray-700 ">
             {/* <div className="relative flex flex-col items-center rounded-[20px] w-[400px] mx-auto p-4 bg-white bg-clip-border shadow-3xl shadow-shadow-500 dark:!bg-navy-800 dark:text-white dark:!shadow-none"> */}
             <div className="relative  flex h-40 w-full justify-center rounded-xl ">
@@ -138,7 +135,7 @@ function PublicProfile() {
                               id="badge-dismiss-dark"
                               className="inline-flex mb-2 items-center px-2 py-1 me-2 text-sm font-medium text-gray-800 bg-slate-200 rounded dark:bg-gray-700 dark:text-gray-300"
                             >
-                              {skill}
+                              {ShortenDescription(skill,10)}
                             </span>
                           );
                         })}

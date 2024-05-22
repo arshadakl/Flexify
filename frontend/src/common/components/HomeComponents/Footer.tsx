@@ -20,12 +20,12 @@ function Footer() {
           </h2>
           <ul className="text-gray-500 dark:text-gray-400 font-medium">
             <li className="mb-4">
-              <a href="https://flowbite.com/" className="hover:underline">
+              <a href="https://flexify.services/" className="hover:underline">
             Freelancer
               </a>
             </li>
             <li>
-              <a href="https://tailwindcss.com/" className="hover:underline">
+              <a href="https://flexify.services/" className="hover:underline">
               Client
               </a>
             </li>
@@ -38,7 +38,7 @@ function Footer() {
           <ul className="text-gray-500 dark:text-gray-400 font-medium">
             <li className="mb-4">
               <a
-                href="https://github.com/themesberg/flowbite"
+                href="https://github.com/arshadakl"
                 className="hover:underline "
               >
                 Github
@@ -46,7 +46,6 @@ function Footer() {
             </li>
             <li>
               <a
-                href="https://discord.gg/4eeurUVvTy"
                 className="hover:underline"
               >
                 Discord
@@ -55,7 +54,7 @@ function Footer() {
           </ul>
         </div>
         <div>
-          <h2 className="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">
+          <h2 className="mb-6 text-sm font-medium text-gray-900 uppercase dark:text-white">
             Legal
           </h2>
           <ul className="text-gray-500 dark:text-gray-400 font-medium">
