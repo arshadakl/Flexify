@@ -23,7 +23,7 @@
     "@types/react-chartjs-2": "^2.5.7",
     "axios": "^1.7.0",
     "chart.js": "^4.4.2",
-    "cloudinary": "^2.0.3",
+    "cloudinary": "^2.2.0",
     "cropperjs": "^1.6.1",
     "date-fns": "^3.6.0",
     "flowbite": "^2.3.0",
