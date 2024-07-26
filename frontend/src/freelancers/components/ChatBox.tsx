@@ -74,8 +74,6 @@ function ChatBox({ client }: { client: any }) {
 
     fetchData();
 
-    // socket.emit("join", { userId });
-
     socket.on("message", (newMessage: IChatMessage) => {
       setMessages((prevMessages: IChatMessage[]) => {
         const messageIds = prevMessages.map((message) => message._id);

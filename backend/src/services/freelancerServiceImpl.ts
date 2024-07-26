@@ -96,7 +96,6 @@ export class FreelancerService {
             if (!userData || !userData.OTP) {
                 throw new Error("Invalid email or missing OTP.");
             }
-
             console.log("Stored OTP:", userData.OTP);
             console.log("Entered OTP:", code);
 
@@ -113,9 +112,7 @@ export class FreelancerService {
 
     async doVerifyOtp(id: string): Promise<string | undefined> {
         console.log(id, "reached");
-
         try {
-
             if (id) {
                 const verifiedData = await this.freelancerRepository.doVerification(id);
                 console.log("User Verified");

@@ -22,51 +22,77 @@ const ObjectId = mongoose.Types.ObjectId;
 
 export class FreelancerRepositoryImpl implements FreelancerRepository {
   async findByUsername(username: string): Promise<Freelancer | null> {
-    return await FreelancerModel.findOne({ username });
+    try {
+      const response = await FreelancerModel.findOne({ username });
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   async findByEmail(email: string): Promise<Freelancer | null> {
-    return await FreelancerModel.findOne({ email });
+    try {
+      const response = await FreelancerModel.findOne({ email });
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
 
   async find_ById(id: string): Promise<Freelancer | undefined> {
-    console.log(id, "in implements FreelancerRepository");
-
-    const res = await FreelancerModel.findById(id);
-    console.log(res, "imp");
-
-    return res
+    try {
+      const res = await FreelancerModel.findById(id);
+      return res
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   async create(freelancer: Freelancer): Promise<void> {
-    await FreelancerModel.create(freelancer);
+    try {
+      await FreelancerModel.create(freelancer);
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
 
   async checkPassword(username: string, password: string): Promise<boolean> {
-    const freelancer = await FreelancerModel.findOne({ username });
-    if (!freelancer) {
-      return false; // User not found
+    try {
+      const freelancer = await FreelancerModel.findOne({ username });
+      if (!freelancer) {
+        return false;
+      }
+      const isPasswordValid = await bcrypt.compare(password, freelancer.password);
+      return isPasswordValid;
+    } catch (error: any) {
+      throw new Error(error.message)
     }
-    const isPasswordValid = await bcrypt.compare(password, freelancer.password);
-    return isPasswordValid;
-    // return false; 
   }
 
 
 
 
   async clearOTP(email: string) {
-    await FreelancerModel.updateOne({ email },
-      {
-        $set: { OTP: -1 }
-      }
-    )
+    try {
+      await FreelancerModel.updateOne({ email },
+        {
+          $set: { OTP: -1 }
+        }
+      )
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   async FreelancerDetailsAdd(formData: any) {
-    return await FreelancerDetailsModel.create(formData)
+    try {
+      const response = await FreelancerDetailsModel.create(formData)
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
 
@@ -101,32 +127,51 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
 
   async doVerification(id: String) {
-    return await FreelancerModel.updateOne({ _id: id },
-      {
-        $set: { isVerified: 1 }
-      }
-    )
+    try {
+      const response = await FreelancerModel.updateOne({ _id: id },
+        {
+          $set: { isVerified: 1 }
+        }
+      )
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   async doRolespecify(id: String, role: string): Promise<UpdateWriteOpResult> {
-    return await FreelancerModel.updateOne({ _id: id },
-      {
-        $set: { role: role }
-      }
-    )
+    try {
+      const reposnse = await FreelancerModel.updateOne({ _id: id },
+        {
+          $set: { role: role }
+        }
+      )
+      return reposnse
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   async setNewOTP(email: string, otp: number) {
-    return await Freelancer.updateOne({ email: email },
-      {
-        $set: { OTP: otp },
-
-      }
-    )
+    try {
+      const response = await Freelancer.updateOne({ email: email },
+        {
+          $set: { OTP: otp },
+        }
+      )
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
 
   }
   async cleanOTP(email: string) {
-    return await Freelancer.updateOne({ email: email }, { $set: { OTP: 0 } })
+    try {
+      const response = await Freelancer.updateOne({ email: email }, { $set: { OTP: 0 } })
+      return response
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
   // async updatePassword(id:string, password:string):Promise<any>{
@@ -134,19 +179,28 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
   // }
 
   async updatePassword(id: string, password: string): Promise<any> {
-    return await Freelancer.updateOne(
-      { _id: id },
-      {
-        $set: { password: password },
-        $currentDate: { updatedAt: true }, // Update the updatedAt field with the current timestamp
-      }
-    );
+    try {
+      const response = await Freelancer.updateOne(
+        { _id: id },
+        {
+          $set: { password: password },
+          $currentDate: { updatedAt: true },
+        }
+      );
+      return response
+    } catch (error:any) {
+      throw new Error(error.message)
+    }
   }
 
 
   async findDetailsById(id: string): Promise<FreelancerDetails | null> {
-    console.log("implement id", id);
-    return await FreelancerDetailsModel.findOne({ user: id });
+    try {
+      const response = await FreelancerDetailsModel.findOne({ user: id });
+    return response
+    } catch (error:any) {
+      throw new Error(error.message)
+    }
   }
 
   async updateProfileImage(id: string, filepath: string): Promise<Freelancer | null> {
@@ -195,87 +249,12 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     return await WorkModel.find({ user: id });
   }
 
-  // async getAllActiveWorksToDiscover(): Promise<IWork[]> {
-  //     return await WorkModel.find({ isActive: true });
-  // }
+
 
   async deleteWork(id: string): Promise<DeleteResult> {
     return await WorkModel.deleteOne({ _id: id });
   }
 
-
-
-  // async getAllActiveWorksToDiscover(): Promise<any> {
-  //     try {
-  //         const works = await WorkModel.aggregate([
-  //             {
-  //                 $match: {
-  //                     isActive: true
-  //                 }
-  //             },
-  //             // Lookup user details
-  //             {
-  //                 $lookup: {
-  //                     from: "freelancers",
-  //                     localField: "user",
-  //                     foreignField: "_id",
-  //                     as: "user"
-  //                 }
-  //             },
-  //             { $unwind: "$user" },
-  //             // Lookup freelancer details
-  //             {
-  //                 $lookup: {
-  //                     from: "freelancerdetails",
-  //                     localField: "user._id",
-  //                     foreignField: "user",
-  //                     as: "freelancerdetails"
-  //                 }
-  //             },
-  //             // Project only the required fields
-  //             {
-  //                 $project: {
-  //                     user: {
-  //                         _id: 1,
-  //                         username: 1,
-  //                         email: 1,
-  //                         profile: 1,
-  //                         role: 1
-  //                     },
-  //                     title: 1,
-  //                     category: 1,
-  //                     subcategory: 1,
-  //                     categoryNames: 1,
-  //                     tags: 1,
-  //                     image1: 1,
-  //                     image2: 1,
-  //                     image3: 1,
-  //                     deliveryPeriod: 1,
-  //                     referenceMaterial: 1,
-  //                     logo: 1,
-  //                     description: 1,
-  //                     questionnaire: 1,
-  //                     amount: 1,
-  //                     isActive: 1,
-  //                     freelancerdetails: 1,
-  //                     // Include averageRating field for sorting
-  //                     averageRating: { $ifNull: ["$averageRating", 0] } // Use 0 if averageRating is null
-  //                 }
-  //             },
-  //             // Sort works based on averageRating in descending order
-  //             { $sort: { averageRating: -1 } }
-  //         ]);
-
-  //         console.log(works, "Sorted works"); // Log the sorted works to verify
-
-  //         return works;
-
-  //     } catch (error) {
-  //         console.log(error);
-
-  //         throw new Error(`Error getting all active work details: ${error}`);
-  //     }
-  // }
 
 
 
@@ -284,7 +263,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
       const limit = 6;
       const skip = (page - 1) * limit;
 
-      // Define the regular expression for searching
+
       const searchRegex = new RegExp(searchTerm, 'i');
       const categoryRegex = new RegExp(categoryName, 'i');
 
@@ -310,7 +289,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
               : {}),
           },
         },
-        // Lookup user details
+
         {
           $lookup: {
             from: 'freelancers',
@@ -320,7 +299,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
           },
         },
         { $unwind: '$user' },
-        // Lookup freelancer details
+
         {
           $lookup: {
             from: 'freelancerdetails',
@@ -329,7 +308,7 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             as: 'freelancerdetails',
           },
         },
-        // Project only the required fields
+
         {
           $project: {
             user: { _id: 1, username: 1, email: 1, profile: 1, role: 1 },
@@ -349,15 +328,15 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
             amount: 1,
             isActive: 1,
             freelancerdetails: 1,
-            // Include averageRating field for sorting
-            averageRating: { $ifNull: ['$averageRating', 0] }, // Use 0 if averageRating is null
+
+            averageRating: { $ifNull: ['$averageRating', 0] },
           },
         },
-        // Sort works based on averageRating in descending order
+
         { $sort: { averageRating: -1 } },
-        // Skip documents based on the page number
+
         { $skip: skip },
-        // Limit the number of documents to retrieve
+
         { $limit: limit },
       ]);
 
@@ -391,103 +370,6 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
       throw new Error(`Error getting all active work details: ${error}`);
     }
   }
-
-
-  // async getAllActiveWorksToDiscover(searchTerm: string,filter:string, page: number): Promise<any> {
-  //     try {
-  //       const limit = 6;
-  //       const skip = (page - 1) * limit;
-
-  //       // Define the regular expression for searching
-  //       const regex = new RegExp(searchTerm, 'i');
-
-  //       const works = await WorkModel.aggregate([
-  //         {
-  //           $match: searchTerm
-  //             ? {
-  //                 isActive: true,
-  //                 $or: [
-  //                   { title: { $regex: regex } },
-  //                   { categoryNames: { $elemMatch: { $regex: regex } } },
-  //                   { tags: { $elemMatch: { $regex: regex } } },
-  //                 ],
-  //               }
-  //             : { isActive: true }, // If searchTerm is empty, match only active works
-  //         },
-  //         // Lookup user details
-  //         {
-  //           $lookup: {
-  //             from: 'freelancers',
-  //             localField: 'user',
-  //             foreignField: '_id',
-  //             as: 'user',
-  //           },
-  //         },
-  //         { $unwind: '$user' },
-  //         // Lookup freelancer details
-  //         {
-  //           $lookup: {
-  //             from: 'freelancerdetails',
-  //             localField: 'user._id',
-  //             foreignField: 'user',
-  //             as: 'freelancerdetails',
-  //           },
-  //         },
-  //         // Project only the required fields
-  //         {
-  //           $project: {
-  //             user: { _id: 1, username: 1, email: 1, profile: 1, role: 1 },
-  //             title: 1,
-  //             category: 1,
-  //             subcategory: 1,
-  //             categoryNames: 1,
-  //             tags: 1,
-  //             image1: 1,
-  //             image2: 1,
-  //             image3: 1,
-  //             deliveryPeriod: 1,
-  //             referenceMaterial: 1,
-  //             logo: 1,
-  //             description: 1,
-  //             questionnaire: 1,
-  //             amount: 1,
-  //             isActive: 1,
-  //             freelancerdetails: 1,
-  //             // Include averageRating field for sorting
-  //             averageRating: { $ifNull: ['$averageRating', 0] }, // Use 0 if averageRating is null
-  //           },
-  //         },
-  //         // Sort works based on averageRating in descending order
-  //         { $sort: { averageRating: -1 } },
-  //         // Skip documents based on the page number
-  //         { $skip: skip },
-  //         // Limit the number of documents to retrieve
-  //         { $limit: limit },
-  //       ]);
-
-  //       // Get the total count of documents
-  //       const count = await WorkModel.countDocuments(
-  //         searchTerm
-  //           ? {
-  //               isActive: true,
-  //               $or: [
-  //                 { title: { $regex: regex } },
-  //                 { categoryNames: { $elemMatch: { $regex: regex } } },
-  //                 { tags: { $elemMatch: { $regex: regex } } },
-  //               ],
-  //             }
-  //           : { isActive: true }
-  //       );
-
-  //       const totalPages = Math.ceil(count / limit);
-
-  //       console.log(works, 'Sorted works');
-  //       return { works, totalPages };
-  //     } catch (error) {
-  //       console.log(error);
-  //       throw new Error(`Error getting all active work details: ${error}`);
-  //     }
-  //   }
 
   // for search 
   async getAllActiveWorksToDiscoverSearch(searchTerm: string): Promise<any> {
@@ -679,65 +561,65 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
 
   async getReceivedWork(id: string, page: number): Promise<{ works: IOrder[], totalPages: number, currentPage: number } | null> {
     try {
-      const limit =6
-        const skip = (page - 1) * limit;
-        const count = await Order.countDocuments({ freelancerId: new mongoose.Types.ObjectId(id) });
+      const limit = 6
+      const skip = (page - 1) * limit;
+      const count = await Order.countDocuments({ freelancerId: new mongoose.Types.ObjectId(id) });
 
-        const totalPages = Math.ceil(count / limit);
+      const totalPages = Math.ceil(count / limit);
 
-        const works = await Order.aggregate([
-            { $match: { freelancerId: new mongoose.Types.ObjectId(id) } },
-            {
-                $lookup: {
-                    from: "freelancers",
-                    localField: "clientId",
-                    foreignField: "_id",
-                    as: "client"
-                }
+      const works = await Order.aggregate([
+        { $match: { freelancerId: new mongoose.Types.ObjectId(id) } },
+        {
+          $lookup: {
+            from: "freelancers",
+            localField: "clientId",
+            foreignField: "_id",
+            as: "client"
+          }
+        },
+        {
+          $project: {
+            client: {
+              username: 1,
+              profile: 1,
+              email: 1
             },
-            {
-                $project: {
-                    client: {
-                        username: 1,
-                        profile: 1,
-                        email: 1
-                    },
-                    workId: 1,
-                    freelancerId: 1,
-                    clientId: 1,
-                    category: 1,
-                    amount: 1,
-                    WorkDetails: 1,
-                    date: 1,
-                    status: 1,
-                    requirementStatus: 1,
-                    deadline: 1
-                }
-            },
-            {
-                $sort: {
-                    date: -1 // Sort by date in descending order
-                }
-            },
-            {
-                $skip: skip
-            },
-            {
-                $limit: limit
-            }
-        ]);
+            workId: 1,
+            freelancerId: 1,
+            clientId: 1,
+            category: 1,
+            amount: 1,
+            WorkDetails: 1,
+            date: 1,
+            status: 1,
+            requirementStatus: 1,
+            deadline: 1
+          }
+        },
+        {
+          $sort: {
+            date: -1
+          }
+        },
+        {
+          $skip: skip
+        },
+        {
+          $limit: limit
+        }
+      ]);
 
-        if (!works) throw new Error("Work not found");
+      if (!works) throw new Error("Work not found");
 
-        return {
-            works,
-            totalPages,
-            currentPage: page,
-        };
+      return {
+        works,
+        totalPages,
+        currentPage: page,
+      };
     } catch (error: any) {
-        throw new Error(error.message);
+      throw new Error(error.message);
     }
-}
+  }
 
 
   // get all active post
@@ -757,7 +639,6 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
         { $limit: limit }
       ]);
 
-      // Return total pages along with the paginated data
       return {
         works,
         totalPages
@@ -888,160 +769,6 @@ export class FreelancerRepositoryImpl implements FreelancerRepository {
     }
   }
 
-
-  // async getChartData(freelancerId:string):Promise<any> {
-  //     try {
-  //       const endDate = new Date();
-  //       const startDate = new Date(endDate.getTime() - (7 * 24 * 60 * 60 * 1000)); // 7 days ago
-
-  //       const response = await Order.aggregate([
-  //         {
-  //           $match: {
-  //             freelancerId: new mongoose.Types.ObjectId(freelancerId),
-  //             date: { $gte: startDate, $lte: endDate }
-  //           }
-  //         },
-  //         {
-  //           $lookup: {
-  //             from: 'freelancers',
-  //             localField: 'freelancerId',
-  //             foreignField: '_id',
-  //             as: 'freelancer'
-  //           }
-  //         },
-  //         {
-  //           $unwind: '$freelancer'
-  //         },
-  //         {
-  //           $group: {
-  //             _id: {
-  //               day: { $dateToString: { format: '%Y-%m-%d', date: '$date' } }
-  //             },
-  //             orderCount: { $sum: 1 },
-  //             totalAmount: { $sum: '$amount' }
-  //           }
-  //         },
-  //         {
-  //           $project: {
-  //             _id: 0,
-  //             day: '$_id.day',
-  //             orderCount: 1,
-  //             totalAmount: 1
-  //           }
-  //         },
-  //         {
-  //           $sort: { day: 1 }
-  //         }
-  //       ]);
-
-  //       // Fill in missing days with zeros
-  //       const filledResponse = [];
-  //       for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
-  //         const dateString = d.toISOString().split('T')[0];
-  //         const dataForDay = response.find((data) => data.day === dateString);
-  //         filledResponse.push({
-  //           day: dateString,
-  //           orderCount: dataForDay ? dataForDay.orderCount : 0,
-  //           totalAmount: dataForDay ? dataForDay.totalAmount : 0
-  //         });
-  //       }
-
-  //       return filledResponse;
-  //     } catch (error:any) {
-  //       throw new Error(error.message);
-  //     }
-  //   }
-
-
-  // async getChartData(freelancerId: string): Promise<ChartDataResponse[]> {
-  //     try {
-  //       const startDate = new Date();
-  //       startDate.setDate(startDate.getDate() - 7); // Set the start date to 7 days ago
-
-  //       const aggregationResult: any[] = await Order.aggregate([
-  //         {
-  //           $match: {
-  //             freelancerId: new mongoose.Types.ObjectId(freelancerId),
-  //             date: { $gte: startDate.getTime() }
-  //           }
-  //         },
-  //         {
-  //           $lookup: {
-  //             from: 'freelancers',
-  //             localField: 'freelancerId',
-  //             foreignField: '_id',
-  //             as: 'freelancer'
-  //           }
-  //         },
-  //         { $unwind: '$freelancer' },
-  //         {
-  //           $group: {
-  //             _id: {
-  //               freelancerId: '$freelancer._id',
-  //               day: {
-  //                 $dateToString: {
-  //                   format: '%Y-%m-%d',
-  //                   date: { $toDate: '$date' }
-  //                 }
-  //               }
-  //             },
-  //             freelancerDetails: { $first: '$freelancer' },
-  //             orderCount: { $sum: 1 },
-  //             totalAmount: { $sum: '$amount' }
-  //           }
-  //         },
-  //         { $sort: { '_id.day': 1 } },
-  //         {
-  //           $group: {
-  //             _id: '$_id.freelancerId',
-  //             freelancerDetails: { $first: '$freelancerDetails' },
-  //             dailyData: {
-  //               $push: {
-  //                 day: '$_id.day',
-  //                 orderCount: '$orderCount',
-  //                 totalAmount: '$totalAmount'
-  //               }
-  //             }
-  //           }
-  //         }
-  //       ]).exec(); // Execute the aggregation pipeline
-
-  //       // Helper function to generate a range of dates
-  //       const generateDateRange = (start: Date, end: Date): string[] => {
-  //         const dates: string[] = [];
-  //         let currentDate = new Date(start);
-  //         while (currentDate <= end) {
-  //           dates.push(currentDate.toISOString().split('T')[0]); // Format date as 'YYYY-MM-DD'
-  //           currentDate.setDate(currentDate.getDate() + 1);
-  //         }
-  //         return dates;
-  //       };
-
-  //       // Generate the date range array
-  //       const dateRange = generateDateRange(startDate, new Date());
-
-  //       // Map the aggregation result to the ChartDataResponse type
-  //       const chartDataResponses: ChartDataResponse[] = aggregationResult.map(item => {
-  //         // Initialize dailyData as an empty array if it's undefined
-  //         item.dailyData = item.dailyData || [];
-
-  //         // Fill in missing days with zeros
-  //         const filledDailyData = dateRange.map(date => {
-  //             const existingData = item.dailyData.find((d: DailyData) => d.day === date);
-  //             return existingData || { day: date, orderCount: 0, totalAmount: 0 };
-  //           });
-
-  //         // Replace dailyData with filledDailyData
-  //         item.dailyData = filledDailyData;
-
-  //         return item as ChartDataResponse; // Cast the item to ChartDataResponse
-  //       });
-
-  //       return chartDataResponses;
-  //     } catch (error: any) {
-  //       throw new Error(error.message);
-  //     }
-  //   }
 
   async getChartData(freelancerId: string): Promise<ChartDataResponse[]> {
     try {
