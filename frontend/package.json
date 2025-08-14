@@ -52,7 +52,7 @@
     "socket.io-client": "^4.8.0",
     "sonner": "^1.4.3",
     "stream-chat": "^8.31.0",
-    "stream-chat-react": "^11.17.0",
+    "stream-chat-react": "^12.13.1",
     "uid": "^2.0.2"
   },
   "devDependencies": {
